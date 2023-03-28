@@ -29,7 +29,6 @@ export default function App({ Component, pageProps }: Props) {
 			</Head>
 			<SWRConfig
 				value={{
-					refreshInterval: 3000,
 					fetcher: fetcher,
 				}}
 			>

@@ -32,6 +32,7 @@ specifiers:
   eslint: 8.34.0
   eslint-config-next: 13.1.6
   eslint-plugin-storybook: ^0.6.10
+  linkifyjs: ^4.1.1
   next: 13.1.6
   polished: ^4.2.2
   prettier: ^2.8.4
@@ -64,6 +65,7 @@ dependencies:
   dayjs: 1.11.7
   eslint: 8.34.0
   eslint-config-next: 13.1.6_7kw3g6rralp5ps6mg3uyzz6azm
+  linkifyjs: 4.1.1
   next: 13.1.6_pjwopsidmaokadturxaafygjp4
   polished: 4.2.2
   react: 18.2.0
@@ -8907,6 +8909,10 @@ packages:
 
   /lines-and-columns/1.2.4:
     resolution: {integrity: sha512-7ylylesZQ/PV29jhEDl3Ufjo6ZX7gCqJr5F7PKrqc93v7fzSymt1BpwEU8nAUXs8qzzvqhbjhK5QZg6Mt/HkBg==}
+
+  /linkifyjs/4.1.1:
+    resolution: {integrity: sha512-zFN/CTVmbcVef+WaDXT63dNzzkfRBKT1j464NJQkV7iSgJU0sLBus9W0HBwnXK13/hf168pbrx/V/bjEHOXNHA==}
+    dev: false
 
   /load-json-file/1.1.0:
     resolution: {integrity: sha512-cy7ZdNRXdablkXYNI049pthVeXFurRyb9+hA/dZzerZ0pGTx42z+y+ssxBaVV2l70t1muq5IdKhn4UtcoGUY9A==}

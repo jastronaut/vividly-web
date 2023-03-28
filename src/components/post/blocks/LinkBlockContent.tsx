@@ -44,7 +44,14 @@ const LinkInfo = styled.span`
 	}
 `;
 
-export const LinkBlockContent = (props: LinkElement) => {
+type LinkBlockProps = {
+	description?: string;
+	imageURL?: string;
+	title?: string;
+	url: string;
+};
+
+export const LinkBlockContent = (props: LinkBlockProps) => {
 	return (
 		<LinkText>
 			<a href={props.url}>

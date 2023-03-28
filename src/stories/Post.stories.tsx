@@ -22,18 +22,13 @@ Primary.args = {
 	blocks: [
 		{
 			type: BlockType.TEXT,
-			text: {
-				content: 'this structure sucks',
-			},
+			text: 'this structure sucks',
 		},
-
 		{
 			type: BlockType.IMAGE,
-			image: {
-				url: 'https://i.imgur.com/B0VUfKl.jpg',
-				width: 316,
-				height: 316,
-			},
+			url: 'https://i.imgur.com/B0VUfKl.jpg',
+			width: 316,
+			height: 316,
 		},
 		{
 			type: BlockType.MUSIC,

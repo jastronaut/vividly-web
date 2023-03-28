@@ -6,10 +6,14 @@ export enum BlockType {
 	IMAGE = 'image',
 	MUSIC = 'music',
 	LINK = 'link',
+	MAGIC = 'magic',
+	VIDEO = 'video',
 }
 
 export type CustomText = { text: string };
-export type CustomElement = { type: 'paragraph'; children: CustomText[] };
+
+export type CustomElement = { type: BlockType.TEXT; children: CustomText[] };
+
 export type ImageElement = {
 	type: BlockType.IMAGE;
 	url: string;
@@ -17,7 +21,12 @@ export type ImageElement = {
 	height: number;
 	children: CustomText[];
 };
-export type VideoElementType = { type: 'video'; url: string; children: string };
+
+export type VideoElementType = {
+	type: BlockType.VIDEO;
+	url: string;
+	children: CustomText[];
+};
 export type LinkElement = {
 	type: BlockType.LINK;
 	description?: string;
@@ -27,8 +36,28 @@ export type LinkElement = {
 	children: CustomText[];
 };
 
+export type MagicElement = {
+	type: BlockType.MAGIC;
+	data: string;
+	children: CustomText[];
+};
+
 export type ElementType =
 	| CustomElement
 	| ImageElement
 	| VideoElementType
-	| LinkElement;
+	| LinkElement
+	| MagicElement;
+
+export type Weather = {
+	id: number;
+	main: string;
+};
+
+export type OpenWeatherResponse = {
+	main: {
+		temp: number;
+	};
+	weather: Weather[];
+	cod: number;
+};

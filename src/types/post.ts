@@ -1,3 +1,11 @@
+export type Comment = {
+	id: string;
+	authorId: string;
+	createdTime: string;
+	content: string;
+	postId: string;
+};
+
 export enum BlockType {
 	TEXT = 'text',
 	IMAGE = 'image',
@@ -7,18 +15,14 @@ export enum BlockType {
 
 export type TextBlock = {
 	type: BlockType.TEXT;
-	text: {
-		content: string;
-	};
+	text: string;
 };
 
 export type ImageBlock = {
 	type: BlockType.IMAGE;
-	image: {
-		url: string;
-		width: number;
-		height: number;
-	};
+	url: string;
+	width: number;
+	height: number;
 };
 
 export type MusicBlock = {
@@ -42,14 +46,25 @@ export type MusicBlock = {
 	};
 };
 
-export type Block = TextBlock | ImageBlock | MusicBlock;
+export type LinkBlock = {
+	type: BlockType.LINK;
+	description?: string;
+	imageURL?: string;
+	title?: string;
+	url: string;
+};
+
+export type Block = TextBlock | ImageBlock | MusicBlock | LinkBlock;
 
 export type Post = {
 	id: string;
 	authorId: string;
-	createdTime: string;
-	updatedTime: string;
+	createdTime: number;
+	updatedTime: number;
 	commentsDisabled: boolean;
 	content: Block[];
 	isUpdated: boolean;
+	likes: number;
+	comments?: Comment[];
+	isLikedByUser?: boolean;
 };

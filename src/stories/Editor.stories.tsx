@@ -25,7 +25,7 @@ const emptyChildren = {
 Primary.args = {
 	initialValue: [
 		{
-			type: 'paragraph',
+			type: BlockType.TEXT,
 			children: [{ text: 'A line of text in a paragraph.' }],
 		},
 		{
@@ -36,7 +36,7 @@ Primary.args = {
 			...emptyChildren,
 		},
 		{
-			type: 'paragraph',
+			type: BlockType.TEXT,
 			children: [{ text: '2 A line of text in a paragraph.' }],
 		},
 		{
