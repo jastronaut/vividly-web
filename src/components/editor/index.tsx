@@ -29,8 +29,7 @@ import { OpenWeatherResponse } from '../../types/editor';
 
 const openWeatherKey =
 	process.env.REACT_APP_OPEN_WEATHER_API_KEY ||
-	process.env.OPEN_WEATHER_API_KEY ||
-	'1a627ae47875ec32d233bc89daf79e62';
+	process.env.OPEN_WEATHER_API_KEY;
 
 const LinkBlock = (props: BaseElementProps) => {
 	const { attributes, children, element } = props;
