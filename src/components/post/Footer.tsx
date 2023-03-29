@@ -58,6 +58,7 @@ export const Footer = (props: FooterProps) => {
 						<IconMessageCircle2 color={theme.text.lightest} size={18} />
 					}
 					title='Comment on post'
+					onClick={props.onClickComment}
 				>
 					{props.commentCount}
 				</Button>

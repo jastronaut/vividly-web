@@ -4,6 +4,12 @@ export type Comment = {
 	createdTime: string;
 	content: string;
 	postId: string;
+	author: {
+		id: string;
+		name: string;
+		username: string;
+		avatarSrc: string;
+	};
 };
 
 export enum BlockType {
@@ -65,6 +71,6 @@ export type Post = {
 	content: Block[];
 	isUpdated: boolean;
 	likes: number;
-	comments?: Comment[];
+	comments: Comment[];
 	isLikedByUser: boolean;
 };

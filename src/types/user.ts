@@ -1,7 +1,7 @@
 export type User = {
 	id: string;
 	bio: string;
-	profilePicture: string;
+	avatarSrc: string;
 	name: string;
 	username: string;
 };

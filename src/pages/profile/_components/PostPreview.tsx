@@ -1,8 +1,11 @@
+import { useState } from 'react';
 import { Post, BlockType, Block } from '@/types/post';
 
 import { Footer } from '@/components/post/Footer';
 import { ImageBlock } from '@/components/post/blocks/blocks';
 import { LinkBlockContent } from '@/components/post/blocks/LinkBlockContent';
+
+import { Comments } from '@/components/post/comments/Comments';
 
 function renderPostContent(content: Block, key: string) {
 	switch (content.type) {
@@ -39,19 +42,37 @@ type Props = {
 
 export const PostPreview = (props: Props) => {
 	const { post } = props;
-	const commentCount = post.comments?.length || 0;
+	const [commentsOpen, setCommentsOpen] = useState(false);
+	const commentCount = post.comments.length;
+
+	const onSubmitComment = (comment: string) => {
+		console.log(comment);
+	};
+
+	const onDeleteComment = (id: string) => {
+		console.log('delete comment', id);
+	};
 
 	return (
 		<div className='post-preview'>
 			{post.content.map((block, index) =>
 				renderPostContent(block, index.toString())
 			)}
+
+			<Comments
+				isOpen={commentsOpen}
+				onClose={() => setCommentsOpen(false)}
+				comments={post.comments}
+				onSubmit={onSubmitComment}
+				onDelete={onDeleteComment}
+			/>
+
 			<Footer
 				isLiked={post.isLikedByUser}
 				likeCount={post.likes}
 				commentCount={commentCount}
 				timestamp={post.createdTime}
-				onClickComment={() => {}}
+				onClickComment={() => setCommentsOpen(true)}
 				onClickLike={() => props.onClickLike(post.id, post.isLikedByUser)}
 			/>
 		</div>

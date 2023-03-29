@@ -64,22 +64,18 @@ type ProfileHeaderProps = {
 	bio?: string;
 	username?: string;
 	name?: string;
-	profilePicture?: string;
+	avatarSrc?: string;
 };
 
 export const ProfileHeaderComponent = (props: ProfileHeaderProps) => {
-	const { isLoading, bio, name, username, profilePicture } = props;
+	const { isLoading, bio, name, username, avatarSrc } = props;
 	return (
 		<ProfileHeaderContainer>
 			<ProfileHeaderContent>
 				{isLoading ? (
 					<Skeleton height={100} circle mb='xl' />
 				) : (
-					<Avatar
-						src={profilePicture ?? DEFAULT_AVATAR}
-						radius={50}
-						size={100}
-					/>
+					<Avatar src={avatarSrc ?? DEFAULT_AVATAR} radius={50} size={100} />
 				)}
 				<ProfileHeaderText>
 					{isLoading && <Skeleton height={28} width='60%' />}
