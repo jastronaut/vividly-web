@@ -66,5 +66,5 @@ export type Post = {
 	isUpdated: boolean;
 	likes: number;
 	comments?: Comment[];
-	isLikedByUser?: boolean;
+	isLikedByUser: boolean;
 };

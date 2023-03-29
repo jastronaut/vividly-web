@@ -32,25 +32,28 @@ function renderPostContent(content: Block, key: string) {
 	}
 }
 
-export const PostPreview = (props: Post) => {
-	const { content } = props;
-	const commentCount = props.comments?.length || 0;
-	const isLiked = props?.isLikedByUser || false;
+type Props = {
+	post: Post;
+	onClickLike: (id: string, isLiked: boolean) => void;
+};
+
+export const PostPreview = (props: Props) => {
+	const { post } = props;
+	const commentCount = post.comments?.length || 0;
 
 	return (
 		<div className='post-preview'>
-			{content.map((block, index) =>
+			{post.content.map((block, index) =>
 				renderPostContent(block, index.toString())
 			)}
 			<Footer
-				isLiked={isLiked}
-				likeCount={props.likes}
+				isLiked={post.isLikedByUser}
+				likeCount={post.likes}
 				commentCount={commentCount}
-				timestamp={props.createdTime}
+				timestamp={post.createdTime}
 				onClickComment={() => {}}
-				onClickLike={() => {}}
+				onClickLike={() => props.onClickLike(post.id, post.isLikedByUser)}
 			/>
-			<hr />
 		</div>
 	);
 };

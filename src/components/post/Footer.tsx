@@ -1,10 +1,6 @@
 import styled, { useTheme } from 'styled-components';
 import { rem } from 'polished';
-import {
-	IconHeart,
-	IconHeartFilled,
-	IconMessageCircle2,
-} from '@tabler/icons-react';
+import { IconHeart, IconMessageCircle2 } from '@tabler/icons-react';
 import { Group, Button, Text } from '@mantine/core';
 
 import { getPostTime } from '../utils/time';
@@ -14,7 +10,6 @@ const Wrapper = styled.div`
 		padding: 0 ${rem(10)};
 		min-width: ${rem(20)};
 		color: ${props => props.theme.text.lightest};
-		font-size: ${rem(12)};
 	}
 
 	.mantine-Button-label {
@@ -41,15 +36,16 @@ export const Footer = (props: FooterProps) => {
 					variant='subtle'
 					color='pink'
 					radius='lg'
-					size='xs'
+					size='sm'
 					leftIcon={
 						props.isLiked ? (
-							<IconHeartFilled stroke={theme.accent} size={18} />
+							<IconHeart fill={theme.accent} color={theme.accent} size={18} />
 						) : (
 							<IconHeart color={theme.text.lightest} size={18} />
 						)
 					}
 					title='Like post'
+					onClick={props.onClickLike}
 				>
 					{props.likeCount}
 				</Button>
@@ -57,7 +53,7 @@ export const Footer = (props: FooterProps) => {
 					variant='subtle'
 					color='green'
 					radius='lg'
-					size='xs'
+					size='sm'
 					leftIcon={
 						<IconMessageCircle2 color={theme.text.lightest} size={18} />
 					}
