@@ -1,14 +1,22 @@
 // fetcher for swr
-export const fetcher = (url: string) =>
-	fetch(url)
-		.then(res => res.json())
-		.catch(err => console.error(err));
+export const fetcher = async (url: string) => {
+	const res = await fetch(url);
+	if (!res.ok) {
+		const error = new Error('An error occurred while fetching the data.');
+		throw error;
+	}
+	return res.json();
+};
 
-export const fetchWithToken = (url: string, token: string) =>
-	fetch(url, {
+export const fetchWithToken = async (url: string, token: string) => {
+	const res = await fetch(url, {
 		headers: {
 			Authorization: `Bearer ${token}`,
 		},
-	})
-		.then(res => res.json())
-		.catch(err => console.error(err));
+	});
+	if (!res.ok) {
+		const error = new Error('An error occurred while fetching the data.');
+		throw error;
+	}
+	return res.json();
+};

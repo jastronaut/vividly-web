@@ -1,6 +1,7 @@
 import React from 'react';
 import { DefaultTheme, ThemeProvider } from 'styled-components';
 import { MantineProvider } from '@mantine/core';
+import { Notifications } from '@mantine/notifications';
 
 import { GlobalStyle } from './GlobalStyle';
 
@@ -93,6 +94,7 @@ export const VividlyThemeProvider = (props: {
 				<ThemeProvider theme={props.theme}>
 					<>
 						<GlobalStyle />
+						<Notifications />
 						{props.children}
 					</>
 				</ThemeProvider>
