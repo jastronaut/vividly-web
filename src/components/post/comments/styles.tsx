@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { rem } from 'polished';
-import { Textarea } from '@mantine/core';
+import { Textarea, Group } from '@mantine/core';
 
 export const AllComments = styled.div`
 	margin-top: ${rem(8)};
@@ -28,5 +28,21 @@ export const CommentTextArea = styled(Textarea)`
 
 	.mantine-Textarea-input:focus-within {
 		border-color: ${props => props.theme.border.primary};
+	}
+`;
+
+export const MenuContainer = styled(Group)`
+	align-self: flex-start;
+`;
+
+export const Wrapper = styled.div`
+	a {
+		display: flex;
+		color: unset;
+	}
+
+	a:hover .mantine-Text-root:first-of-type {
+		text-decoration: underline;
+		color: ${props => props.theme.accent};
 	}
 `;

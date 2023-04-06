@@ -22,7 +22,7 @@ export const GlobalStyle = createGlobalStyle`
     
     a, a:visited {
         text-decoration: none;
-        color: ${props => props.theme.link};
+        color: ${props => props.theme.accent};
     }
 
     * {

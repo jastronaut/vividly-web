@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import styled from 'styled-components';
 import { rem } from 'polished';
-import { Skeleton, Avatar, Text } from '@mantine/core';
+import { Skeleton, Avatar, Text, Flex, Button, Modal } from '@mantine/core';
 
-import { DEFAULT_AVATAR } from '../constants';
+import { DEFAULT_AVATAR } from '../../constants';
+import { SettingsModal } from './SettingsModal';
 
 export const ProfileHeaderContainer = styled.div`
 	padding-top: ${rem(50)};
@@ -69,8 +70,13 @@ type ProfileHeaderProps = {
 
 export const ProfileHeaderComponent = (props: ProfileHeaderProps) => {
 	const { isLoading, bio, name, username, avatarSrc } = props;
+	const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
 	return (
 		<ProfileHeaderContainer>
+			<SettingsModal
+				isOpen={isSettingsModalOpen}
+				onClose={() => setIsSettingsModalOpen(false)}
+			/>
 			<ProfileHeaderContent>
 				{isLoading ? (
 					<Skeleton height={100} circle mb='xl' />
@@ -86,6 +92,21 @@ export const ProfileHeaderComponent = (props: ProfileHeaderProps) => {
 					{isLoading && <Skeleton height={16} mt={6} width='40%' />}
 					{!isLoading && <Text>{bio || 'No bio yet.'}</Text>}
 				</ProfileHeaderText>
+				<>
+					<Flex>
+						<>
+							<Button
+								variant='outline'
+								size='sm'
+								color='grape'
+								radius='xl'
+								onClick={() => setIsSettingsModalOpen(true)}
+							>
+								Edit profile
+							</Button>
+						</>
+					</Flex>
+				</>
 			</ProfileHeaderContent>
 		</ProfileHeaderContainer>
 	);

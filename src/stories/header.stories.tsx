@@ -1,7 +1,7 @@
 import React from 'react';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 
-import { ProfileHeaderComponent } from '../components/header';
+import { ProfileHeaderComponent } from '../components/profile/header';
 import { VividlyThemeProvider, lightTheme } from '../styles/Theme';
 
 export default {

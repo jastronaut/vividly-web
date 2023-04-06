@@ -5,7 +5,7 @@ import { Footer } from '@/components/post/Footer';
 import { ImageBlock } from '@/components/post/blocks/blocks';
 import { LinkBlockContent } from '@/components/post/blocks/LinkBlockContent';
 
-import { Comments } from '@/components/post/comments/Comments';
+import { CommentsModal } from '@/components/post/comments/Comments';
 
 function renderPostContent(content: Block, key: string) {
 	switch (content.type) {
@@ -38,6 +38,11 @@ function renderPostContent(content: Block, key: string) {
 type Props = {
 	post: Post;
 	onClickLike: (id: string, isLiked: boolean) => void;
+	onAddComment: (id: string, comment: string) => void;
+	onDeleteComment: (id: string, commentId: string) => void;
+	onDeletePost: (id: string) => void;
+	isOwnPost: boolean;
+	toggleDisableComments: (id: string, isDisabled: boolean) => void;
 };
 
 export const PostPreview = (props: Props) => {
@@ -45,26 +50,20 @@ export const PostPreview = (props: Props) => {
 	const [commentsOpen, setCommentsOpen] = useState(false);
 	const commentCount = post.comments.length;
 
-	const onSubmitComment = (comment: string) => {
-		console.log(comment);
-	};
-
-	const onDeleteComment = (id: string) => {
-		console.log('delete comment', id);
-	};
-
 	return (
 		<div className='post-preview'>
 			{post.content.map((block, index) =>
 				renderPostContent(block, index.toString())
 			)}
 
-			<Comments
+			<CommentsModal
 				isOpen={commentsOpen}
 				onClose={() => setCommentsOpen(false)}
 				comments={post.comments}
-				onSubmit={onSubmitComment}
-				onDelete={onDeleteComment}
+				onSubmit={comment => props.onAddComment(post.id, comment)}
+				onDelete={id => props.onDeleteComment(post.id, id)}
+				isPostAuthor={props.isOwnPost}
+				commentsDisabledForFriends={post.commentsDisabled}
 			/>
 
 			<Footer
@@ -74,6 +73,12 @@ export const PostPreview = (props: Props) => {
 				timestamp={post.createdTime}
 				onClickComment={() => setCommentsOpen(true)}
 				onClickLike={() => props.onClickLike(post.id, post.isLikedByUser)}
+				onDelete={() => props.onDeletePost(post.id)}
+				isOwnPost={props.isOwnPost}
+				commentsDisabled={props.post.commentsDisabled}
+				toggleDisableComments={() =>
+					props.toggleDisableComments(post.id, post.commentsDisabled)
+				}
 			/>
 		</div>
 	);

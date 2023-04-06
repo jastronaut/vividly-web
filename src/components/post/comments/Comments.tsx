@@ -1,21 +1,9 @@
 import { useState } from 'react';
-import {
-	Button,
-	Flex,
-	Modal,
-	Space,
-	Text,
-	Avatar,
-	Container,
-	Group,
-	Menu,
-	ActionIcon,
-} from '@mantine/core';
-import { IconDots, IconTrash } from '@tabler/icons-react';
+import { Button, Flex, Modal, Space, Text } from '@mantine/core';
 
-import { Comment } from '@/types/post';
-
+import { Comment as CommentType } from '@/types/post';
 import { DismissWarningModal } from '@/components/DismissWarningModal';
+import { Comment } from './Comment';
 
 import { AllComments, AddCommentContainer, CommentTextArea } from './styles';
 
@@ -31,45 +19,13 @@ const EmptyCommentsState = () => {
 	);
 };
 
-type CommentProps = {
-	onDelete: () => void;
-} & Comment;
-
-const Comment = (props: CommentProps) => {
+const DisabledCommentsState = () => {
 	return (
 		<>
-			<Group style={{ alignItems: 'start' }}>
-				<Avatar src={props.author.avatarSrc} size='sm' radius='xl' />
-				<div style={{ flexGrow: 1 }}>
-					<Flex>
-						<Text fw={700}>{props.author.name}</Text>
-						<Text c='dimmed' style={{ marginLeft: '5px' }}>
-							{` @`}
-							{props.author.username}
-						</Text>
-					</Flex>
-					<Text>{props.content}</Text>
-				</div>
-				<div style={{ justifySelf: 'flex-end' }}>
-					<Menu position='bottom-end'>
-						<Menu.Target>
-							<ActionIcon>
-								<IconDots size={14} />
-							</ActionIcon>
-						</Menu.Target>
-						<Menu.Dropdown>
-							<Menu.Item
-								color='red'
-								icon={<IconTrash size={14} />}
-								onClick={props.onDelete}
-							>
-								Delete comment
-							</Menu.Item>
-						</Menu.Dropdown>
-					</Menu>
-				</div>
-			</Group>
-
+			<Space h='sm' />
+			<Text c='dimmed' style={{ textAlign: 'center' }}>
+				New comments on this post are limited.
+			</Text>
 			<Space h='sm' />
 		</>
 	);
@@ -78,12 +34,14 @@ const Comment = (props: CommentProps) => {
 type Props = {
 	isOpen: boolean;
 	onClose: () => void;
-	comments: Comment[];
+	comments: CommentType[];
 	onSubmit: (comment: string) => void;
 	onDelete: (id: string) => void;
+	isPostAuthor: boolean;
+	commentsDisabledForFriends: boolean;
 };
 
-export const Comments = (props: Props) => {
+export const CommentsModal = (props: Props) => {
 	const [isWarningModalOpen, setIsWarningModalOpen] = useState(false);
 	const [draft, setDraft] = useState('');
 
@@ -125,9 +83,11 @@ export const Comments = (props: Props) => {
 						key={comment.id}
 						{...comment}
 						onDelete={() => props.onDelete(comment.id)}
+						onClickLink={props.onClose}
 					/>
 				))}
 				{props.comments.length === 0 && <EmptyCommentsState />}
+				{props.commentsDisabledForFriends && <DisabledCommentsState />}
 			</AllComments>
 			<AddCommentContainer>
 				<form
@@ -142,7 +102,9 @@ export const Comments = (props: Props) => {
 						autoFocus
 						data-autofocus
 						value={draft}
+						maxLength={500}
 						onChange={e => setDraft(e.currentTarget.value)}
+						disabled={!props.isPostAuthor && props.commentsDisabledForFriends}
 					/>
 					<Flex justify='flex-end'>
 						<Button radius='xl' color='grape' type='submit'>

@@ -1,7 +1,15 @@
+import React from 'react';
 import styled, { useTheme } from 'styled-components';
 import { rem } from 'polished';
-import { IconHeart, IconMessageCircle2 } from '@tabler/icons-react';
-import { Group, Button, Text } from '@mantine/core';
+import {
+	IconHeart,
+	IconMessageCircle2,
+	IconDots,
+	IconTrash,
+	IconBan,
+	IconMessageCircleOff,
+} from '@tabler/icons-react';
+import { Group, Button, Text, Menu, ActionIcon } from '@mantine/core';
 
 import { getPostTime } from '../utils/time';
 
@@ -25,6 +33,10 @@ export type FooterProps = {
 	commentCount: number;
 	onClickComment: () => void;
 	timestamp: number;
+	onDelete: () => void;
+	isOwnPost: boolean;
+	commentsDisabled: boolean;
+	toggleDisableComments: () => void;
 };
 
 export const Footer = (props: FooterProps) => {
@@ -55,7 +67,11 @@ export const Footer = (props: FooterProps) => {
 					radius='lg'
 					size='sm'
 					leftIcon={
-						<IconMessageCircle2 color={theme.text.lightest} size={18} />
+						props.commentsDisabled ? (
+							<IconMessageCircleOff color={theme.text.lightest} size={18} />
+						) : (
+							<IconMessageCircle2 color={theme.text.lightest} size={18} />
+						)
 					}
 					title='Comment on post'
 					onClick={props.onClickComment}
@@ -64,6 +80,32 @@ export const Footer = (props: FooterProps) => {
 				</Button>
 				<Text>—</Text>
 				<Text>{getPostTime(props.timestamp)}</Text>
+				{props.isOwnPost && (
+					<Menu withArrow offset={0}>
+						<Menu.Target>
+							<ActionIcon>
+								<IconDots size={14} />
+							</ActionIcon>
+						</Menu.Target>
+						<Menu.Dropdown>
+							<Menu.Item
+								color='red'
+								icon={<IconTrash size={14} />}
+								onClick={props.onDelete}
+							>
+								Delete post
+							</Menu.Item>
+							<Menu.Item
+								icon={<IconBan size={14} />}
+								onClick={props.toggleDisableComments}
+							>
+								{props.commentsDisabled
+									? 'Enable comments'
+									: 'Disable comments'}
+							</Menu.Item>
+						</Menu.Dropdown>
+					</Menu>
+				)}
 			</Group>
 		</Wrapper>
 	);
