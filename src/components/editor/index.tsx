@@ -8,13 +8,14 @@ import {
 import { Slate, Editable, withReact, ReactEditor } from 'slate-react';
 import * as linkify from 'linkifyjs';
 import dayjs from 'dayjs';
-
 import { Text, Modal, Button, Flex, Space, ActionIcon } from '@mantine/core';
+import { notifications } from '@mantine/notifications';
 import {
 	IconPhoto,
 	IconCalendar,
 	IconTemperature,
 	IconClockHour9,
+	IconX,
 } from '@tabler/icons-react';
 
 import { BlockType as EditorBlockType } from '../../types/editor';
@@ -29,7 +30,8 @@ import { OpenWeatherResponse } from '../../types/editor';
 
 const openWeatherKey =
 	process.env.REACT_APP_OPEN_WEATHER_API_KEY ||
-	process.env.OPEN_WEATHER_API_KEY;
+	process.env.OPEN_WEATHER_API_KEY ||
+	process.env.NEXT_PUBLIC_OPEN_WEATHER_API_KEY;
 
 const LinkBlock = (props: BaseElementProps) => {
 	const { attributes, children, element } = props;
@@ -152,7 +154,7 @@ const Editor = (props: EditorProps) => {
 	const finishAddingBlock = () => {
 		editor.insertNode({
 			type: EditorBlockType.TEXT,
-			children: [{ text: '' }],
+			children: [{ text: ' ' }],
 		});
 		editor.insertBreak();
 
@@ -245,13 +247,20 @@ const Editor = (props: EditorProps) => {
 						data: `${emoji} ${temp}º F`,
 						children: [{ text: '' }],
 					});
+					finishAddingBlock();
 				});
 		};
 
-		navigator.geolocation.getCurrentPosition(positionSuccess, e =>
-			console.error('Couldnt get location', e)
-		);
-		finishAddingBlock();
+		navigator.geolocation.getCurrentPosition(positionSuccess, e => {
+			console.error('Couldnt get location', e);
+			console.error('🟣 Vividly Error: ', e);
+			notifications.show({
+				title: 'Error',
+				message: 'Could not get location',
+				color: 'red',
+				icon: <IconX />,
+			});
+		});
 	};
 
 	useEffect(() => {
@@ -342,13 +351,23 @@ type EditorModalProps = {
 
 export const EditorModal = (props: EditorModalProps) => {
 	const [isWarningModalOpen, setIsWarningModalOpen] = useState(false);
-
 	const [draft, setDraft] = useState<ElementType[]>([]);
 
 	const tryDismissModal = () => {
-		if (isWarningModalOpen) {
+		if (isWarningModalOpen || draft.length === 0) {
+			props.onClose();
 			return;
 		}
+
+		if (
+			draft.length === 1 &&
+			draft[0].type === EditorBlockType.TEXT &&
+			draft[0].children[0].text === ''
+		) {
+			props.onClose();
+			return;
+		}
+
 		setIsWarningModalOpen(true);
 	};
 
