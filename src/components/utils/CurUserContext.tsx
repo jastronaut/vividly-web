@@ -1,11 +1,13 @@
 import { useLocalStorage } from '@mantine/hooks';
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useState, useCallback } from 'react';
 
-import { CurUser } from '@/types/user';
+import { CurUser, User } from '@/types/user';
+import { STORAGE_CUR_USER_KEY } from '@/constants';
 
 type CurUserContext = {
 	isLoading: boolean;
 	curUser: CurUser;
+	updateCurUser: (user: User) => void;
 };
 
 const CurUserContext = createContext<CurUserContext>({} as CurUserContext);
@@ -21,15 +23,30 @@ type Props = {
 export const CurUserProvider = ({ children }: Props) => {
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 	const [curUserData, setCurUserData] = useLocalStorage({
-		key: 'vividly.curUserData',
+		key: STORAGE_CUR_USER_KEY,
 		defaultValue: {} as CurUser,
 	});
+
+	const updateCurUser = useCallback(
+		async (user: User) => {
+			const newCurUser = {
+				...curUserData,
+				user: {
+					...curUserData.user,
+					...user,
+				},
+			};
+			setCurUserData(newCurUser);
+		},
+		[curUserData]
+	);
 
 	return (
 		<CurUserContext.Provider
 			value={{
 				isLoading,
 				curUser: curUserData,
+				updateCurUser,
 			}}
 		>
 			{children}

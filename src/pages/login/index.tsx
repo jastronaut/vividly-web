@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
 	Alert,
 	Stack,
@@ -9,7 +9,7 @@ import {
 	Text,
 } from '@mantine/core';
 
-import { STORAGE_TOKEN_KEY, STORAGE_USER_KEY } from '../../constants';
+import { STORAGE_CUR_USER_KEY } from '../../constants';
 
 enum LoginErrors {
 	OK = 'OK',
@@ -30,38 +30,53 @@ const LoginComponent = (props: LoginComponentProps) => {
 		<>
 			<Center style={{ height: '100vh' }}>
 				<Stack>
-					<Text>Log in to Vividly</Text>
-					<TextInput
-						onChange={e => props.setUsername(e.target.value)}
-						key='username'
-						type='text'
-						placeholder='username'
-						required
-					/>
-					<Space h='xs' />
-					<TextInput
-						onChange={e => props.setPassword(e.target.value)}
-						key='password'
-						type='password'
-						placeholder='password'
-						required
-					/>
+					<form
+						action=''
+						method='post'
+						onSubmit={e => {
+							e.preventDefault();
+							props.onClickSubmit();
+						}}
+					>
+						<Text style={{ textAlign: 'center' }}>Log in to Vividly</Text>
+						<Space h='md' />
+						<TextInput
+							onChange={e => props.setUsername(e.target.value)}
+							key='username'
+							type='text'
+							placeholder='username'
+							required
+						/>
+						<Space h='xs' />
+						<TextInput
+							onChange={e => props.setPassword(e.target.value)}
+							key='password'
+							type='password'
+							placeholder='password'
+							required
+						/>
 
-					{props.loginError !== LoginErrors.OK && (
-						<Alert color='red' title='❗️ Error' radius='lg' variant='outline'>
-							{props.loginError === LoginErrors.MISSING_CREDENTIALS
-								? 'Missing credentials'
-								: props.loginError === LoginErrors.INVALID_LOGIN
-								? 'Invalid login'
-								: 'Unknown error 😅'}
-						</Alert>
-					)}
-					<Space h='md' />
-					<Center>
-						<Button color='green' size='xs' onClick={props.onClickSubmit}>
-							Enter
-						</Button>
-					</Center>
+						{props.loginError !== LoginErrors.OK && (
+							<Alert
+								color='red'
+								title='❗️ Error'
+								radius='lg'
+								variant='outline'
+							>
+								{props.loginError === LoginErrors.MISSING_CREDENTIALS
+									? 'Missing credentials'
+									: props.loginError === LoginErrors.INVALID_LOGIN
+									? 'Invalid login'
+									: 'Unknown error 😅'}
+							</Alert>
+						)}
+						<Space h='md' />
+						<Center>
+							<Button color='violet' size='xs' type='submit'>
+								Enter
+							</Button>
+						</Center>
+					</form>
 				</Stack>
 			</Center>
 		</>
@@ -72,24 +87,21 @@ export default function Login() {
 	const [username, setUsername] = useState('');
 	const [password, setPassword] = useState('');
 	const [loginError, setLoginError] = useState(LoginErrors.OK);
+	const [isPageLoading, setIsPageLoading] = useState(true);
 
 	const onClickSubmit = async () => {
-		const res = await fetch('/login', {
+		const res = await fetch(`http://localhost:1337/v0/auth/login`, {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
 			},
-
 			body: JSON.stringify({
 				username: username,
 				password: password,
 			}),
-
-			credentials: 'include',
 		});
 
 		const data = await res.json();
-
 		if (data.error) {
 			if (data.error === 'invalid login') {
 				setLoginError(LoginErrors.INVALID_LOGIN);
@@ -98,30 +110,34 @@ export default function Login() {
 			} else {
 				setLoginError(LoginErrors.OTHER);
 			}
-			console.log(data.error);
 			return;
 		}
 
-		if (data.data && data.data.streams[0]) {
-			localStorage.setItem(STORAGE_TOKEN_KEY, data.data.streams[0].token);
-			localStorage.setItem(
-				STORAGE_USER_KEY,
-				JSON.stringify(data.data.streams[0])
-			);
-			window.location.href = '/feed';
-		}
-
-		console.log(data);
+		localStorage.setItem(STORAGE_CUR_USER_KEY, JSON.stringify(data));
+		window.location.href = '/profile/' + data.user.id;
 	};
+
+	useEffect(() => {
+		const storedUser = localStorage.getItem(STORAGE_CUR_USER_KEY);
+		if (storedUser) {
+			window.location.href = '/profile/' + JSON.parse(storedUser).user.id;
+		} else {
+			setIsPageLoading(false);
+		}
+	}, []);
 
 	return (
 		<>
-			<LoginComponent
-				setUsername={setUsername}
-				setPassword={setPassword}
-				onClickSubmit={onClickSubmit}
-				loginError={loginError}
-			/>
+			{isPageLoading ? (
+				<div>Loading...</div>
+			) : (
+				<LoginComponent
+					setUsername={setUsername}
+					setPassword={setPassword}
+					onClickSubmit={onClickSubmit}
+					loginError={loginError}
+				/>
+			)}
 		</>
 	);
 }
