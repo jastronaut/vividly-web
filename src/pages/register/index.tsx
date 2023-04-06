@@ -1,151 +1,262 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { TextInput, Center, Button, Space, Text, Tooltip } from '@mantine/core';
+import Link from 'next/link';
+
 import {
-	Alert,
-	Stack,
-	TextInput,
-	Center,
-	Button,
-	Space,
-	Text,
-	Container,
-} from '@mantine/core';
+	Background,
+	GlobalStyle,
+	StyledContainer,
+	RegisterContainer,
+} from './styles';
+import { STORAGE_CUR_USER_KEY } from '../../constants';
+import { CurUser } from '@/types/user';
+import { showAndLogErrorNotification } from '@/showerror';
 
-import { STORAGE_TOKEN_KEY, STORAGE_USER_KEY } from '../../constants';
+const usernameRegex = /^[a-zA-Z0-9_]+$/;
 
-enum RegisterErrors {
-	OK = 'OK',
-	EMAIL_TAKEN = 'EMAIL_TAKEN',
-	USERNAME_TAKEN = 'USERNAME_TAKEN',
-	MISSING_CREDENTIALS = 'MISSING_CREDENTIALS',
-	OTHER = 'OTHER',
-}
+export const RegisterSteps = () => {
+	const [username, setUsername] = useState('');
+	const [password, setPassword] = useState('');
+	const [email, setEmail] = useState('');
+	const [usernameError, setUsernameError] = useState<string | null>(null);
+	const [passwordError, setPasswordError] = useState<string | null>(null);
+	const [emailError, setEmailError] = useState<string | null>(null);
+	const [step, setStep] = useState(0);
 
-type RegisterComponentProps = {
-	setUsername: (username: string) => void;
-	setPassword: (password: string) => void;
-	setEmail: (password: string) => void;
-	onClickSubmit: () => void;
-	registerError: RegisterErrors;
-};
+	const checkUsername = () => {
+		// make sure username is valid
+		const len = username.length;
+		if (len < 3) {
+			return setUsernameError(
+				'Username is too short. Must be at least 3 characters.'
+			);
+		}
 
-export const RegisterComponent = (props: RegisterComponentProps) => {
+		if (len > 20) {
+			return setUsernameError(
+				'Username is too long. Must be at most 20 characters.'
+			);
+		}
+
+		if (!usernameRegex.test(username)) {
+			return setUsernameError(
+				'Username can only contain letters, numbers, and underscores.'
+			);
+		}
+
+		fetch(`http://localhost:1337/v0/users/username/exists/${username}`, {
+			method: 'GET',
+		})
+			.then(res => res.json())
+			.then(data => {
+				if (data.exists) {
+					setUsernameError('Username already taken.');
+				} else {
+					setStep(1);
+					setUsernameError(null);
+				}
+			});
+	};
+
+	const tryRegister = () => {
+		// check if email in use
+		fetch(`http://localhost:1337/v0/users/email/exists/${email}`, {
+			method: 'GET',
+		})
+			.then(res => res.json())
+			.then(data => {
+				if (data.exists) {
+					setEmailError('Email already in use.');
+				} else {
+					// register user
+					fetch('http://localhost:1337/v0/auth/register', {
+						method: 'POST',
+						headers: {
+							'Content-Type': 'application/json',
+						},
+						body: JSON.stringify({
+							username,
+							password,
+							email,
+						}),
+					})
+						.then(res => res.json())
+						.then(data => {
+							const user = data as CurUser;
+							localStorage.setItem(STORAGE_CUR_USER_KEY, JSON.stringify(user));
+						})
+						.catch(err => {
+							showAndLogErrorNotification(
+								`Couldn't register your account, please check your details and try again later!`,
+								err
+							);
+						});
+				}
+			})
+			.catch(err => {
+				showAndLogErrorNotification(`Email already in use.`, err);
+			});
+	};
+
+	useEffect(() => {
+		if (!username.length) {
+			return;
+		}
+
+		if (username.length > 20) {
+			setUsernameError('Username is too long. Must be at most 20 characters.');
+			return;
+		}
+
+		if (!usernameRegex.test(username)) {
+			setUsernameError(
+				'Username can only contain letters, numbers, and underscores.'
+			);
+		} else {
+			setUsernameError(null);
+		}
+	}, [username]);
+
+	useEffect(() => {
+		if (!password.length) {
+			return;
+		}
+
+		if (password.length < 6) {
+			setPasswordError('Password must be at least 6 characters.');
+		} else {
+			setPasswordError(null);
+		}
+	}, [password]);
+
 	return (
 		<>
-			<Container>
-				<Center style={{ height: '100vh' }}>
-					<Stack>
-						<Text>Join vividly</Text>
+			{step < 2 && (
+				<>
+					<Text>Join Vividly</Text>
+					<Space h='md' />
+					<Tooltip
+						label='Username can contain letters, numbers, and underscores'
+						position='bottom'
+						withArrow
+					>
 						<TextInput
-							onChange={e => props.setEmail(e.target.value)}
-							key='email'
-							type='text'
-							placeholder='email'
-							required
-						/>
-						<TextInput
-							onChange={e => props.setUsername(e.target.value)}
+							onChange={e => setUsername(e.target.value)}
 							key='username'
-							type='text'
+							type='username'
 							placeholder='username'
 							required
+							maxLength={20}
+							title='Username'
+							error={usernameError}
+							style={{
+								width: '200px',
+							}}
 						/>
-						<TextInput
-							onChange={e => props.setPassword(e.target.value)}
-							key='password'
-							type='password'
-							placeholder='password'
-							required
-						/>
+					</Tooltip>
+					<Space h='md' />
+					{step === 1 && (
+						<>
+							<TextInput
+								onChange={e => setEmail(e.target.value)}
+								key='email'
+								type='email'
+								placeholder='email'
+								required
+								title='Email'
+								error={emailError}
+								style={{
+									width: '200px',
+								}}
+							/>
+							<Space h='md' />
+							<Tooltip
+								label='Password must be at least 6 characters'
+								position='bottom'
+								withArrow
+							>
+								<TextInput
+									onChange={e => setPassword(e.target.value)}
+									key='password'
+									type='password'
+									placeholder='password'
+									required
+									title='Password'
+									error={passwordError}
+									minLength={6}
+									style={{
+										width: '200px',
+									}}
+								/>
+							</Tooltip>
+						</>
+					)}
 
-						{props.registerError !== RegisterErrors.OK && (
-							<Alert
-								color='red'
-								title='❗️ Error'
+					{step === 0 && (
+						<Center>
+							<Button
+								type='submit'
+								color='grape'
 								radius='lg'
+								onClick={checkUsername}
 								variant='outline'
 							>
-								{props.registerError === RegisterErrors.EMAIL_TAKEN
-									? 'Email already taken'
-									: props.registerError === RegisterErrors.USERNAME_TAKEN
-									? 'Username already taken'
-									: props.registerError === RegisterErrors.MISSING_CREDENTIALS
-									? 'Missing credentials'
-									: 'Unknown error 😅'}
-							</Alert>
-						)}
-
-						<Space h='md' />
-						<Center>
-							<Button color='green' size='xs' onClick={props.onClickSubmit}>
-								Create account
+								Next
 							</Button>
 						</Center>
-					</Stack>
-				</Center>
-			</Container>
+					)}
+					{step === 1 && (
+						<>
+							<Space h='md' />
+							<Center>
+								<Button
+									type='submit'
+									color='grape'
+									radius='lg'
+									onClick={tryRegister}
+								>
+									Join
+								</Button>
+							</Center>
+						</>
+					)}
+				</>
+			)}
+			{step === 2 && (
+				<>
+					<Text fw={700}>Thanks for joining Vividly!</Text>
+					<Text>{`We've sent an email to ${email} to verify your account.`}</Text>
+					<Space h='sm' />
+					<Link href='/feed'>
+						<Button
+							variant='gradient'
+							gradient={{ from: '#ed6ea0', to: '#ec8c69', deg: 35 }}
+							radius='lg'
+						>{`Let's go!`}</Button>
+					</Link>
+				</>
+			)}
 		</>
 	);
 };
 
 export default function Register() {
-	const [username, setUsername] = useState('');
-	const [password, setPassword] = useState('');
-	const [email, setEmail] = useState('');
-	const [error, setError] = useState<RegisterErrors>(RegisterErrors.OK);
-
-	const onClickSubmit = async () => {
-		const res = await fetch('/register', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-
-			body: JSON.stringify({
-				username: username,
-				password: password,
-				email: email,
-			}),
-
-			credentials: 'include',
-		});
-
-		const data = await res.json();
-
-		if (data.error) {
-			if (data.error === 'EMAIL_TAKEN') {
-				setError(RegisterErrors.EMAIL_TAKEN);
-			} else if (data.error === 'USERNAME_TAKEN') {
-				setError(RegisterErrors.USERNAME_TAKEN);
-			} else if (data.error === 'MISSING_CREDENTIALS') {
-				setError(RegisterErrors.MISSING_CREDENTIALS);
-			} else {
-				setError(RegisterErrors.OTHER);
-			}
-			console.log(data.error);
-			return;
-		}
-
-		if (data.data && data.data.streams[0]) {
-			localStorage.setItem(STORAGE_TOKEN_KEY, data.data.streams[0].token);
-			localStorage.setItem(
-				STORAGE_USER_KEY,
-				JSON.stringify(data.data.streams[0])
-			);
-			window.location.href = '/feed';
-		}
-
-		console.log(data);
-	};
-
 	return (
-		<>
-			<RegisterComponent
-				setUsername={setUsername}
-				setPassword={setPassword}
-				setEmail={setEmail}
-				onClickSubmit={onClickSubmit}
-				registerError={error}
-			/>
-		</>
+		<div>
+			<GlobalStyle />
+			<Background>
+				<form
+					style={{ height: '100vh' }}
+					onSubmit={e => e.preventDefault()}
+					method=''
+				>
+					<RegisterContainer>
+						<StyledContainer>
+							<RegisterSteps />
+						</StyledContainer>
+					</RegisterContainer>
+				</form>
+			</Background>
+		</div>
 	);
 }

@@ -7,7 +7,7 @@ import { GlobalStyle } from './GlobalStyle';
 
 const baseTheme = {
 	link: '#00A7FD',
-	accent: '#fe4f72',
+	accent: '#be4bdb',
 	green: '#1bb76e',
 };
 
@@ -70,21 +70,6 @@ export const VividlyThemeProvider = (props: {
 				withNormalizeCSS
 				theme={{
 					colorScheme: props.theme.name === 'light' ? 'light' : 'dark',
-					colors: {
-						pink: [
-							'#ffe3ea',
-							'#ffb1c2',
-							'#ff7f99',
-							'#fe4e71',
-							'#fd1e48',
-							'#e30730',
-							'#b10124',
-							'#80001a',
-							'#4e000f',
-							'#1f0004',
-						],
-					},
-					primaryColor: 'pink',
 					fontFamily: 'Lato, sans-serif',
 					headings: { fontFamily: 'Montserrat, sans-serif' },
 					white: LightThemeAdditions.background.primary,
