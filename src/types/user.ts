@@ -29,3 +29,9 @@ export type FriendRequest = {
 	createdTime: string;
 	user: User;
 };
+
+export type FriendshipInfo = {
+	isFavorite: boolean;
+	lastReadPostId: string;
+	lastReadPostTime: string;
+};

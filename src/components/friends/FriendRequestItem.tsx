@@ -1,53 +1,14 @@
-import {
-	ActionIcon,
-	Flex,
-	Avatar,
-	Container,
-	Text,
-	Group,
-	Skeleton,
-} from '@mantine/core';
+import { ActionIcon, Flex, Avatar, Text, Skeleton } from '@mantine/core';
 import { IconCheck, IconX, IconBan } from '@tabler/icons-react';
-import styled from 'styled-components';
-import { rem } from 'polished';
 
+import {
+	Wrapper,
+	TextContainer,
+	ActionsContainer,
+	LeftContent,
+} from './styles';
 import { DEFAULT_AVATAR } from '@/constants';
 import { User } from '@/types/user';
-
-const FriendRequestTextContainer = styled.div`
-	padding-left: ${rem(16)};
-`;
-
-const Wrapper = styled.div<{ withHover?: boolean }>`
-	padding: ${rem(16)} ${rem(24)};
-	border-bottom: 1px solid ${props => props.theme.background.secondary};
-
-	${props =>
-		props.withHover &&
-		`
-	:hover {
-		background: ${props.theme.background.secondary};
-	}	`}
-
-	@media screen and (max-width: 800px) {
-		padding: ${rem(16)} ${rem(16)};
-	}
-`;
-
-const ActionsContainer = styled(Group)`
-	/* align-self: flex-start; */
-	@media screen and (max-width: 800px) {
-		padding-top: ${rem(8)};
-		padding-left: ${rem(52)};
-	}
-`;
-
-const LeftContent = styled(Flex)`
-	max-width: 80%;
-	@media screen and (max-width: 800px) {
-		max-width: 100%;
-	}
-`;
 
 export type Props = {
 	user: User;
@@ -68,11 +29,11 @@ export const FriendRequestItem = (props: Props) => {
 						radius='xl'
 						style={{ alignSelf: 'flex-start' }}
 					/>
-					<FriendRequestTextContainer>
+					<TextContainer>
 						<Text fw={700}>{name}</Text>
 						<Text c='dimmed'>@{username}</Text>
 						<Text>{bio}</Text>
-					</FriendRequestTextContainer>
+					</TextContainer>
 				</LeftContent>
 				<ActionsContainer spacing={'xs'}>
 					{onClickAccept && (
