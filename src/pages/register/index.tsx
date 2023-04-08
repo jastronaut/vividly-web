@@ -7,7 +7,7 @@ import {
 	GlobalStyle,
 	StyledContainer,
 	RegisterContainer,
-} from './styles';
+} from './components/styles';
 import { STORAGE_CUR_USER_KEY, uri } from '../../constants';
 import { CurUser } from '@/types/user';
 import { showAndLogErrorNotification } from '@/showerror';
