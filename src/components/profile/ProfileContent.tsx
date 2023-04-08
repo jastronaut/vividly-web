@@ -32,20 +32,24 @@ export const ProfileContent = (props: ProfileContentProps) => {
 		<div>
 			<ProfileHeaderComponent isLoading={props.isUserLoading} {...props.user} />
 			{props.children}
-			{feed.map((posts, index) =>
-				posts.data.map(post => (
-					<PostPreview
-						key={post.id}
-						post={post}
-						onClickLike={(id, isLiked) => props.onClickLike(id, isLiked, index)}
-						onAddComment={props.onAddComment}
-						onDeleteComment={props.onDeleteComment}
-						onDeletePost={props.onDeletePost}
-						isOwnPost={curUser.user.id === props.user?.id}
-						toggleDisableComments={props.toggleDisableComments}
-					/>
-				))
-			)}
+			{feed.map((posts, index) => {
+				if (posts.data)
+					return posts.data.map(post => (
+						<PostPreview
+							key={post.id}
+							post={post}
+							onClickLike={(id, isLiked) =>
+								props.onClickLike(id, isLiked, index)
+							}
+							onAddComment={props.onAddComment}
+							onDeleteComment={props.onDeleteComment}
+							onDeletePost={props.onDeletePost}
+							isOwnPost={curUser.user.id === props.user?.id}
+							toggleDisableComments={props.toggleDisableComments}
+						/>
+					));
+				return null;
+			})}
 			{/*props.posts.map(post => (
 				<PostPreview
 					key={post.id}
