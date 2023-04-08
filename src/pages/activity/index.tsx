@@ -1,4 +1,4 @@
-import { TabsWrapper, Tabs } from './components/_style';
+import { TabsWrapper, Tabs } from '../../components/activity/_style';
 
 const ActivityComponent = () => {
 	return (
