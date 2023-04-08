@@ -21,7 +21,7 @@ export const LightThemeAdditions = {
 	background: {
 		primary: '#ffffff',
 		secondary: '#E7E8EC',
-		hover: '#cacaca90',
+		hover: '#f8f9fa',
 		accented: '#FCF0E7',
 	},
 	border: {
@@ -74,6 +74,7 @@ export const VividlyThemeProvider = (props: {
 					headings: { fontFamily: 'Montserrat, sans-serif' },
 					white: LightThemeAdditions.background.primary,
 					black: darkThemeAdditions.background.primary,
+					primaryColor: 'grape',
 				}}
 			>
 				<ThemeProvider theme={props.theme}>

@@ -15,7 +15,7 @@ import {
 	LoadingItem,
 } from '@/components/friends/FriendRequestItem';
 import { TabsWrapper } from './_style';
-import AppShellLayout from '@/components/AppShellLayout';
+import AppShellLayout from '@/components/layout/AppShellLayout';
 
 const EmptyTab = () => {
 	return (

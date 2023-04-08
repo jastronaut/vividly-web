@@ -5,7 +5,7 @@ import { SWRConfig } from 'swr';
 
 import { fetcher } from '../utils';
 
-import { Layout } from '../components/Layout';
+import { Layout } from '../components/layout/Layout';
 
 export type Page<P = unknown> = NextPage<P> & {
 	getLayout?: (page: React.ReactNode) => React.ReactNode;

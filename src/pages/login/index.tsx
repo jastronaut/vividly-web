@@ -9,7 +9,7 @@ import {
 	Text,
 } from '@mantine/core';
 
-import { STORAGE_CUR_USER_KEY } from '../../constants';
+import { STORAGE_CUR_USER_KEY, uri } from '../../constants';
 
 enum LoginErrors {
 	OK = 'OK',
@@ -90,7 +90,7 @@ export default function Login() {
 	const [isPageLoading, setIsPageLoading] = useState(true);
 
 	const onClickSubmit = async () => {
-		const res = await fetch(`http://localhost:1337/v0/auth/login`, {
+		const res = await fetch(`${uri}auth/login`, {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
@@ -120,7 +120,12 @@ export default function Login() {
 	useEffect(() => {
 		const storedUser = localStorage.getItem(STORAGE_CUR_USER_KEY);
 		if (storedUser) {
-			window.location.href = '/profile/' + JSON.parse(storedUser).user.id;
+			const parsedCurUser = JSON.parse(storedUser);
+			if (parsedCurUser.token && parsedCurUser.user) {
+				window.location.href = '/profile/' + parsedCurUser.user.id;
+			} else {
+				setIsPageLoading(false);
+			}
 		} else {
 			setIsPageLoading(false);
 		}

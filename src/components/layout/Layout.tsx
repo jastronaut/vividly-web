@@ -1,5 +1,9 @@
 import styled from 'styled-components';
-import { VividlyThemeProvider, lightTheme } from '../styles/Theme';
+import {
+	VividlyThemeProvider,
+	lightTheme,
+	darkTheme,
+} from '../../styles/Theme';
 
 type Props = {
 	children: React.ReactNode;

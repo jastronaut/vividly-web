@@ -8,7 +8,7 @@ import {
 	StyledContainer,
 	RegisterContainer,
 } from './styles';
-import { STORAGE_CUR_USER_KEY } from '../../constants';
+import { STORAGE_CUR_USER_KEY, uri } from '../../constants';
 import { CurUser } from '@/types/user';
 import { showAndLogErrorNotification } from '@/showerror';
 
@@ -44,7 +44,7 @@ export const RegisterSteps = () => {
 			);
 		}
 
-		fetch(`http://localhost:1337/v0/users/username/exists/${username}`, {
+		fetch(`${uri}users/username/exists/${username}`, {
 			method: 'GET',
 		})
 			.then(res => res.json())
@@ -59,8 +59,27 @@ export const RegisterSteps = () => {
 	};
 
 	const tryRegister = () => {
+		setEmailError(null);
+		setPasswordError(null);
+		setUsernameError(null);
+
+		if (!email.length) {
+			setEmailError('Email is required.');
+			return;
+		}
+
+		if (!password.length) {
+			setPasswordError('Password is required.');
+			return;
+		}
+
+		if (!username.length) {
+			setUsernameError('Username is required.');
+			return;
+		}
+
 		// check if email in use
-		fetch(`http://localhost:1337/v0/users/email/exists/${email}`, {
+		fetch(`${uri}users/email/exists/${email}`, {
 			method: 'GET',
 		})
 			.then(res => res.json())
@@ -69,7 +88,7 @@ export const RegisterSteps = () => {
 					setEmailError('Email already in use.');
 				} else {
 					// register user
-					fetch('http://localhost:1337/v0/auth/register', {
+					fetch(uri + '/auth/register', {
 						method: 'POST',
 						headers: {
 							'Content-Type': 'application/json',
