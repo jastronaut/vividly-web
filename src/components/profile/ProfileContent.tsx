@@ -1,68 +1,56 @@
-import { Text, Center, Container, Stack, Button } from '@mantine/core';
-import { IconTrash } from '@tabler/icons-react';
+import { Button } from '@mantine/core';
 
+import { UserResponse, FeedResponse as Feed } from '@/types/api';
 import { User } from '@/types/user';
-import { Post } from '@/types/post';
-import { FeedResponse as Feed } from '@/types/api';
 import { useCurUserContext } from '@/components/utils/CurUserContext';
 
-import { ProfileHeaderComponent } from './header';
+import { ProfileHeaderComponent } from './header/header';
 import { PostPreview } from './PostPreview';
 
 type ProfileContentProps = {
-	user?: User;
+	user?: UserResponse;
 	isUserLoading: boolean;
-	posts: Post[];
 	feed?: Feed[];
 	isPostsLoading: boolean;
-	onClickLike: (id: string, isLiked: boolean, pageIndex: number) => void;
-	onAddComment: (postId: string, comment: string) => void;
-	onDeleteComment: (postId: string, commentId: string) => void;
-	onDeletePost: (id: string) => void;
+	onDeletePost: (id: string, pageIndex: number) => void;
 	children?: React.ReactNode;
-	toggleDisableComments: (id: string, isDisabled: boolean) => void;
 	hasMorePosts?: boolean;
 	onClickLoadMore?: () => void;
+	updateUserProfileInfo?: (user: User) => void;
 };
 
 export const ProfileContent = (props: ProfileContentProps) => {
 	const { curUser } = useCurUserContext();
+	const user = props.user;
 	const feed: Feed[] = props.feed || [];
+	const isLoggedInUser = !!user && curUser.user.id === user.user.id;
+	console.log('user', user);
+	console.log('curUser', curUser);
 	return (
 		<div>
-			<ProfileHeaderComponent isLoading={props.isUserLoading} {...props.user} />
+			<ProfileHeaderComponent
+				isLoading={props.isUserLoading}
+				isLoggedInUser={isLoggedInUser}
+				user={props.user}
+				updateUserProfileInfo={props.updateUserProfileInfo}
+			/>
 			{props.children}
-			{feed.map((posts, index) => {
-				if (posts.data)
-					return posts.data.map(post => (
-						<PostPreview
-							key={post.id}
-							post={post}
-							onClickLike={(id, isLiked) =>
-								props.onClickLike(id, isLiked, index)
-							}
-							onAddComment={props.onAddComment}
-							onDeleteComment={props.onDeleteComment}
-							onDeletePost={props.onDeletePost}
-							isOwnPost={curUser.user.id === props.user?.id}
-							toggleDisableComments={props.toggleDisableComments}
-						/>
-					));
-				return null;
-			})}
-			{/*props.posts.map(post => (
-				<PostPreview
-					key={post.id}
-					post={post}
-					onClickLike={props.onClickLike}
-					onAddComment={props.onAddComment}
-					onDeleteComment={props.onDeleteComment}
-					onDeletePost={props.onDeletePost}
-					isOwnPost={curUser.user.id === props.user?.id}
-					toggleDisableComments={props.toggleDisableComments}
-				/>
-			))*/}
-			{!props.isPostsLoading && (
+			{feed.map((posts, index) => (
+				<div key={`page-${index}-${posts.cursor}`}>
+					{posts.data
+						? posts.data.map(post => (
+								<PostPreview
+									key={post.id}
+									post={post}
+									onDeletePost={id => props.onDeletePost(id, index)}
+									isOwnPost={isLoggedInUser}
+								/>
+						  ))
+						: null}
+				</div>
+			))}
+
+			{!props.isPostsLoading && props.hasMorePosts && (
 				<Button onClick={props.onClickLoadMore}>Load More</Button>
 			)}
 			{props.isPostsLoading && <div>Loading...</div>}
