@@ -3,12 +3,13 @@ import { IconDots, IconTrash } from '@tabler/icons-react';
 import Link from 'next/link';
 
 import { Comment as CommentType } from '@/types/post';
-import { TextContainer } from '../../friends/styles';
+import { TextContainer } from '../../activity/requests/styles';
 import { MenuContainer, Wrapper } from './styles';
 
 type CommentProps = {
 	onDelete: () => void;
 	onClickLink: () => void;
+	canDelete: boolean;
 } & CommentType;
 
 export const Comment = (props: CommentProps) => {
@@ -37,24 +38,26 @@ export const Comment = (props: CommentProps) => {
 							<Text>{props.content}</Text>
 						</TextContainer>
 					</Flex>
-					<MenuContainer spacing={'xs'}>
-						<Menu position='bottom-end' withArrow offset={0}>
-							<Menu.Target>
-								<ActionIcon>
-									<IconDots size={14} />
-								</ActionIcon>
-							</Menu.Target>
-							<Menu.Dropdown>
-								<Menu.Item
-									color='red'
-									icon={<IconTrash size={14} />}
-									onClick={props.onDelete}
-								>
-									Delete comment
-								</Menu.Item>
-							</Menu.Dropdown>
-						</Menu>
-					</MenuContainer>
+					{props.canDelete && (
+						<MenuContainer spacing={'xs'}>
+							<Menu position='bottom-end' withArrow offset={0}>
+								<Menu.Target>
+									<ActionIcon>
+										<IconDots size={14} />
+									</ActionIcon>
+								</Menu.Target>
+								<Menu.Dropdown>
+									<Menu.Item
+										color='red'
+										icon={<IconTrash size={14} />}
+										onClick={props.onDelete}
+									>
+										Delete comment
+									</Menu.Item>
+								</Menu.Dropdown>
+							</Menu>
+						</MenuContainer>
+					)}
 				</Flex>
 			</Wrapper>
 			<Space h='sm' />

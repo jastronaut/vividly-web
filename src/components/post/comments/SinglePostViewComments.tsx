@@ -1,6 +1,7 @@
 import { Divider } from '@mantine/core';
 import { Comment as CommentComponent } from './Comment';
 import { Comment } from '@/types/post';
+import { usePostContext } from '../PostContext';
 
 type Props = {
 	comments: Comment[];
@@ -10,6 +11,7 @@ type Props = {
 };
 export const SinglePostViewComments = (props: Props) => {
 	const { comments, curUserId, postAuthorId, commentAuthorId } = props;
+	const { deleteComment } = usePostContext();
 
 	return (
 		<>
@@ -18,7 +20,7 @@ export const SinglePostViewComments = (props: Props) => {
 					<CommentComponent
 						key={comment.id}
 						{...comment}
-						onDelete={() => {}}
+						onDelete={() => deleteComment(comment.id)}
 						onClickLink={() => {}}
 						canDelete={
 							postAuthorId === curUserId || commentAuthorId === curUserId

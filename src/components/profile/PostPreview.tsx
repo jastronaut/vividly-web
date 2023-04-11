@@ -1,11 +1,19 @@
-import { useState } from 'react';
-import { Post, BlockType, Block } from '@/types/post';
+import { useState, useCallback } from 'react';
+import { Post, BlockType, Block, Comment } from '@/types/post';
 
+import { showAndLogErrorNotification } from '@/showerror';
 import { Footer } from '@/components/post/Footer';
 import { ImageBlock } from '@/components/post/blocks/blocks';
 import { LinkBlockContent } from '@/components/post/blocks/LinkBlockContent';
 
-import { CommentsModal } from '@/components/post/comments/Comments';
+import { useCurUserContext } from '../utils/CurUserContext';
+import { CommentsModal } from '@/components/post/comments/CommentsModal';
+import { makeApiCall } from '@/utils';
+import {
+	LikesResponse,
+	NewCommentResponse,
+	DefaultResponse,
+} from '@/types/api';
 
 function renderPostContent(content: Block, key: string) {
 	switch (content.type) {
@@ -37,21 +45,113 @@ function renderPostContent(content: Block, key: string) {
 
 type Props = {
 	post: Post;
-	onClickLike: (id: string, isLiked: boolean) => void;
-	onAddComment: (id: string, comment: string) => void;
-	onDeleteComment: (id: string, commentId: string) => void;
 	onDeletePost: (id: string) => void;
 	isOwnPost: boolean;
-	toggleDisableComments: (id: string, isDisabled: boolean) => void;
 };
 
 export const PostPreview = (props: Props) => {
 	const { post } = props;
 	const [commentsOpen, setCommentsOpen] = useState(false);
-	const commentCount = post.comments.length;
+	const [comments, setComments] = useState(post.comments);
+	const [isLiked, setIsLiked] = useState(post.isLikedByUser);
+	const [likeCount, setLikeCount] = useState(post.likes);
+	const [likesLoading, setLikesLoading] = useState(false);
+	const [commentsDisabled, setCommentsDisabled] = useState(
+		post.commentsDisabled
+	);
+
+	const { curUser } = useCurUserContext();
+	const { token } = curUser;
+
+	const onClickLikeDebug = useCallback(async () => {
+		setLikesLoading(true);
+		try {
+			const resp = await makeApiCall<LikesResponse>({
+				uri: `/posts/${post.id}/${isLiked ? 'unlike' : 'like'}`,
+				method: 'POST',
+				token,
+			});
+
+			setIsLiked(!isLiked);
+			setLikeCount(resp.likes);
+		} catch (err) {
+			showAndLogErrorNotification(`Can't like post.id ${post.id}`, err);
+		}
+		setLikesLoading(false);
+	}, [isLiked, post.id, token]);
+
+	const onAddComment = useCallback(
+		async (comment: string) => {
+			try {
+				const resp = await makeApiCall<NewCommentResponse>({
+					uri: `/posts/${post.id}/comment`,
+					method: 'POST',
+					token,
+					body: {
+						content: comment,
+					},
+				});
+				const newComment = {
+					...resp.comment,
+					authorId: curUser.user.id,
+					author: {
+						id: curUser.user.id,
+						username: curUser.user.username,
+						name: curUser.user.name,
+						avatarSrc: curUser.user.avatarSrc,
+					},
+				};
+				setComments(comments => [...comments, newComment]);
+			} catch (err) {
+				showAndLogErrorNotification(
+					`Can't add comment to post.id=${post.id}`,
+					err
+				);
+			}
+		},
+		[post.id, curUser, token]
+	);
+
+	const onDeleteComment = useCallback(
+		async (id: string) => {
+			try {
+				const res = await makeApiCall<DefaultResponse>({
+					uri: `/posts/${post.id}/comment/${id}`,
+					method: 'DELETE',
+					token,
+				});
+				setComments(comments => comments.filter(comment => comment.id !== id));
+			} catch (err) {
+				showAndLogErrorNotification(
+					`Can't delete comment.id=${id} from post.id=${post.id}`,
+					err
+				);
+			}
+		},
+		[post.id, token]
+	);
+
+	const toggleDisableComments = useCallback(async () => {
+		try {
+			const resp = await makeApiCall<DefaultResponse>({
+				uri: `/posts/${post.id}/comments/${
+					commentsDisabled ? 'enable' : 'disable'
+				}`,
+				method: 'POST',
+				token,
+			});
+			if (resp.success) setCommentsDisabled(!commentsDisabled);
+			else throw new Error('Failed to disable/enable comments');
+		} catch (err) {
+			showAndLogErrorNotification(
+				`Can't disable/enable comments for post.id=${post.id}`,
+				err
+			);
+		}
+	}, [post.id, commentsDisabled, token]);
 
 	return (
-		<div className='post-preview'>
+		<div>
 			{post.content.map((block, index) =>
 				renderPostContent(block, index.toString())
 			)}
@@ -59,26 +159,24 @@ export const PostPreview = (props: Props) => {
 			<CommentsModal
 				isOpen={commentsOpen}
 				onClose={() => setCommentsOpen(false)}
-				comments={post.comments}
-				onSubmit={comment => props.onAddComment(post.id, comment)}
-				onDelete={id => props.onDeleteComment(post.id, id)}
+				comments={comments}
+				onSubmit={onAddComment}
+				onDelete={onDeleteComment}
 				isPostAuthor={props.isOwnPost}
-				commentsDisabledForFriends={post.commentsDisabled}
+				commentsDisabledForFriends={commentsDisabled}
 			/>
 
 			<Footer
-				isLiked={post.isLikedByUser}
-				likeCount={post.likes}
-				commentCount={commentCount}
+				commentCount={comments.length}
 				timestamp={post.createdTime}
 				onClickComment={() => setCommentsOpen(true)}
-				onClickLike={() => props.onClickLike(post.id, post.isLikedByUser)}
+				likeCount={likeCount}
+				isLiked={isLiked}
+				onClickLike={likesLoading ? () => null : onClickLikeDebug}
 				onDelete={() => props.onDeletePost(post.id)}
 				isOwnPost={props.isOwnPost}
-				commentsDisabled={props.post.commentsDisabled}
-				toggleDisableComments={() =>
-					props.toggleDisableComments(post.id, post.commentsDisabled)
-				}
+				commentsDisabled={commentsDisabled}
+				toggleDisableComments={toggleDisableComments}
 			/>
 		</div>
 	);

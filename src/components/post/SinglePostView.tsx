@@ -1,31 +1,35 @@
-import { Post } from '@/types/post';
+import { useRef } from 'react';
 import { Divider, Space, Affix } from '@mantine/core';
 import { rem } from 'polished';
 
 import { Content } from './Content';
-import { CurUser } from '@/types/user';
 import { Footer } from './Footer';
 import { NewCommentInput } from './comments/NewCommentInput';
 import { SinglePostViewComments } from './comments/SinglePostViewComments';
+import { usePostContext } from './PostContext';
+import { useCurUserContext } from '../utils/CurUserContext';
 
-type Props = {
-	post: Post;
-	curUser: CurUser;
-};
+export const SinglePostView = () => {
+	const { curUser } = useCurUserContext();
+	const { post, likePost, toggleDisableComments, addComment } =
+		usePostContext();
 
-export const SinglePostView = (props: Props) => {
-	const { post, curUser } = props;
+	const inputRef = useRef<HTMLTextAreaElement>(null);
+
+	const onClickCommentsButton = () => {
+		inputRef.current?.focus();
+	};
 
 	return (
 		<>
 			<Content blocks={post.content} postId={post.id} />
 			<Footer
-				onClickLike={() => {}}
-				onClickComment={() => {}}
+				onClickLike={likePost}
+				onClickComment={onClickCommentsButton}
 				onDelete={() => {}}
 				isLiked={post.isLikedByUser}
 				timestamp={post.createdTime}
-				toggleDisableComments={() => {}}
+				toggleDisableComments={toggleDisableComments}
 				commentsDisabled={post.commentsDisabled}
 				likeCount={post.likes}
 				commentCount={post.comments.length}
@@ -46,8 +50,9 @@ export const SinglePostView = (props: Props) => {
 				sx={{ padding: rem(16), zIndex: 50, width: '80%' }}
 			>
 				<NewCommentInput
-					onSubmit={() => {}}
-					disabled={post.commentsDisabled || curUser.user.id !== post.authorId}
+					onSubmit={addComment}
+					disabled={post.commentsDisabled && curUser.user.id !== post.authorId}
+					inputRef={inputRef}
 				/>
 			</Affix>
 		</>

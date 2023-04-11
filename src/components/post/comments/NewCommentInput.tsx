@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, RefObject } from 'react';
 import { Button, Flex } from '@mantine/core';
 
 import { AddCommentContainer, CommentTextArea } from './styles';
@@ -6,7 +6,9 @@ import { AddCommentContainer, CommentTextArea } from './styles';
 type Props = {
 	onSubmit: (comment: string) => void;
 	disabled?: boolean;
+	inputRef?: RefObject<HTMLTextAreaElement>;
 };
+
 export const NewCommentInput = (props: Props) => {
 	const { disabled = false } = props;
 	const [draft, setDraft] = useState<string>('');
@@ -27,6 +29,7 @@ export const NewCommentInput = (props: Props) => {
 					maxLength={500}
 					onChange={e => setDraft(e.currentTarget.value)}
 					disabled={disabled}
+					ref={props.inputRef}
 				/>
 				<Flex justify='flex-end'>
 					<Button radius='xl' color='grape' type='submit'>

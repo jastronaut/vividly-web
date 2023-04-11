@@ -9,6 +9,7 @@ import AppShellLayout from '@/components/layout/AppShellLayout';
 import { PostResponse } from '@/types/api';
 import { fetchWithToken } from '@/utils';
 import { SinglePostView } from '@/components/post/SinglePostView';
+import { PostProvider } from '@/components/post/PostContext';
 
 type PageProps = {
 	id: string;
@@ -29,7 +30,9 @@ const PostPage: Page<PageProps> = (props: PageProps) => {
 	return (
 		<AppShellLayout id={curUser?.user?.id}>
 			{data?.post && !isLoading ? (
-				<SinglePostView post={data.post} curUser={curUser} />
+				<PostProvider post={data.post} curUser={curUser}>
+					<SinglePostView />
+				</PostProvider>
 			) : (
 				'lol'
 			)}
