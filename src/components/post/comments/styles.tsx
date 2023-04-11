@@ -13,7 +13,6 @@ export const AllComments = styled.div`
 export const AddCommentContainer = styled.div`
 	padding-bottom: 0;
 	width: 100%;
-	background: ${props => props.theme.background.primary};
 	flex: 0 1 auto;
 `;
 

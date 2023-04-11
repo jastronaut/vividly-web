@@ -3,7 +3,6 @@ import {
 	AppShell,
 	Navbar,
 	Header,
-	Footer,
 	Group,
 	Text,
 	MediaQuery,
@@ -22,6 +21,7 @@ import {
 	IconInfoSquareRounded,
 	IconAddressBook,
 } from '@tabler/icons-react';
+import Link from 'next/link';
 
 const NavButton = styled.div`
 	padding: ${rem(8)} ${rem(16)};
@@ -40,6 +40,7 @@ const getRgba = (color: string, opacity: number, isDarkened: boolean) => {
 
 type Props = {
 	children: React.ReactNode;
+	id?: string;
 };
 
 const HeaderStyled = styled(Header)`
@@ -97,28 +98,28 @@ export default function AppShellLayout(props: Props) {
 					<Text>Application navbar</Text>
 					<Stack>
 						<Navbar.Section>
-							<NavButton>
-								<UnstyledButton>
+							<Link href={`/profile/${props.id}`}>
+								<NavButton>
 									<Group>
 										<ThemeIcon variant='light'>
 											<IconUser size={18} />
 										</ThemeIcon>
 										<Text>Profile</Text>
 									</Group>
-								</UnstyledButton>
-							</NavButton>
+								</NavButton>
+							</Link>
 						</Navbar.Section>
 						<Navbar.Section>
-							<NavButton>
-								<UnstyledButton>
+							<Link href={`/friends`}>
+								<NavButton>
 									<Group>
 										<ThemeIcon variant='light'>
 											<IconBellRinging size={18} />
 										</ThemeIcon>
 										<Text>Notifications</Text>
 									</Group>
-								</UnstyledButton>
-							</NavButton>
+								</NavButton>
+							</Link>
 						</Navbar.Section>
 						<Navbar.Section>
 							<NavButton>

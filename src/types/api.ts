@@ -19,3 +19,16 @@ export type FeedResponse = {
 	data: Post[];
 	cursor: string | null;
 };
+
+export type IMGBBResponse = {
+	data: {
+		id: string;
+		url: string;
+	};
+	success: boolean;
+};
+
+export type PostResponse = {
+	post: Post;
+	error?: string;
+};

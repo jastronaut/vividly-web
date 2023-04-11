@@ -236,15 +236,17 @@ const Friends = () => {
 const FriendsPage: Page = props => {
 	const { curUser, isLoading } = useCurUserContext();
 
-	return <>{!curUser.token ? <div>Loading</div> : <Friends />}</>;
+	return (
+		<>
+			<AppShellLayout id={curUser.user?.id || ''}>
+				{!curUser.token ? <div>Loading</div> : <Friends />}
+			</AppShellLayout>
+		</>
+	);
 };
 
 FriendsPage.getLayout = (page: React.ReactNode) => {
-	return (
-		<AppShellLayout>
-			<CurUserProvider>{page}</CurUserProvider>
-		</AppShellLayout>
-	);
+	return <CurUserProvider>{page}</CurUserProvider>;
 };
 
 export default FriendsPage;

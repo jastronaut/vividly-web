@@ -66,11 +66,16 @@ export type Post = {
 	id: string;
 	authorId: string;
 	createdTime: number;
-	updatedTime: number;
 	commentsDisabled: boolean;
 	content: Block[];
 	isUpdated: boolean;
 	likes: number;
 	comments: Comment[];
 	isLikedByUser: boolean;
+	author?: {
+		id: string;
+		name: string;
+		username: string;
+		avatarSrc: string;
+	};
 };

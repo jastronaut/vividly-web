@@ -29,19 +29,3 @@ export function renderPostContent(content: Block, key: string) {
 			return <p key={key}>Unknown block type</p>;
 	}
 }
-
-type Props = {
-	blocks: Block[];
-	postId: string;
-};
-
-export const Content = (props: Props) => {
-	const { blocks, postId } = props;
-	return (
-		<>
-			{blocks.map((block, index) =>
-				renderPostContent(block, `post-${postId}-${index}`)
-			)}
-		</>
-	);
-};
