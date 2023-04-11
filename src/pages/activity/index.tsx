@@ -1,35 +1,26 @@
-import { TabsWrapper, Tabs } from '../../components/activity/_style';
+import { FriendRequestTabs } from '@/components/activity/requests/FriendRequestTabs';
 
-const ActivityComponent = () => {
+import { Page } from '../_app';
+import {
+	CurUserProvider,
+	useCurUserContext,
+} from '@/components/utils/CurUserContext';
+import AppShellLayout from '@/components/layout/AppShellLayout';
+
+const FriendsPage: Page = props => {
+	const { curUser, isLoading } = useCurUserContext();
+
 	return (
-		<div>
-			ho
-			<TabsWrapper>
-				<Tabs defaultValue='comments' variant='pills' color='pink'>
-					<Tabs.List>
-						<Tabs.Tab value='comments'>Comments</Tabs.Tab>
-						<Tabs.Tab value='mentions'>Mentions</Tabs.Tab>
-						<Tabs.Tab value='likes'>Likes</Tabs.Tab>
-					</Tabs.List>
-					<Tabs.Panel value='comments' pt='xs'>
-						Comments
-					</Tabs.Panel>
-					<Tabs.Panel value='mentions' pt='xs'>
-						Mentions
-					</Tabs.Panel>
-					<Tabs.Panel value='likes' pt='xs'>
-						Likes
-					</Tabs.Panel>
-				</Tabs>
-			</TabsWrapper>
-		</div>
+		<>
+			<AppShellLayout id={curUser.user?.id || ''}>
+				{!curUser.token ? <div>Loading</div> : <FriendRequestTabs />}
+			</AppShellLayout>
+		</>
 	);
 };
 
-export default function Activity() {
-	return (
-		<>
-			<ActivityComponent />
-		</>
-	);
-}
+FriendsPage.getLayout = (page: React.ReactNode) => {
+	return <CurUserProvider>{page}</CurUserProvider>;
+};
+
+export default FriendsPage;

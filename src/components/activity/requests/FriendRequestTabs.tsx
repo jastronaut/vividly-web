@@ -1,21 +1,33 @@
-import { useEffect } from 'react';
+import { useEffect, useCallback } from 'react';
 import useSWR from 'swr';
-import { Tabs, Center, Badge, Text, Container } from '@mantine/core';
+import {
+	Tabs,
+	Center,
+	Badge,
+	Text,
+	Container,
+	Title,
+	Space,
+} from '@mantine/core';
+import { notifications } from '@mantine/notifications';
 
+import { AddFriendForm } from './AddFriendForm';
 import { FriendRequest } from '@/types/user';
 import { showAndLogErrorNotification } from '@/showerror';
-import { fetchWithToken } from '../../utils';
-import { Page } from '../_app';
-import {
-	CurUserProvider,
-	useCurUserContext,
-} from '@/components/utils/CurUserContext';
+import { fetchWithToken } from '@/utils';
+import { useCurUserContext } from '@/components/utils/CurUserContext';
 import {
 	FriendRequestItem,
 	LoadingItem,
-} from '@/components/friends/FriendRequestItem';
-import { TabsWrapper } from '../../components/friends/_style';
-import AppShellLayout from '@/components/layout/AppShellLayout';
+} from '@/components/activity/requests/FriendRequestItem';
+import { TabsWrapper } from './_style';
+import { makeApiCall } from '@/utils';
+import {
+	AcceptFriendRequestResponse,
+	DefaultResponse,
+	FriendRequestsResponse,
+	SendFriendRequestResponse,
+} from '@/types/api';
 
 const EmptyTab = () => {
 	return (
@@ -25,12 +37,7 @@ const EmptyTab = () => {
 	);
 };
 
-type FriendRequestsResponse = {
-	inbound: FriendRequest[];
-	outbound: FriendRequest[];
-};
-
-const Friends = () => {
+export const FriendRequestTabs = () => {
 	const { curUser } = useCurUserContext();
 	const { token } = curUser;
 	const {
@@ -48,17 +55,51 @@ const Friends = () => {
 	const outboundCount = data?.outbound.length;
 	const inboundCount = data?.inbound.length;
 
-	const onClickAccept = (id: string) => {
-		fetch(`http://localhost:1337/v0/friends/accept/${id}`, {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-				Authorization: `Bearer ${token}`,
-			},
-		})
-			.then(res => res.json())
-			.then(res => {
-				console.log(res);
+	const addFriendByUsername = useCallback(
+		async (username: string) => {
+			try {
+				const resp = await makeApiCall<SendFriendRequestResponse>({
+					uri: `/friends/add/${username}`,
+					method: 'POST',
+					token,
+				});
+
+				if (!resp.success) {
+					throw new Error(resp.error);
+				}
+
+				mutate(data => {
+					if (data) {
+						return {
+							...data,
+							outbound: [...data.outbound, resp.friendRequest],
+						};
+					}
+				});
+				notifications.show({
+					message: `Friend request sent to @${username}!`,
+					color: 'teal',
+				});
+			} catch (err) {
+				showAndLogErrorNotification(`Couldn't add friend`, err);
+			}
+		},
+		[token, mutate]
+	);
+
+	const onClickAccept = useCallback(
+		async (id: string) => {
+			try {
+				const resp = await makeApiCall<AcceptFriendRequestResponse>({
+					uri: `/friends/accept/${id}`,
+					method: 'POST',
+					token,
+				});
+
+				if (!resp.success) {
+					throw new Error(resp.error);
+				}
+
 				mutate(data => {
 					if (data) {
 						return {
@@ -71,22 +112,26 @@ const Friends = () => {
 
 					return data;
 				});
-			})
-			.catch(err => {
+			} catch (err) {
 				showAndLogErrorNotification(`Couldn't accept friend request`, err);
-			});
-	};
+			}
+		},
+		[token, mutate]
+	);
 
-	const onClickDecline = (id: string) => {
-		fetch(`http://localhost:1337/v0/friends/reject/${id}`, {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-				Authorization: `Bearer ${token}`,
-			},
-		})
-			.then(res => res.json())
-			.then(res => {
+	const onClickDecline = useCallback(
+		async (id: string) => {
+			try {
+				const resp = await makeApiCall<DefaultResponse>({
+					uri: `/friends/reject/${id}`,
+					method: 'POST',
+					token,
+				});
+
+				if (!resp.success) {
+					throw new Error(resp.error);
+				}
+
 				mutate(data => {
 					if (data) {
 						return {
@@ -99,22 +144,26 @@ const Friends = () => {
 
 					return data;
 				});
-			})
-			.catch(err => {
+			} catch (err) {
 				showAndLogErrorNotification(`Couldn't decline friend request`, err);
-			});
-	};
+			}
+		},
+		[token, mutate]
+	);
 
-	const onClickBlock = (id: string, isInbound: boolean) => {
-		fetch(`http://localhost:1337/v0/block/${id}`, {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-				Authorization: `Bearer ${token}`,
-			},
-		})
-			.then(res => res.json())
-			.then(res => {
+	const onClickBlock = useCallback(
+		async (id: string, isInbound: boolean) => {
+			try {
+				const resp = await makeApiCall<DefaultResponse>({
+					uri: `/block/${id}`,
+					method: 'POST',
+					token,
+				});
+
+				if (!resp.success) {
+					throw new Error(resp.error);
+				}
+
 				mutate(data => {
 					if (data) {
 						return {
@@ -124,7 +173,6 @@ const Friends = () => {
 										(req: FriendRequest) => req.user.id !== id
 								  )
 								: data.inbound,
-
 							outbound: !isInbound
 								? data.outbound.filter(
 										(req: FriendRequest) => req.user.id !== id
@@ -135,11 +183,12 @@ const Friends = () => {
 
 					return data;
 				});
-			})
-			.catch(err => {
+			} catch (err) {
 				showAndLogErrorNotification(`Couldn't block user`, err);
-			});
-	};
+			}
+		},
+		[token, mutate]
+	);
 
 	useEffect(() => {
 		if (loadFriendsError) {
@@ -154,6 +203,8 @@ const Friends = () => {
 		<>
 			<Center>
 				<TabsWrapper>
+					<Title order={3}>Friend Requests</Title>
+					<Space h='xs' />
 					<Tabs defaultValue='received' color='grape'>
 						<Tabs.List>
 							<Tabs.Tab
@@ -227,26 +278,10 @@ const Friends = () => {
 							{!isLoading && !outboundCount && <EmptyTab />}
 						</Tabs.Panel>
 					</Tabs>
+					<Space h='lg' />
+					<AddFriendForm onSubmit={addFriendByUsername} />
 				</TabsWrapper>
 			</Center>
 		</>
 	);
 };
-
-const FriendsPage: Page = props => {
-	const { curUser, isLoading } = useCurUserContext();
-
-	return (
-		<>
-			<AppShellLayout id={curUser.user?.id || ''}>
-				{!curUser.token ? <div>Loading</div> : <Friends />}
-			</AppShellLayout>
-		</>
-	);
-};
-
-FriendsPage.getLayout = (page: React.ReactNode) => {
-	return <CurUserProvider>{page}</CurUserProvider>;
-};
-
-export default FriendsPage;

@@ -75,6 +75,19 @@ export const VividlyThemeProvider = (props: {
 					white: LightThemeAdditions.background.primary,
 					black: darkThemeAdditions.background.primary,
 					primaryColor: 'grape',
+					components: {
+						Button: {
+							defaultProps: {
+								radius: 'lg',
+								color: 'grape',
+							},
+						},
+						TextInput: {
+							defaultProps: {
+								radius: 'md',
+							},
+						},
+					},
 				}}
 			>
 				<ThemeProvider theme={props.theme}>

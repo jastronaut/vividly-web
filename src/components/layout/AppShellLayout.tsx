@@ -110,13 +110,13 @@ export default function AppShellLayout(props: Props) {
 							</Link>
 						</Navbar.Section>
 						<Navbar.Section>
-							<Link href={`/friends`}>
+							<Link href={`/activity`}>
 								<NavButton>
 									<Group>
 										<ThemeIcon variant='light'>
 											<IconBellRinging size={18} />
 										</ThemeIcon>
-										<Text>Notifications</Text>
+										<Text>Activity</Text>
 									</Group>
 								</NavButton>
 							</Link>
