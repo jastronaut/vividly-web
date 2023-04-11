@@ -88,7 +88,7 @@ export const FriendRequestTabs = () => {
 	);
 
 	const onClickAccept = useCallback(
-		async (id: string) => {
+		async (id: number) => {
 			try {
 				const resp = await makeApiCall<AcceptFriendRequestResponse>({
 					uri: `/friends/accept/${id}`,
@@ -120,7 +120,7 @@ export const FriendRequestTabs = () => {
 	);
 
 	const onClickDecline = useCallback(
-		async (id: string) => {
+		async (id: number) => {
 			try {
 				const resp = await makeApiCall<DefaultResponse>({
 					uri: `/friends/reject/${id}`,
@@ -152,7 +152,7 @@ export const FriendRequestTabs = () => {
 	);
 
 	const onClickBlock = useCallback(
-		async (id: string, isInbound: boolean) => {
+		async (id: number, isInbound: boolean) => {
 			try {
 				const resp = await makeApiCall<DefaultResponse>({
 					uri: `/block/${id}`,

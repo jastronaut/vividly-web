@@ -5,9 +5,9 @@ import { usePostContext } from '../PostContext';
 
 type Props = {
 	comments: Comment[];
-	postAuthorId: string;
-	curUserId: string;
-	commentAuthorId: string;
+	postAuthorId: number;
+	curUserId: number;
+	commentAuthorId: number;
 };
 export const SinglePostViewComments = (props: Props) => {
 	const { comments, curUserId, postAuthorId, commentAuthorId } = props;

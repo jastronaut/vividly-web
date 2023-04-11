@@ -1,5 +1,6 @@
 import { User, FriendshipInfo, FriendRequest } from './user';
 import { Post } from './post';
+import { NotificationBody } from './notification';
 
 export type DefaultResponse = {
 	success: boolean;
@@ -14,15 +15,15 @@ export type UserResponse = {
 	user: User;
 	friendship: FriendshipInfo | null;
 	friendRequest: {
-		fromUserId: string;
-		toUserId: string;
+		fromUserId: number;
+		toUserId: number;
 	} | null;
 	isBlocked: boolean;
 };
 
 export type FeedResponse = {
 	data: Post[];
-	cursor: string | null;
+	cursor: number | null;
 };
 
 export type IMGBBResponse = {
@@ -40,8 +41,8 @@ export type PostResponse = {
 
 export interface NewCommentResponse extends DefaultResponse {
 	comment: {
-		id: string;
-		postId: string;
+		id: number;
+		postId: number;
 		createdTime: string;
 		content: string;
 	};
@@ -57,4 +58,14 @@ export interface AcceptFriendRequestResponse extends DefaultResponse {
 
 export interface SendFriendRequestResponse extends DefaultResponse {
 	friendRequest: FriendRequest;
+}
+
+export interface NotificationsResponse extends DefaultResponse {
+	notifications: {
+		id: number;
+		body: NotificationBody;
+		createdTime: string;
+		isUnread: boolean;
+		sender: User;
+	}[];
 }

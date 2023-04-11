@@ -1,5 +1,5 @@
 export type User = {
-	id: string;
+	id: number;
 	bio: string;
 	avatarSrc: string;
 	name: string;
@@ -18,14 +18,14 @@ export enum FriendType {
 }
 
 export type Friend = {
-	id: string;
+	id: number;
 	friendType: FriendType;
 	isFavorite: boolean;
 	user: User;
 };
 
 export type FriendRequest = {
-	id: string;
+	id: number;
 	createdTime: string;
 	user: User;
 };

@@ -45,7 +45,7 @@ function renderPostContent(content: Block, key: string) {
 
 type Props = {
 	post: Post;
-	onDeletePost: (id: string) => void;
+	onDeletePost: (id: number) => void;
 	isOwnPost: boolean;
 };
 
@@ -113,7 +113,7 @@ export const PostPreview = (props: Props) => {
 	);
 
 	const onDeleteComment = useCallback(
-		async (id: string) => {
+		async (id: number) => {
 			try {
 				const res = await makeApiCall<DefaultResponse>({
 					uri: `/posts/${post.id}/comment/${id}`,

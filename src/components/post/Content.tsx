@@ -32,7 +32,7 @@ export function renderPostContent(content: Block, key: string) {
 
 type Props = {
 	blocks: Block[];
-	postId: string;
+	postId: number;
 };
 
 export const Content = (props: Props) => {

@@ -12,7 +12,7 @@ type ProfileContentProps = {
 	isUserLoading: boolean;
 	feed?: Feed[];
 	isPostsLoading: boolean;
-	onDeletePost: (id: string, pageIndex: number) => void;
+	onDeletePost: (id: number, pageIndex: number) => void;
 	children?: React.ReactNode;
 	hasMorePosts?: boolean;
 	onClickLoadMore?: () => void;
@@ -24,8 +24,7 @@ export const ProfileContent = (props: ProfileContentProps) => {
 	const user = props.user;
 	const feed: Feed[] = props.feed || [];
 	const isLoggedInUser = !!user && curUser.user.id === user.user.id;
-	console.log('user', user);
-	console.log('curUser', curUser);
+
 	return (
 		<div>
 			<ProfileHeaderComponent

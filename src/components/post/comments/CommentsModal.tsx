@@ -38,7 +38,7 @@ type Props = {
 	onClose: () => void;
 	comments: CommentType[];
 	onSubmit: (comment: string) => void;
-	onDelete: (id: string) => void;
+	onDelete: (id: number) => void;
 	isPostAuthor: boolean;
 	commentsDisabledForFriends: boolean;
 };

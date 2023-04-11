@@ -1,6 +1,7 @@
 import { Text } from '@mantine/core';
 import React from 'react';
 import styled, { createGlobalStyle } from 'styled-components';
+import { rem } from 'polished';
 
 const Page = styled.div`
 	display: flex;
@@ -21,13 +22,13 @@ const Animations = createGlobalStyle`
 		}
 
 		to {
-		transform: translateY(2rem);
+		transform: translateY(${rem(16)});
 		}
 	}
 `;
 
 const LoadingIcon = styled.div`
-	font-size: 2rem;
+	font-size: ${rem(16)};
 	animation: 1s linear infinite alternate levitate;
 `;
 
@@ -57,9 +58,9 @@ export const Loading = () => (
 const MiniLoaderWrapper = styled.p`
 	display: inline;
 	display: inline-block;
-	margin: 0 1rem;
-	font-size: 1rem;
-	width: 1rem;
+	margin: 0 ${rem(16)};
+	font-size: ${rem(24)};
+	width: ${rem(16)};
 	animation: spin 1s ease-in-out 1s infinite running;
 `;
 

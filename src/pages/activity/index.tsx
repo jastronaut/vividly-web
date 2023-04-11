@@ -1,4 +1,5 @@
 import { FriendRequestTabs } from '@/components/activity/requests/FriendRequestTabs';
+import { NotificationTabs } from '@/components/activity/notifications/NotificationTabs';
 
 import { Page } from '../_app';
 import {
@@ -12,8 +13,15 @@ const FriendsPage: Page = props => {
 
 	return (
 		<>
-			<AppShellLayout id={curUser.user?.id || ''}>
-				{!curUser.token ? <div>Loading</div> : <FriendRequestTabs />}
+			<AppShellLayout id={curUser.user?.id}>
+				{!curUser.token ? (
+					<div>Loading</div>
+				) : (
+					<>
+						<FriendRequestTabs />
+						<NotificationTabs />
+					</>
+				)}
 			</AppShellLayout>
 		</>
 	);

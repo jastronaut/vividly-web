@@ -8,9 +8,10 @@ import {
 	StyledContainer,
 	RegisterContainer,
 } from '../../components/register/styles';
-import { STORAGE_CUR_USER_KEY, uri } from '../../constants';
+import { STORAGE_CUR_USER_KEY } from '../../constants';
 import { CurUser } from '@/types/user';
 import { showAndLogErrorNotification } from '@/showerror';
+import { makeApiCall } from '@/utils';
 
 const usernameRegex = /^[a-zA-Z0-9_]+$/;
 
@@ -22,6 +23,7 @@ export const RegisterSteps = () => {
 	const [passwordError, setPasswordError] = useState<string | null>(null);
 	const [emailError, setEmailError] = useState<string | null>(null);
 	const [step, setStep] = useState(0);
+	const [userId, setUserId] = useState<number | null>(null);
 
 	const checkUsername = () => {
 		// make sure username is valid
@@ -44,18 +46,21 @@ export const RegisterSteps = () => {
 			);
 		}
 
-		fetch(`${uri}users/username/exists/${username}`, {
-			method: 'GET',
-		})
-			.then(res => res.json())
-			.then(data => {
-				if (data.exists) {
-					setUsernameError('Username already taken.');
-				} else {
-					setStep(1);
-					setUsernameError(null);
-				}
+		const checkUsername = async () => {
+			const res = await makeApiCall<{ exists: boolean }>({
+				uri: `/users/username/exists/${username}`,
+				method: 'GET',
 			});
+
+			if (res.exists) {
+				setUsernameError('Username already taken.');
+			} else {
+				setStep(1);
+				setUsernameError(null);
+			}
+		};
+
+		checkUsername();
 	};
 
 	const tryRegister = () => {
@@ -78,43 +83,41 @@ export const RegisterSteps = () => {
 			return;
 		}
 
-		// check if email in use
-		fetch(`${uri}users/email/exists/${email}`, {
-			method: 'GET',
-		})
-			.then(res => res.json())
-			.then(data => {
-				if (data.exists) {
+		const checkEmailAndRegister = async () => {
+			try {
+				const res = await makeApiCall<{ exists: boolean }>({
+					uri: `/users/email/exists/${email}`,
+					method: 'GET',
+				});
+
+				if (res.exists) {
 					setEmailError('Email already in use.');
-				} else {
-					// register user
-					fetch(uri + '/auth/register', {
-						method: 'POST',
-						headers: {
-							'Content-Type': 'application/json',
-						},
-						body: JSON.stringify({
-							username,
-							password,
-							email,
-						}),
-					})
-						.then(res => res.json())
-						.then(data => {
-							const user = data as CurUser;
-							localStorage.setItem(STORAGE_CUR_USER_KEY, JSON.stringify(user));
-						})
-						.catch(err => {
-							showAndLogErrorNotification(
-								`Couldn't register your account, please check your details and try again later!`,
-								err
-							);
-						});
+					return;
 				}
-			})
-			.catch(err => {
-				showAndLogErrorNotification(`Email already in use.`, err);
-			});
+
+				setEmailError(null);
+
+				const user = await makeApiCall<CurUser>({
+					uri: '/auth/register',
+					method: 'POST',
+					body: {
+						username,
+						password,
+						email,
+					},
+				});
+
+				localStorage.setItem(STORAGE_CUR_USER_KEY, JSON.stringify(user));
+				setUserId(user.user.id);
+			} catch (err) {
+				showAndLogErrorNotification(
+					`Couldn't register your account, please check your details and try again later!`,
+					err
+				);
+			}
+		};
+
+		checkEmailAndRegister();
 	};
 
 	useEffect(() => {
@@ -147,6 +150,12 @@ export const RegisterSteps = () => {
 			setPasswordError(null);
 		}
 	}, [password]);
+
+	useEffect(() => {
+		if (userId !== null) {
+			window.location.href = '/profile/' + userId;
+		}
+	}, [userId]);
 
 	return (
 		<>

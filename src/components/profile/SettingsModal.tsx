@@ -9,7 +9,6 @@ import {
 	Space,
 	Avatar,
 	FileButton,
-	ActionIcon,
 } from '@mantine/core';
 import { IconPhotoPlus } from '@tabler/icons-react';
 
@@ -19,18 +18,22 @@ import { IMGBBResponse } from '@/types/api';
 import { useCurUserContext } from '@/components/utils/CurUserContext';
 import { showAndLogErrorNotification } from '@/showerror';
 
+import { MiniLoader } from '../utils/Loading';
+
 const ImageEditContainer = styled.div`
 	position: absolute;
 	top: 0;
-	height: 100%;
+	height: 150px;
 	width: 150px;
 	display: flex;
 	align-items: center;
 	justify-content: center;
-
-	button {
-		opacity: 0.8;
-	}
+	background-color: rgba(0, 0, 0, 0.5);
+	border-radius: 75px;
+	backdrop-filter: blur(6px);
+	-webkit-backdrop-filter: blur(6px);
+	-o-backdrop-filter: blur(6px);
+	-moz-backdrop-filter: blur(6px);
 `;
 
 function createImageUploadRequest(file: File) {
@@ -53,29 +56,35 @@ export const SettingsModal = (props: Props) => {
 	const [newAvatarSrc, setNewAvatarSrc] = useState('');
 	const [uploadingAvatar, setUploadingAvatar] = useState(false);
 
-	const uploadImage = async (file: File | null) => {
-		setUploadingAvatar(true);
+	const uploadImage = (file: File | null) => {
 		if (file === null || file.length < 1) {
 			return;
 		}
 
-		fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, {
-			method: 'POST',
-			headers: {
-				Accept: 'application/json',
-			},
-			body: createImageUploadRequest(file),
-		})
-			.then(res => res.json())
-			.then(res => {
-				const resData = res as IMGBBResponse;
+		const upload = async () => {
+			try {
+				setUploadingAvatar(true);
+				const res = await fetch(
+					`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`,
+					{
+						method: 'POST',
+						headers: {
+							Accept: 'application/json',
+						},
+						body: createImageUploadRequest(file),
+					}
+				);
+
+				const resData = await res.json();
 				if (!resData.success) throw new Error('Error uploading image to imgbb');
 				setNewAvatarSrc(resData.data.url);
-			})
-			.catch(err => {
-				showAndLogErrorNotification(err, 'Error uploading image');
-			});
-		setUploadingAvatar(false);
+			} catch (err) {
+				showAndLogErrorNotification('Error uploading image', err);
+			}
+			setUploadingAvatar(false);
+		};
+
+		upload();
 	};
 
 	useEffect(() => {
@@ -96,11 +105,13 @@ export const SettingsModal = (props: Props) => {
 					size={150}
 					radius={75}
 				/>
-				<ImageEditContainer>
-					<ActionIcon variant='filled' radius='xl' size='lg' title='Add photo'>
-						<IconPhotoPlus />
-					</ActionIcon>
-				</ImageEditContainer>
+
+				{uploadingAvatar && (
+					<ImageEditContainer>
+						<MiniLoader />
+					</ImageEditContainer>
+				)}
+
 				<FileButton
 					onChange={uploadImage}
 					accept='image/png,image/jpeg'

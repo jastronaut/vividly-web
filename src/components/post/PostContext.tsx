@@ -15,7 +15,7 @@ type PostContext = {
 	post: Post;
 	addComment: (comment: string) => void;
 	likePost: () => void;
-	deleteComment: (commentId: string) => void;
+	deleteComment: (commentId: number) => void;
 	toggleDisableComments: () => void;
 };
 
@@ -96,7 +96,7 @@ export const PostProvider = (props: Props) => {
 	);
 
 	const deleteComment = useCallback(
-		async (id: string) => {
+		async (id: number) => {
 			try {
 				const res = await makeApiCall<DefaultResponse>({
 					uri: `/posts/${post.id}/comment/${id}`,

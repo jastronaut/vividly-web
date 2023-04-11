@@ -40,7 +40,7 @@ const getRgba = (color: string, opacity: number, isDarkened: boolean) => {
 
 type Props = {
 	children: React.ReactNode;
-	id?: string;
+	id?: number;
 };
 
 const HeaderStyled = styled(Header)`
@@ -55,7 +55,6 @@ const HeaderStyled = styled(Header)`
 
 export default function AppShellLayout(props: Props) {
 	const theme = useMantineTheme();
-	console.log(theme.primaryColor);
 	const [opened, setOpened] = useState(false);
 	return (
 		<AppShell

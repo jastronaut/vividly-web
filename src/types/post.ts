@@ -1,11 +1,11 @@
 export type Comment = {
-	id: string;
-	authorId: string;
+	id: number;
+	authorId: number;
 	createdTime: string;
 	content: string;
-	postId: string;
+	postId: number;
 	author: {
-		id: string;
+		id: number;
 		name: string;
 		username: string;
 		avatarSrc: string;
@@ -63,8 +63,8 @@ export type LinkBlock = {
 export type Block = TextBlock | ImageBlock | MusicBlock | LinkBlock;
 
 export type Post = {
-	id: string;
-	authorId: string;
+	id: number;
+	authorId: number;
 	createdTime: number;
 	commentsDisabled: boolean;
 	content: Block[];
@@ -73,7 +73,7 @@ export type Post = {
 	comments: Comment[];
 	isLikedByUser: boolean;
 	author?: {
-		id: string;
+		id: number;
 		name: string;
 		username: string;
 		avatarSrc: string;

@@ -115,7 +115,7 @@ const Profile = (props: PageProps) => {
 			});
 	};
 
-	const onDeletePost = (postId: string, pageIndex: number) => {
+	const onDeletePost = (postId: number, pageIndex: number) => {
 		fetch(`http://localhost:1337/v0/posts/${postId}`, {
 			method: 'DELETE',
 			headers: {
@@ -163,9 +163,7 @@ const Profile = (props: PageProps) => {
 	);
 
 	useEffect(() => {
-		console.log('user changed');
 		if (user?.user.id === curUser.user.id) {
-			console.log('updated');
 			updateCurUser(user.user);
 		}
 	}, [user]);
