@@ -3,7 +3,7 @@ import { ComponentStory, ComponentMeta } from '@storybook/react';
 
 import { VividlyThemeProvider, lightTheme } from '../styles/Theme';
 import { Post } from '../components/Post';
-import { BlockType } from '../types';
+import { BlockType } from '@/types/post';
 
 export default {
 	title: 'Profile/Post',

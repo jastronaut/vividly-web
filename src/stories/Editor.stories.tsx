@@ -3,7 +3,7 @@ import { ComponentStory, ComponentMeta } from '@storybook/react';
 
 import Editor from '../components/editor';
 import { VividlyThemeProvider, lightTheme, darkTheme } from '../styles/Theme';
-import { BlockType } from '../types';
+import { BlockType } from '@/types/editor';
 
 export default {
 	title: 'Editor',
