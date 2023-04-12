@@ -30,8 +30,12 @@ export const FriendRequestItem = (props: Props) => {
 						style={{ alignSelf: 'flex-start' }}
 					/>
 					<TextContainer>
-						<Text fw={700}>{name}</Text>
-						<Text c='dimmed'>@{username}</Text>
+						<Text span fw={700}>
+							{name}
+						</Text>
+						<Text span c='dimmed'>
+							@{username}
+						</Text>
 						<Text>{bio}</Text>
 					</TextContainer>
 				</LeftContent>

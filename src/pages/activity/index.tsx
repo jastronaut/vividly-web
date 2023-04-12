@@ -18,8 +18,8 @@ const FriendsPage: Page = props => {
 					<div>Loading</div>
 				) : (
 					<>
-						<FriendRequestTabs />
 						<NotificationTabs />
+						<FriendRequestTabs />
 					</>
 				)}
 			</AppShellLayout>

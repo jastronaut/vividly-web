@@ -1,5 +1,7 @@
 import { Flex, Avatar, Text, Space } from '@mantine/core';
 import Link from 'next/link';
+import styled from 'styled-components';
+import { rem } from 'polished';
 
 import {
 	Notification,
@@ -9,6 +11,22 @@ import {
 
 import { Wrapper, TextContainer } from '../requests/styles';
 import { DEFAULT_AVATAR } from '@/constants';
+import { Block, BlockType } from '@/types/post';
+
+function getBlockPreview(block: Block) {
+	switch (block.type) {
+		case BlockType.TEXT:
+			return block.text;
+		case BlockType.IMAGE:
+			return 'Image';
+		case BlockType.LINK:
+			return block.url;
+		case BlockType.MUSIC:
+			return `🎧 ${block.music.title}`;
+		default:
+			return '';
+	}
+}
 
 function getNotificationActionMessage(notification: NotificationBody) {
 	switch (notification.type) {
@@ -26,13 +44,19 @@ function getNotificationActionMessage(notification: NotificationBody) {
 function getNotificationContentPreview(notification: NotificationBody) {
 	switch (notification.type) {
 		case NotificationType.POST_LIKE:
-			return 'post like';
 		case NotificationType.COMMENT:
-			return notification.message;
+			return getBlockPreview(notification.post.block);
 		default:
 			return '';
 	}
 }
+
+const WrapperStyled = styled(Wrapper)`
+	@media (max-width: 800px) {
+		padding: ${rem(10)};
+		min-width: ${rem(295)};
+	}
+`;
 
 interface Props {
 	notification: Notification;
@@ -59,7 +83,7 @@ export const NotificationItem = (props: Props) => {
 
 	return (
 		<Link href={link} style={{ color: 'unset' }}>
-			<Wrapper withHover>
+			<WrapperStyled withHover>
 				<Flex>
 					<Avatar
 						src={notification.sender.avatarSrc || DEFAULT_AVATAR}
@@ -67,18 +91,20 @@ export const NotificationItem = (props: Props) => {
 						style={{ alignSelf: 'flex-start' }}
 					/>
 					<TextContainer>
-						<Flex wrap='wrap'>
-							<Text fw={700}>{notification.sender.name}</Text>
-							<Space w='xs' />
-							<Text>
-								{` `}
-								{notificationActionMessage}
+						<Text>
+							<Text fw={700} component='span'>
+								{notification.sender.name}
 							</Text>
-						</Flex>
-						<Text>{notificationContentPreview}</Text>
+							{` `}
+							{notificationActionMessage}
+						</Text>
+						{notification.body.type === NotificationType.COMMENT && (
+							<Text>{notification.body.message}</Text>
+						)}
+						<Text c='dimmed'>{notificationContentPreview}</Text>
 					</TextContainer>
 				</Flex>
-			</Wrapper>
+			</WrapperStyled>
 		</Link>
 	);
 };
