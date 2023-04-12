@@ -1,4 +1,4 @@
-import { User, FriendshipInfo, FriendRequest } from './user';
+import { User, FriendshipInfo, FriendRequest, CurUser } from './user';
 import { Post } from './post';
 import { NotificationBody } from './notification';
 
@@ -68,4 +68,8 @@ export interface NotificationsResponse extends DefaultResponse {
 		isUnread: boolean;
 		sender: User;
 	}[];
+}
+
+export interface LoginResponse extends DefaultResponse {
+	user: CurUser;
 }

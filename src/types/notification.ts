@@ -1,5 +1,5 @@
 import { User } from './user';
-import { Block } from '@/types';
+import { Block } from '@/types/post';
 
 type PostNotificationPreview = {
 	id: number;

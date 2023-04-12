@@ -9,7 +9,9 @@ import {
 	Text,
 } from '@mantine/core';
 
-import { STORAGE_CUR_USER_KEY, uri } from '../../constants';
+import { STORAGE_CUR_USER_KEY } from '../../constants';
+import { makeApiCall } from '@/utils';
+import { LoginResponse } from '@/types/api';
 
 enum LoginErrors {
 	OK = 'OK',
@@ -89,32 +91,30 @@ export default function Login() {
 	const [loginError, setLoginError] = useState(LoginErrors.OK);
 	const [isPageLoading, setIsPageLoading] = useState(true);
 
-	const onClickSubmit = async () => {
-		const res = await fetch(`${uri}auth/login`, {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify({
-				username: username,
-				password: password,
-			}),
-		});
+	const onClickSubmit = () => {
+		const tryLogin = async () => {
+			const res = await makeApiCall<LoginResponse>({
+				uri: `/auth/login`,
+				method: 'POST',
+				body: { username, password },
+			});
 
-		const data = await res.json();
-		if (data.error) {
-			if (data.error === 'invalid login') {
-				setLoginError(LoginErrors.INVALID_LOGIN);
-			} else if (data.error === 'missing credentials') {
-				setLoginError(LoginErrors.MISSING_CREDENTIALS);
-			} else {
-				setLoginError(LoginErrors.OTHER);
+			if (!res.success && res.error) {
+				if (res.error === 'Invalid credentials') {
+					setLoginError(LoginErrors.INVALID_LOGIN);
+				} else if (res.error === 'Missing credentials') {
+					setLoginError(LoginErrors.MISSING_CREDENTIALS);
+				} else {
+					setLoginError(LoginErrors.OTHER);
+				}
+			} else if (res.success) {
+				console.log(res);
+				localStorage.setItem(STORAGE_CUR_USER_KEY, JSON.stringify(res));
+				window.location.href = '/profile/' + res.user.user.id;
 			}
-			return;
-		}
+		};
 
-		localStorage.setItem(STORAGE_CUR_USER_KEY, JSON.stringify(data));
-		window.location.href = '/profile/' + data.user.id;
+		tryLogin();
 	};
 
 	useEffect(() => {
