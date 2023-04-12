@@ -7,10 +7,9 @@ type Props = {
 	comments: Comment[];
 	postAuthorId: number;
 	curUserId: number;
-	commentAuthorId: number;
 };
 export const SinglePostViewComments = (props: Props) => {
-	const { comments, curUserId, postAuthorId, commentAuthorId } = props;
+	const { comments, curUserId, postAuthorId } = props;
 	const { deleteComment } = usePostContext();
 
 	return (
@@ -23,7 +22,7 @@ export const SinglePostViewComments = (props: Props) => {
 						onDelete={() => deleteComment(comment.id)}
 						onClickLink={() => {}}
 						canDelete={
-							postAuthorId === curUserId || commentAuthorId === curUserId
+							postAuthorId === curUserId || comment.author.id === curUserId
 						}
 					/>
 					<Divider variant='dashed' />

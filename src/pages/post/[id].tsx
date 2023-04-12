@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import {
 	CurUserProvider,
 	useCurUserContext,
@@ -21,11 +22,17 @@ const PostPage: Page<PageProps> = (props: PageProps) => {
 
 	const { token = null } = curUser;
 
-	const { data, error, isLoading, mutate } = useSWR<PostResponse>(
+	const { data, error, isLoading } = useSWR<PostResponse>(
 		[id && token ? `http://localhost:1337/v0/posts/${id}` : '', token],
 		// @ts-ignore
 		([url, token]) => fetchWithToken(url, token)
 	);
+
+	useEffect(() => {
+		if (error && !isLoading && !data) {
+			window.location.href = '/404';
+		}
+	}, [error, isLoading, data]);
 
 	return (
 		<AppShellLayout id={curUser?.user?.id}>
