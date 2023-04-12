@@ -5,6 +5,7 @@ import {
 	Header,
 	Group,
 	Text,
+	Title,
 	MediaQuery,
 	Burger,
 	useMantineTheme,
@@ -30,6 +31,11 @@ const NavButton = styled.div`
 	:hover {
 		cursor: pointer;
 		background-color: ${props => props.theme.background.hover};
+	}
+
+	a,
+	a:visited {
+		color: ${props => props.theme.text.primary};
 	}
 `;
 
@@ -82,8 +88,7 @@ export default function AppShellLayout(props: Props) {
 								mr='xl'
 							/>
 						</MediaQuery>
-
-						<Text>Application header</Text>
+						<Title order={3}>🔮 Vividly</Title>
 					</div>
 				</HeaderStyled>
 			}
@@ -94,54 +99,53 @@ export default function AppShellLayout(props: Props) {
 					hidden={!opened}
 					width={{ sm: 200, lg: 300 }}
 				>
-					<Text>Application navbar</Text>
 					<Stack>
 						<Navbar.Section>
-							<Link href={`/profile/${props.id}`}>
-								<NavButton>
+							<NavButton>
+								<Link href={`/profile/${props.id}`}>
 									<Group>
 										<ThemeIcon variant='light'>
 											<IconUser size={18} />
 										</ThemeIcon>
 										<Text>Profile</Text>
 									</Group>
-								</NavButton>
-							</Link>
+								</Link>
+							</NavButton>
 						</Navbar.Section>
 						<Navbar.Section>
-							<Link href={`/activity`}>
-								<NavButton>
+							<NavButton>
+								<Link href={`/activity`}>
 									<Group>
 										<ThemeIcon variant='light'>
 											<IconBellRinging size={18} />
 										</ThemeIcon>
 										<Text>Activity</Text>
 									</Group>
-								</NavButton>
-							</Link>
+								</Link>
+							</NavButton>
 						</Navbar.Section>
 						<Navbar.Section>
 							<NavButton>
-								<UnstyledButton>
+								<Link href='/settings'>
 									<Group>
 										<ThemeIcon variant='light'>
 											<IconSettings size={18} />
 										</ThemeIcon>
 										<Text>Settings</Text>
 									</Group>
-								</UnstyledButton>
+								</Link>
 							</NavButton>
 						</Navbar.Section>
 						<Navbar.Section>
 							<NavButton>
-								<UnstyledButton>
+								<Link href='/feedback'>
 									<Group>
 										<ThemeIcon variant='light'>
 											<IconInfoSquareRounded size={18} />
 										</ThemeIcon>
 										<Text>Feedback</Text>
 									</Group>
-								</UnstyledButton>
+								</Link>
 							</NavButton>
 						</Navbar.Section>
 						<Navbar.Section>
