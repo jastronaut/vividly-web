@@ -31,7 +31,7 @@ const WrapperStyled = styled(Wrapper)`
 type FriendItemProps = {
 	closeDrawer: () => void;
 	friendshipInfo: Friend;
-	// unfriendUser: (id: string) => void;
+	unfriendUser: (id: number) => void;
 };
 
 export const FriendItem = (props: FriendItemProps) => {
@@ -99,7 +99,7 @@ export const FriendItem = (props: FriendItemProps) => {
 								<Menu.Item
 									color='red'
 									icon={<IconUserMinus size={14} />}
-									// onClick={props.onDelete}
+									onClick={() => props.unfriendUser(friend.id)}
 								>
 									Unfriend
 								</Menu.Item>
