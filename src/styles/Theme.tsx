@@ -1,9 +1,16 @@
-import React from 'react';
-import { DefaultTheme, ThemeProvider } from 'styled-components';
+import React, { useState, createContext, useContext } from 'react';
+import { ThemeProvider } from 'styled-components';
 import { MantineProvider } from '@mantine/core';
+import { useLocalStorage } from '@mantine/hooks';
 import { Notifications } from '@mantine/notifications';
 
 import { GlobalStyle } from './GlobalStyle';
+import { STORAGE_THEME_KEY } from '@/constants';
+
+export enum ThemeName {
+	Light = 'light',
+	Dark = 'dark',
+}
 
 const baseTheme = {
 	link: '#00A7FD',
@@ -12,7 +19,7 @@ const baseTheme = {
 };
 
 export const LightThemeAdditions = {
-	name: 'light',
+	name: ThemeName.Light,
 	text: {
 		primary: '#333333',
 		muted: '#696969',
@@ -36,7 +43,7 @@ export const lightTheme = {
 };
 
 const darkThemeAdditions = {
-	name: 'dark',
+	name: ThemeName.Dark,
 	text: {
 		primary: '#C1C2C5',
 		muted: '#cccc',
@@ -59,17 +66,35 @@ export const darkTheme = {
 	...baseTheme,
 };
 
-export const VividlyThemeProvider = (props: {
-	children: React.ReactNode;
-	theme: DefaultTheme;
-}) => {
+type VividlyThemeContext = {
+	theme: ThemeName;
+	setTheme: (theme: ThemeName) => void;
+};
+
+export const VividlyThemeContext = createContext<VividlyThemeContext>({
+	theme: ThemeName.Light,
+	setTheme: (theme: ThemeName) => {},
+});
+
+export const useVividlyTheme = () => useContext(VividlyThemeContext);
+
+export const VividlyThemeProvider = (props: { children: React.ReactNode }) => {
+	const [theme, setTheme] = useLocalStorage({
+		key: STORAGE_THEME_KEY,
+		defaultValue: 'light' as ThemeName,
+	});
 	return (
-		<>
+		<VividlyThemeContext.Provider
+			value={{
+				theme,
+				setTheme,
+			}}
+		>
 			<MantineProvider
 				withGlobalStyles
 				withNormalizeCSS
 				theme={{
-					colorScheme: props.theme.name === 'light' ? 'light' : 'dark',
+					colorScheme: theme,
 					fontFamily: 'Lato, sans-serif',
 					headings: { fontFamily: 'Montserrat, sans-serif' },
 					white: LightThemeAdditions.background.primary,
@@ -90,7 +115,7 @@ export const VividlyThemeProvider = (props: {
 					},
 				}}
 			>
-				<ThemeProvider theme={props.theme}>
+				<ThemeProvider theme={theme === 'light' ? lightTheme : darkTheme}>
 					<>
 						<GlobalStyle />
 						<Notifications />
@@ -98,6 +123,6 @@ export const VividlyThemeProvider = (props: {
 					</>
 				</ThemeProvider>
 			</MantineProvider>
-		</>
+		</VividlyThemeContext.Provider>
 	);
 };
