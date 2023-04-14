@@ -1,4 +1,5 @@
 import { URL_PREFIX } from './constants';
+import confetti from 'canvas-confetti';
 
 // fetcher for swr
 export const fetcher = async (url: string) => {
@@ -62,4 +63,12 @@ export async function makeApiCall<T>(props: MakeApiCallProps): Promise<T> {
 			);
 		})
 		.then(response => response.json());
+}
+
+export function throwConfetti() {
+	confetti({
+		particleCount: 100,
+		startVelocity: 30,
+		spread: 360,
+	});
 }

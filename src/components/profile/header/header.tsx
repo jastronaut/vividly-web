@@ -44,20 +44,13 @@ import {
 	useUnfriend,
 	useCancelFriendRequest,
 } from '@/components/activity/requests/hooks';
+import { throwConfetti } from '@/utils';
 
 function showSuccessNotification(message: string) {
 	notifications.show({
 		message,
 		color: 'green',
 		title: 'Success',
-	});
-}
-
-function throwConfetti() {
-	confetti({
-		particleCount: 100,
-		startVelocity: 30,
-		spread: 360,
 	});
 }
 
@@ -332,7 +325,6 @@ export const ProfileHeaderComponent = (props: ProfileHeaderProps) => {
 			});
 
 			showSuccessNotification(`User unfriended.`);
-			throwConfetti();
 			refetchFeed();
 		}
 
