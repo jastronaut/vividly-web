@@ -1,6 +1,24 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: true,
-}
+	reactStrictMode: true,
+	async redirects() {
+		return [
+			{
+				source: '/',
+				destination: '/login',
+				permanent: true,
+			},
+		];
+	},
+	images: {
+		remotePatterns: [
+			{
+				protocol: 'https',
+				hostname: 'i.ibb.co',
+				pathname: '/**/*',
+			},
+		],
+	},
+};
 
-module.exports = nextConfig
+module.exports = nextConfig;
