@@ -165,7 +165,7 @@ const Profile = (props: PageProps) => {
 	);
 
 	const refetchFeed = useCallback(() => {
-		mutate();
+		mutate(undefined, true);
 	}, [mutate]);
 
 	useEffect(() => {
