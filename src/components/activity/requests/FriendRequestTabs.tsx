@@ -1,14 +1,6 @@
 import { useEffect, useCallback } from 'react';
 import useSWR from 'swr';
-import {
-	Tabs,
-	Center,
-	Badge,
-	Text,
-	Container,
-	Title,
-	Space,
-} from '@mantine/core';
+import { Tabs, Center, Badge, Title, Space } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 
 import { AddFriendForm } from './AddFriendForm';
@@ -16,26 +8,15 @@ import { FriendRequest } from '@/types/user';
 import { showAndLogErrorNotification } from '@/showerror';
 import { fetchWithToken } from '@/utils';
 import { useCurUserContext } from '@/components/utils/CurUserContext';
-import {
-	FriendRequestItem,
-	LoadingItem,
-} from '@/components/activity/requests/FriendRequestItem';
+import { FriendRequestItem } from '@/components/activity/requests/FriendRequestItem';
 import { TabsWrapper } from './_style';
 import { makeApiCall } from '@/utils';
 import {
 	AcceptFriendRequestResponse,
 	DefaultResponse,
 	FriendRequestsResponse,
-	SendFriendRequestResponse,
 } from '@/types/api';
-
-const EmptyTab = () => {
-	return (
-		<Container py={36} px={0}>
-			<Text style={{ textAlign: 'center' }}>Nothing to see here!</Text>
-		</Container>
-	);
-};
+import { EmptyTab, LoadingTab } from '../TabStates';
 
 export const FriendRequestTabs = () => {
 	const { curUser } = useCurUserContext();
@@ -55,37 +36,20 @@ export const FriendRequestTabs = () => {
 	const outboundCount = data?.outbound.length;
 	const inboundCount = data?.inbound.length;
 
-	const addFriendByUsername = useCallback(
-		async (username: string) => {
-			try {
-				const resp = await makeApiCall<SendFriendRequestResponse>({
-					uri: `/friends/add/${username}`,
-					method: 'POST',
-					token,
-				});
-
-				if (!resp.success) {
-					throw new Error(resp.error);
-				}
-
-				mutate(data => {
-					if (data) {
-						return {
-							...data,
-							outbound: [...data.outbound, resp.friendRequest],
-						};
-					}
-				});
-				notifications.show({
-					message: `Friend request sent to @${username}!`,
-					color: 'teal',
-				});
-			} catch (err) {
-				showAndLogErrorNotification(`Couldn't add friend`, err);
+	const addFriendRequest = (friendRequest: FriendRequest) => {
+		mutate(data => {
+			if (data) {
+				return {
+					...data,
+					outbound: [...data.outbound, friendRequest],
+				};
 			}
-		},
-		[token, mutate]
-	);
+		});
+		notifications.show({
+			message: `Friend request sent to @${friendRequest.user.username}!`,
+			color: 'teal',
+		});
+	};
 
 	const onClickAccept = useCallback(
 		async (id: number) => {
@@ -260,7 +224,7 @@ export const FriendRequestTabs = () => {
 									/>
 								);
 							})}
-							{isLoading && <LoadingItem />}
+							{isLoading && <LoadingTab />}
 							{!isLoading && !inboundCount && <EmptyTab />}
 						</Tabs.Panel>
 						<Tabs.Panel value='sent' pt='xs'>
@@ -274,13 +238,16 @@ export const FriendRequestTabs = () => {
 									/>
 								);
 							})}
-							{isLoading && <LoadingItem />}
+							{isLoading && <LoadingTab />}
 							{!isLoading && !outboundCount && <EmptyTab />}
 						</Tabs.Panel>
 					</Tabs>
-					<Space h='lg' />
-					<AddFriendForm onSubmit={addFriendByUsername} />
 				</TabsWrapper>
+			</Center>
+			<Center>
+				<div>
+					<AddFriendForm onSubmit={addFriendRequest} />
+				</div>
 			</Center>
 		</>
 	);

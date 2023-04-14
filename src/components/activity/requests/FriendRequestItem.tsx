@@ -1,5 +1,6 @@
-import { ActionIcon, Flex, Avatar, Text, Skeleton } from '@mantine/core';
+import { ActionIcon, Flex, Text } from '@mantine/core';
 import { IconCheck, IconX, IconBan } from '@tabler/icons-react';
+import { useRouter } from 'next/router';
 
 import {
 	Wrapper,
@@ -9,6 +10,7 @@ import {
 } from './styles';
 import { DEFAULT_AVATAR } from '@/constants';
 import { User } from '@/types/user';
+import { Avatar } from '@/components/Avatar';
 
 export type Props = {
 	user: User;
@@ -19,20 +21,28 @@ export type Props = {
 
 export const FriendRequestItem = (props: Props) => {
 	const { onClickAccept = null, user } = props;
-	const { avatarSrc, username, name, bio } = user;
+	const { avatarSrc, username, name, bio, id } = user;
+	const router = useRouter();
+
+	const profileLink = `/profile/${id}`;
 	return (
 		<Wrapper withHover>
 			<Flex wrap='wrap' style={{ justifyContent: 'space-between' }}>
 				<LeftContent>
 					<Avatar
 						src={avatarSrc || DEFAULT_AVATAR}
-						radius='xl'
 						style={{ alignSelf: 'flex-start' }}
+						onClick={() => router.push(profileLink)}
+						width={40}
+						height={40}
+						size={40}
+						alt={`${username}'s avatar`}
 					/>
 					<TextContainer>
 						<Text span fw={700}>
 							{name}
 						</Text>
+						{` `}
 						<Text span c='dimmed'>
 							@{username}
 						</Text>
@@ -71,12 +81,3 @@ export const FriendRequestItem = (props: Props) => {
 		</Wrapper>
 	);
 };
-
-export const LoadingItem = () => (
-	<Wrapper>
-		<Skeleton height={38} circle mb='xl' />
-		<Skeleton height={8} mt={6} w='70%' radius='xl' />
-		<Skeleton height={8} mt={6} w='70%' radius='xl' />
-		<Skeleton height={8} mt={6} w='40%' radius='xl' />
-	</Wrapper>
-);

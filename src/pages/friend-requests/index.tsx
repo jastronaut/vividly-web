@@ -1,4 +1,4 @@
-import { NotificationTabs } from '@/components/activity/notifications/NotificationTabs';
+import { FriendRequestTabs } from '@/components/activity/requests/FriendRequestTabs';
 
 import { Page } from '../_app';
 import {
@@ -17,7 +17,7 @@ const FriendsPage: Page = () => {
 					<div>Loading</div>
 				) : (
 					<>
-						<NotificationTabs />
+						<FriendRequestTabs />
 					</>
 				)}
 			</AppShellLayout>
