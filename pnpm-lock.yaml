@@ -22,12 +22,14 @@ specifiers:
   '@storybook/testing-library': ^0.0.13
   '@tabler/icons': ^2.6.0
   '@tabler/icons-react': ^2.6.0
+  '@types/canvas-confetti': ^1.6.0
   '@types/node': 18.14.0
   '@types/react': 18.0.28
   '@types/react-dom': 18.0.11
   '@types/styled-components': ^5.1.26
   '@types/wordpress__block-editor': ^11.0.1
   babel-loader: ^8.3.0
+  canvas-confetti: ^1.6.0
   dayjs: ^1.11.7
   eslint: 8.34.0
   eslint-config-next: 13.1.6
@@ -62,6 +64,7 @@ dependencies:
   '@types/node': 18.14.0
   '@types/react': 18.0.28
   '@types/react-dom': 18.0.11
+  canvas-confetti: 1.6.0
   dayjs: 1.11.7
   eslint: 8.34.0
   eslint-config-next: 13.1.6_7kw3g6rralp5ps6mg3uyzz6azm
@@ -88,6 +91,7 @@ devDependencies:
   '@storybook/manager-webpack5': 6.5.16_thg4xgkqzam43wvb4m4gitomxu
   '@storybook/react': 6.5.16_jtnmlkbfeo3hjp45yjebah43t4
   '@storybook/testing-library': 0.0.13_biqbaboplfbrettd7655fr4n2y
+  '@types/canvas-confetti': 1.6.0
   '@types/styled-components': 5.1.26
   '@types/wordpress__block-editor': 11.5.0_biqbaboplfbrettd7655fr4n2y
   babel-loader: 8.3.0_@babel+core@7.21.4
@@ -3934,6 +3938,10 @@ packages:
     resolution: {integrity: sha512-XTIieEY+gvJ39ChLcB4If5zHtPxt3Syj5rgZR+e1ctpmK8NjPf0zFqsz4JpLJT0xla9GFDKjy8Cpu331nrmE1Q==}
     dev: true
 
+  /@types/canvas-confetti/1.6.0:
+    resolution: {integrity: sha512-Yq6rIccwcco0TLD5SMUrIM7Fk7Fe/C0jmNRxJJCLtAF6gebDkPuUjK5EHedxecm69Pi/aA+It39Ux4OHmFhjRw==}
+    dev: true
+
   /@types/eslint-scope/3.7.4:
     resolution: {integrity: sha512-9K4zoImiZc3HlIp6AVUDE4CWYx22a+lhSZMYNpbjW04+YF0KWj4pJXnEMjdnFTiQibFFmElcsasJXDbdI/EPhA==}
     dependencies:
@@ -5652,6 +5660,10 @@ packages:
 
   /caniuse-lite/1.0.30001473:
     resolution: {integrity: sha512-ewDad7+D2vlyy+E4UJuVfiBsU69IL+8oVmTuZnH5Q6CIUbxNfI50uVpRHbUPDD6SUaN2o0Lh4DhTrvLG/Tn1yg==}
+
+  /canvas-confetti/1.6.0:
+    resolution: {integrity: sha512-ej+w/m8Jzpv9Z7W7uJZer14Ke8P2ogsjg4ZMGIuq4iqUOqY2Jq8BNW42iGmNfRwREaaEfFIczLuZZiEVSYNHAA==}
+    dev: false
 
   /capital-case/1.0.4:
     resolution: {integrity: sha512-ds37W8CytHgwnhGGTi88pcPyR15qoNkOpYwmMMfnWqqWgESapLqvDx6huFjQ5vqWSn2Z06173XNA7LtMOeUh1A==}

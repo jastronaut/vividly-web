@@ -1,3 +1,7 @@
+import { Center, Button, Space } from '@mantine/core';
+import Link from 'next/link';
+import { IconArrowRight } from '@tabler/icons-react';
+
 import { NotificationTabs } from '@/components/activity/notifications/NotificationTabs';
 
 import { Page } from '../_app';
@@ -18,6 +22,14 @@ const FriendsPage: Page = () => {
 				) : (
 					<>
 						<NotificationTabs />
+						<Space h='xl' />
+						<Center>
+							<Link href='/friend-requests'>
+								<Button component='a' rightIcon={<IconArrowRight />}>
+									Manage friend requests
+								</Button>
+							</Link>
+						</Center>
 					</>
 				)}
 			</AppShellLayout>

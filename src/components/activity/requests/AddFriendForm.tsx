@@ -1,25 +1,28 @@
-import { useState } from 'react';
-import { TextInput, Button, Group, Title, Space } from '@mantine/core';
-import { IconAt } from '@tabler/icons-react';
+import { useState, useEffect } from 'react';
+import { TextInput, Button, Group, Text, Space, Alert } from '@mantine/core';
+import { IconAt, IconAlertCircle } from '@tabler/icons-react';
+
+import { FriendRequest } from '@/types/user';
+import { useAddNewFriend } from './hooks';
 
 type Props = {
-	onSubmit: (username: string) => void;
+	onSubmit: (request: FriendRequest) => void;
 };
 
 export const AddFriendForm = (props: Props) => {
 	const [username, setUsername] = useState<string>('');
+	const { addFriend, error, isAddingFriend, friendRequest } = useAddNewFriend();
 
-	const tryOnSubmit = () => {
-		if (username.length < 3 || username.length > 20) {
-			return;
+	useEffect(() => {
+		if (friendRequest) {
+			props.onSubmit(friendRequest);
+			setUsername('');
 		}
-		props.onSubmit(username);
-		setUsername('');
-	};
+	}, [friendRequest]);
 
 	return (
 		<>
-			<Title order={5}>Add friend by username</Title>
+			<Text fw={700}>Add friend by username</Text>
 			<Space h='xs' />
 			<Group align='center'>
 				<TextInput
@@ -33,10 +36,25 @@ export const AddFriendForm = (props: Props) => {
 					minLength={3}
 					onChange={e => setUsername(e.currentTarget.value.trim())}
 				/>
-				<Button type='submit' color='green' onClick={tryOnSubmit}>
+				<Button
+					type='submit'
+					color='green'
+					onClick={() => addFriend(username)}
+					loading={isAddingFriend}
+				>
 					Add Friend
 				</Button>
 			</Group>
+			{error && (
+				<>
+					<Space h='xs' />
+					<Alert
+						icon={<IconAlertCircle size={18} />}
+						color='red'
+						sx={{ display: 'block', width: 'fit-content' }}
+					>{`${error} 😢`}</Alert>
+				</>
+			)}
 		</>
 	);
 };

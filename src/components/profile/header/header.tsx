@@ -1,105 +1,214 @@
-import { useState } from 'react';
-import styled from 'styled-components';
-import { rem } from 'polished';
-import { Skeleton, Avatar, Text, Flex, Button, Group } from '@mantine/core';
+import { useState, useEffect, useCallback } from 'react';
+import {
+	Skeleton,
+	Flex,
+	Button,
+	Group,
+	ActionIcon,
+	Menu,
+	Tooltip,
+	Indicator,
+} from '@mantine/core';
+import { notifications } from '@mantine/notifications';
+import {
+	IconMoodSmileBeam,
+	IconUserPlus,
+	IconUserMinus,
+	IconUserOff,
+	IconUsers,
+} from '@tabler/icons-react';
+import confetti from 'canvas-confetti';
 
-import { DEFAULT_AVATAR } from '../../../constants';
+import { makeApiCall } from '@/utils';
+import { DEFAULT_AVATAR, uri } from '../../../constants';
+import { User } from '@/types/user';
+import { UserResponse, DefaultResponse } from '@/types/api';
 import { SettingsModal } from '../SettingsModal';
-import { FriendButton, FavoriteButton } from './styles';
-import { UserResponse } from '@/types/api';
-import { uri } from '@/constants';
+import {
+	FavoriteButton,
+	ProfileHeaderContent,
+	ProfileHeaderText,
+	HeaderText,
+	HeaderTextLoading,
+} from './styles';
 import { useCurUserContext } from '@/components/utils/CurUserContext';
 import { showAndLogErrorNotification } from '@/showerror';
-import { User } from '@/types/user';
+import { DismissWarningModal } from '@/components/DismissWarningModal';
+import { Avatar } from '@/components/Avatar';
+import { ProfileActions } from './ProfileActions';
 
-export const ProfileHeaderContainer = styled.div`
-	padding-top: ${rem(50)};
-	border: 1px solid ${props => props.theme.border.secondary};
-	color: ${props => props.theme.text.primary};
-	background-size: cover;
+import {
+	useAcceptFriendRequest,
+	useAddNewFriend,
+	useDeclineFriendRequest,
+	useUnfriend,
+	useCancelFriendRequest,
+} from '@/components/activity/requests/hooks';
 
-	@media screen and (max-width: 700px) {
-		margin: 0;
-	}
-`;
+function showSuccessNotification(message: string) {
+	notifications.show({
+		message,
+		color: 'green',
+		title: 'Success',
+	});
+}
 
-export const ProfileHeaderContent = styled.div`
-	background-color: ${props => props.theme.background.primary};
-	display: flex;
-	padding: ${rem(10)} ${rem(15)} ${rem(16)};
-	margin-top: ${rem(50)};
-	border-top: ${rem(10)} solid ${props => props.theme.background.primary};
-	border-top-left-radius: ${rem(20)};
-	border-top-right-radius: ${rem(20)};
-
-	@media screen and (max-width: 500px) {
-		padding-bottom: ${rem(6)};
-		flex-direction: column;
-		justify-content: center;
-		align-items: center;
-		margin-top: ${rem(24)};
-		text-align: center;
-	}
-`;
-
-export const ProfileHeaderText = styled.div`
-	flex: 9;
-	margin: 1rem;
-
-	a,
-	a:visited {
-		color: ${props => props.theme.link};
-		text-decoration: none;
-	}
-
-	a:hover {
-		text-decoration: underline;
-	}
-
-	> h2 {
-		margin: 0;
-	}
-
-	> p:last-child {
-		margin: 0 auto;
-		word-break: break-word;
-	}
-`;
+function throwConfetti() {
+	confetti({
+		particleCount: 100,
+		startVelocity: 30,
+		spread: 360,
+	});
+}
 
 type ProfileHeaderProps = {
 	isLoading: boolean;
 	isLoggedInUser: boolean;
 	user?: UserResponse;
-	updateUserProfileInfo?: (user: User) => void;
+	updateUserProfileInfo: (user: UserResponse) => void;
+	refetchFeed: () => void;
+	friendsDrawerOpen: boolean;
+	openFriendsDrawer: () => void;
+	closeFriendsDrawer: () => void;
 };
 
+/**
+ * this is unusually stupid and long because we need to
+ * account for different states of the friend button
+ * and the different actions it can trigger.
+ * help!
+ */
 export const ProfileHeaderComponent = (props: ProfileHeaderProps) => {
 	const {
 		isLoading,
 		user,
 		isLoggedInUser,
-		updateUserProfileInfo = null,
+		updateUserProfileInfo,
+		refetchFeed,
 	} = props;
 	const { avatarSrc, name, username, bio } = user?.user ?? {};
-	const [avatar, setAvatar] = useState<string>(
-		user?.user.avatarSrc || DEFAULT_AVATAR
-	);
+	const [avatar, setAvatar] = useState<string>(avatarSrc || DEFAULT_AVATAR);
 	const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
 	const { curUser, updateCurUser } = useCurUserContext();
+	const [warningModalOpen, setWarningModalOpen] = useState(false);
+
+	// this will indicate which action the user just triggered by clicking
+	// the friend button
+	const [chosenFriendButtonAction, setChosenFriendButtonAction] = useState<
+		string | null
+	>(null);
+
+	const toggleFavorite = useCallback(async () => {
+		if (!user || !user.friendship) {
+			return;
+		}
+
+		try {
+			const isFavorite = user.friendship.isFavorite;
+			const uri = `/friends/${isFavorite ? 'un' : ''}favorite/${user.user.id}`;
+
+			const res = await makeApiCall<DefaultResponse>({
+				uri,
+				method: 'POST',
+				token: curUser.token,
+			});
+
+			if (!res.success) {
+				throw new Error(res.error);
+			}
+
+			if (!isFavorite) {
+				throwConfetti();
+			}
+
+			updateUserProfileInfo({
+				...user,
+				friendship: {
+					...user.friendship,
+					isFavorite: !isFavorite,
+				},
+			});
+		} catch (err) {
+			showAndLogErrorNotification(`Couldn't update favorite status!`, err);
+		}
+	}, [user]);
+
+	const onClickUnfriend = () => {
+		setWarningModalOpen(true);
+	};
 
 	const friendship = user?.friendship;
+	const friendRequest = user?.friendRequest;
+
+	const hasInboundRequest = friendRequest?.toUserId === curUser.user.id;
+	const hasOutboundRequest = friendRequest?.fromUserId === curUser.user.id;
+
+	// this indicates which set of actions the friend button should allow
+	let friendButtonAction = 'none';
+	if (friendship) {
+		friendButtonAction = 'friends';
+	} else if (hasInboundRequest) {
+		friendButtonAction = 'inbound';
+	} else if (hasOutboundRequest) {
+		friendButtonAction = 'outbound';
+	}
+
+	// hooks for different friend button actions
+	const {
+		acceptFriendRequest,
+		error: acceptRequestError,
+		friendship: acceptedFriendship,
+		isLoading: acceptRequestLoading,
+	} = useAcceptFriendRequest();
+	const {
+		addFriend,
+		error: addFriendError,
+		friendRequest: newFriendRequest,
+		isLoading: addFriendLoading,
+	} = useAddNewFriend();
+	const {
+		declineFriendRequest,
+		error: declineRequestError,
+		isLoading: declineRequestLoading,
+	} = useDeclineFriendRequest();
+
+	const {
+		unfriend,
+		error: unfriendError,
+		isLoading: unfriendLoading,
+	} = useUnfriend();
+
+	const {
+		cancelFriendRequest,
+		error: cancelRequestError,
+		isLoading: cancelFriendRequestLoading,
+	} = useCancelFriendRequest();
+
+	const onConfirmUnfriend = () => {
+		setChosenFriendButtonAction('unfriend');
+		unfriend(user!.user.id);
+		setWarningModalOpen(false);
+	};
 
 	const onClickSaveSettings = (
 		name: string,
 		bio: string,
 		avatarSrc: string
 	) => {
-		if (!updateUserProfileInfo) return;
+		if (!user || user.user.id !== curUser.user.id) {
+			return;
+		}
 
 		const resp: { [key: string]: string } = {};
-		if (name) resp['name'] = name;
-		if (bio) resp['bio'] = bio;
-		if (avatarSrc) resp['avatarSrc'] = avatarSrc;
+		if (name) {
+			resp['name'] = name;
+		}
+		if (bio) {
+			resp['bio'] = bio;
+		}
+		if (avatarSrc) {
+			resp['avatarSrc'] = avatarSrc;
+		}
 
 		fetch(`${uri}users/info/change`, {
 			method: 'POST',
@@ -114,11 +223,14 @@ export const ProfileHeaderComponent = (props: ProfileHeaderProps) => {
 				const result = data as User;
 				setAvatar(result.avatarSrc);
 				updateUserProfileInfo({
-					id: data.id,
-					name: result.name,
-					bio: result.bio,
-					avatarSrc: result.avatarSrc,
-					username: result.username,
+					...user,
+					user: {
+						id: data.id,
+						name: result.name,
+						bio: result.bio,
+						avatarSrc: result.avatarSrc,
+						username: result.username,
+					},
 				});
 			})
 			.catch(err => {
@@ -129,8 +241,134 @@ export const ProfileHeaderComponent = (props: ProfileHeaderProps) => {
 			});
 	};
 
+	// hoooks to check when friend button is triggered, when they're loading, and
+	// when they error
+	useEffect(() => {
+		if (
+			chosenFriendButtonAction !== 'accept' ||
+			!user ||
+			acceptRequestLoading
+		) {
+			return;
+		}
+
+		if (acceptRequestError) {
+			showAndLogErrorNotification(`Could not accept friend request!`);
+		} else if (acceptedFriendship) {
+			updateUserProfileInfo({
+				...user,
+				friendship: acceptedFriendship,
+			});
+			showSuccessNotification(`You are now friends with ${user.user.name}!`);
+			throwConfetti();
+			refetchFeed();
+		}
+
+		setChosenFriendButtonAction(null);
+	}, [
+		chosenFriendButtonAction,
+		acceptedFriendship,
+		user,
+		acceptRequestLoading,
+	]);
+
+	useEffect(() => {
+		if (chosenFriendButtonAction !== 'add' || !user || addFriendLoading) {
+			return;
+		}
+
+		if (addFriendError) {
+			showAndLogErrorNotification(`Could not add friend!`);
+		} else if (newFriendRequest) {
+			updateUserProfileInfo({
+				...user,
+				friendRequest: {
+					id: newFriendRequest.id,
+					fromUserId: curUser.user.id,
+					toUserId: user.user.id,
+				},
+			});
+			showSuccessNotification(`Friend request sent to ${user.user.name}!`);
+		}
+
+		setChosenFriendButtonAction(null);
+	}, [chosenFriendButtonAction, newFriendRequest, user, addFriendLoading]);
+
+	useEffect(() => {
+		if (
+			chosenFriendButtonAction !== 'decline' ||
+			!user ||
+			declineRequestLoading
+		) {
+			return;
+		}
+
+		if (!declineRequestLoading) {
+			if (declineRequestError) {
+				showAndLogErrorNotification(`Could not decline friend request!`);
+			} else {
+				updateUserProfileInfo({
+					...user,
+					friendRequest: null,
+				});
+				showSuccessNotification(`Friend request declined.`);
+			}
+		}
+
+		setChosenFriendButtonAction(null);
+	}, [chosenFriendButtonAction, declineRequestLoading, user]);
+
+	useEffect(() => {
+		if (chosenFriendButtonAction !== 'unfriend' || !user || unfriendLoading) {
+			return;
+		}
+
+		if (unfriendError) {
+			showAndLogErrorNotification(`Could not unfriend!`);
+		} else {
+			updateUserProfileInfo({
+				...user,
+				friendship: null,
+			});
+
+			showSuccessNotification(`User unfriended.`);
+			throwConfetti();
+			refetchFeed();
+		}
+
+		setChosenFriendButtonAction(null);
+	}, [chosenFriendButtonAction, unfriendLoading, user]);
+
+	useEffect(() => {
+		if (
+			chosenFriendButtonAction !== 'cancel' ||
+			!user ||
+			cancelFriendRequestLoading
+		) {
+			return;
+		}
+
+		if (cancelRequestError) {
+			showAndLogErrorNotification(`Could not cancel friend request!`);
+		} else {
+			updateUserProfileInfo({
+				...user,
+				friendRequest: null,
+			});
+			showSuccessNotification(`Friend request cancelled.`);
+		}
+
+		setChosenFriendButtonAction(null);
+	}, [chosenFriendButtonAction, cancelFriendRequestLoading, user]);
+
 	return (
-		<ProfileHeaderContainer>
+		<>
+			<DismissWarningModal
+				isOpen={warningModalOpen}
+				message={'Are you sure you want to unfriend this user?'}
+				onNo={() => setWarningModalOpen(false)}
+				onYes={onConfirmUnfriend}
+			/>
 			{isLoggedInUser && (
 				<SettingsModal
 					isOpen={isSettingsModalOpen}
@@ -142,43 +380,123 @@ export const ProfileHeaderComponent = (props: ProfileHeaderProps) => {
 				{isLoading ? (
 					<Skeleton height={100} circle mb='xl' />
 				) : (
-					<Avatar src={avatarSrc || DEFAULT_AVATAR} radius={50} size={100} />
+					<Avatar
+						src={avatarSrc || DEFAULT_AVATAR}
+						width={100}
+						height={100}
+						size={100}
+						alt={`${user?.user.username}'s avatar.`}
+					/>
 				)}
 				<ProfileHeaderText>
-					{isLoading && <Skeleton height={28} width='60%' />}
-					{!isLoading && <h2>{name ?? username}</h2>}
-
-					{isLoading && <Skeleton height={16} mt={6} width='20%' />}
-
-					{isLoading && <Skeleton height={16} mt={6} width='40%' />}
-					{!isLoading && <Text>{bio || 'No bio yet.'}</Text>}
+					{isLoading || !user ? (
+						<HeaderTextLoading />
+					) : (
+						<HeaderText
+							name={user.user.name}
+							username={user.user.username}
+							bio={user.user.bio}
+						/>
+					)}
 				</ProfileHeaderText>
 				<>
 					<Flex>
-						{isLoading ? null : isLoggedInUser ? (
-							<>
-								<Button
-									variant='outline'
-									size='sm'
-									color='grape'
-									radius='xl'
-									onClick={() => setIsSettingsModalOpen(true)}
-								>
-									Edit profile
-								</Button>
-							</>
+						{isLoading || !user ? null : isLoggedInUser ? (
+							<ProfileActions
+								onClickFriends={props.openFriendsDrawer}
+								onClickEdit={() => setIsSettingsModalOpen(true)}
+							/>
 						) : (
 							<Group>
-								<FriendButton
-									isFavorite={!!friendship?.isFavorite}
-									isFriend={!!friendship}
-								/>
-								<FavoriteButton />
+								<Menu position='bottom-end' withArrow offset={0}>
+									<Menu.Target>
+										<Indicator
+											color='green'
+											processing
+											disabled={user.friendRequest === null}
+										>
+											<ActionIcon
+												onClick={() => null}
+												color='grape'
+												variant={!!friendship ? 'filled' : 'outline'}
+												aria-label='Manage friendship'
+											>
+												<Tooltip withArrow label='Manage friendship'>
+													<IconMoodSmileBeam size={16} />
+												</Tooltip>
+											</ActionIcon>
+										</Indicator>
+									</Menu.Target>
+									<Menu.Dropdown>
+										{friendButtonAction === 'inbound' && user.friendRequest ? (
+											<>
+												<Menu.Item
+													icon={<IconUserPlus size={14} />}
+													onClick={() => {
+														setChosenFriendButtonAction('accept');
+														// @ts-ignore
+														acceptFriendRequest(user?.friendRequest?.id);
+													}}
+												>
+													Accept friend request
+												</Menu.Item>
+												<Menu.Item
+													icon={<IconUserOff size={14} />}
+													onClick={() => {
+														setChosenFriendButtonAction('decline');
+														// @ts-ignore
+														declineFriendRequest(user.friendRequest.id);
+													}}
+													color='red'
+												>
+													Decline friend request
+												</Menu.Item>
+											</>
+										) : friendButtonAction === 'outbound' &&
+										  user.friendRequest ? (
+											<Menu.Item
+												icon={<IconUserOff size={14} />}
+												onClick={() => {
+													setChosenFriendButtonAction('cancel');
+													// @ts-ignore
+													cancelFriendRequest(user.friendRequest.id);
+												}}
+											>
+												Cancel friend request
+											</Menu.Item>
+										) : friendButtonAction === 'friends' ? (
+											<Menu.Item
+												icon={<IconUserMinus size={14} />}
+												onClick={onClickUnfriend}
+												color='red'
+											>
+												Unfriend
+											</Menu.Item>
+										) : friendButtonAction === 'none' ? (
+											<Menu.Item
+												icon={<IconUserPlus size={14} />}
+												onClick={() => {
+													setChosenFriendButtonAction('add');
+													addFriend(user.user.username);
+												}}
+											>
+												Add friend
+											</Menu.Item>
+										) : null}
+									</Menu.Dropdown>
+								</Menu>
+
+								{friendButtonAction === 'friends' && user.friendship && (
+									<FavoriteButton
+										isFavorite={user.friendship.isFavorite}
+										toggleFavorite={toggleFavorite}
+									/>
+								)}
 							</Group>
 						)}
 					</Flex>
 				</>
 			</ProfileHeaderContent>
-		</ProfileHeaderContainer>
+		</>
 	);
 };

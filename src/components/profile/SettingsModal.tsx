@@ -7,7 +7,6 @@ import {
 	TextInput,
 	Button,
 	Space,
-	Avatar,
 	FileButton,
 } from '@mantine/core';
 import { IconPhotoPlus } from '@tabler/icons-react';
@@ -17,8 +16,8 @@ import { IMGBBResponse } from '@/types/api';
 
 import { useCurUserContext } from '@/components/utils/CurUserContext';
 import { showAndLogErrorNotification } from '@/showerror';
-
 import { MiniLoader } from '../utils/Loading';
+import { Avatar } from '../Avatar';
 
 const ImageEditContainer = styled.div`
 	position: absolute;
@@ -88,10 +87,10 @@ export const SettingsModal = (props: Props) => {
 	};
 
 	useEffect(() => {
-		return () => {
+		if (props.isOpen) {
 			setNewAvatarSrc('');
-		};
-	}, []);
+		}
+	}, [props.isOpen]);
 
 	return (
 		<Modal opened={props.isOpen} onClose={props.onClose} title='Edit profile'>
@@ -103,7 +102,9 @@ export const SettingsModal = (props: Props) => {
 				<Avatar
 					src={newAvatarSrc || curUser.user.avatarSrc}
 					size={150}
-					radius={75}
+					width={150}
+					height={150}
+					alt={`${curUser.user.username}'s avatar}`}
 				/>
 
 				{uploadingAvatar && (

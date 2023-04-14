@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { GetStaticPropsContext } from 'next';
 import useSWR from 'swr';
 import useSWRInfinite from 'swr/infinite';
+import { useRouter } from 'next/router';
 
 import { Page } from '../_app';
 import { fetchWithToken } from '../../utils';
@@ -20,7 +21,6 @@ import {
 } from '@/components/utils/CurUserContext';
 import AppShellLayout from '@/components/layout/AppShellLayout';
 import { UserResponse, FeedResponse } from '@/types/api';
-import { User } from '@/types/user';
 
 type PageProps = {
 	id: string;
@@ -32,6 +32,8 @@ const Profile = (props: PageProps) => {
 
 	const { curUser, updateCurUser } = useCurUserContext();
 	const { token } = curUser;
+
+	const router = useRouter();
 
 	const {
 		data: user,
@@ -78,7 +80,7 @@ const Profile = (props: PageProps) => {
 		},
 		// @ts-ignore
 		([url, token]) => fetchWithToken(url, token),
-		{ revalidateFirstPage: false }
+		{ revalidateFirstPage: false, shouldRetryOnError: false }
 	);
 
 	const lastPage = data.length > 0 ? data[data.length - 1] : null;
@@ -145,22 +147,26 @@ const Profile = (props: PageProps) => {
 	};
 
 	const updateUserProfile = useCallback(
-		(newUser: User) => {
+		(newUser: UserResponse) => {
 			if (!user) {
 				return;
 			}
 
 			mutateUser({
 				...user,
-				user: newUser,
+				...newUser,
 			});
 
-			if (curUser.user.id === newUser.id) {
-				updateCurUser(newUser);
+			if (curUser.user.id === newUser.user.id) {
+				updateCurUser(newUser.user);
 			}
 		},
 		[user]
 	);
+
+	const refetchFeed = useCallback(() => {
+		mutate();
+	}, [mutate]);
 
 	useEffect(() => {
 		if (user?.user.id === curUser.user.id) {
@@ -173,7 +179,12 @@ const Profile = (props: PageProps) => {
 	}, [setSize, size]);
 
 	useEffect(() => {
+		if (userError && !isUserLoading && !user) {
+			router.push('/404');
+		}
+
 		if (userError) {
+			console.log({ userError });
 			showAndLogErrorNotification('Error fetching user', userError);
 		}
 	}, [userError]);
@@ -183,12 +194,14 @@ const Profile = (props: PageProps) => {
 			<ProfileContent
 				user={user}
 				isUserLoading={isUserLoading}
-				isPostsLoading={false}
+				isPostsLoading={isPostsLoading}
 				onDeletePost={onDeletePost}
 				onClickLoadMore={loadMore}
 				hasMorePosts={hasMorePosts}
 				feed={data}
 				updateUserProfileInfo={updateUserProfile}
+				openEditor={() => setIsEditorOpen(true)}
+				refetchFeed={refetchFeed}
 			>
 				{user && user.user.id === curUser.user.id && (
 					<>
@@ -200,7 +213,7 @@ const Profile = (props: PageProps) => {
 						/>
 						<NewPostButton
 							toggle={() => setIsEditorOpen(true)}
-							isOpen={isEditorOpen}
+							isVisible={isEditorOpen}
 						/>
 					</>
 				)}

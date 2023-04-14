@@ -1,11 +1,12 @@
 import { useState, useCallback } from 'react';
-import { Post, BlockType, Block, Comment } from '@/types/post';
+import styled from 'styled-components';
+import { rem } from 'polished';
 
+import { Post, BlockType, Block } from '@/types/post';
 import { showAndLogErrorNotification } from '@/showerror';
 import { Footer } from '@/components/post/Footer';
 import { ImageBlock } from '@/components/post/blocks/blocks';
 import { LinkBlockContent } from '@/components/post/blocks/LinkBlockContent';
-
 import { useCurUserContext } from '../utils/CurUserContext';
 import { CommentsModal } from '@/components/post/comments/CommentsModal';
 import { makeApiCall } from '@/utils';
@@ -14,6 +15,11 @@ import {
 	NewCommentResponse,
 	DefaultResponse,
 } from '@/types/api';
+import { DismissWarningModal } from '../DismissWarningModal';
+
+const PostContentWrapper = styled.div`
+	margin: 0 ${rem(16)};
+`;
 
 function renderPostContent(content: Block, key: string) {
 	switch (content.type) {
@@ -59,9 +65,14 @@ export const PostPreview = (props: Props) => {
 	const [commentsDisabled, setCommentsDisabled] = useState(
 		post.commentsDisabled
 	);
+	const [deleteWarningOpen, setDeleteWarningOpen] = useState(false);
 
 	const { curUser } = useCurUserContext();
 	const { token } = curUser;
+
+	const tryDeletePost = (id: number) => {
+		setDeleteWarningOpen(true);
+	};
 
 	const onClickLikeDebug = useCallback(async () => {
 		setLikesLoading(true);
@@ -152,9 +163,21 @@ export const PostPreview = (props: Props) => {
 
 	return (
 		<div>
-			{post.content.map((block, index) =>
-				renderPostContent(block, index.toString())
-			)}
+			<PostContentWrapper>
+				{post.content.map((block, index) =>
+					renderPostContent(block, index.toString())
+				)}
+			</PostContentWrapper>
+
+			<DismissWarningModal
+				isOpen={deleteWarningOpen}
+				onNo={() => setDeleteWarningOpen(false)}
+				onYes={() => {
+					setDeleteWarningOpen(false);
+					props.onDeletePost(post.id);
+				}}
+				message='Delete this post?'
+			/>
 
 			<CommentsModal
 				isOpen={commentsOpen}
@@ -173,7 +196,7 @@ export const PostPreview = (props: Props) => {
 				likeCount={likeCount}
 				isLiked={isLiked}
 				onClickLike={likesLoading ? () => null : onClickLikeDebug}
-				onDelete={() => props.onDeletePost(post.id)}
+				onDelete={() => tryDeletePost(post.id)}
 				isOwnPost={props.isOwnPost}
 				commentsDisabled={commentsDisabled}
 				toggleDisableComments={toggleDisableComments}

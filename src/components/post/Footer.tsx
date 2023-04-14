@@ -9,7 +9,7 @@ import {
 	IconBan,
 	IconMessageCircleOff,
 } from '@tabler/icons-react';
-import { Group, Button, Text, Menu, ActionIcon } from '@mantine/core';
+import { Group, Button, Text, Menu, ActionIcon, Tooltip } from '@mantine/core';
 
 import { getPostTime } from '../utils/time';
 
@@ -99,9 +99,13 @@ export const Footer = (props: FooterProps) => {
 								icon={<IconBan size={14} />}
 								onClick={props.toggleDisableComments}
 							>
-								{props.commentsDisabled
-									? 'Enable comments'
-									: 'Disable comments'}
+								<Tooltip label='Delete post' position='bottom'>
+									<span>
+										{props.commentsDisabled
+											? 'Enable comments'
+											: 'Disable comments'}
+									</span>
+								</Tooltip>
 							</Menu.Item>
 						</Menu.Dropdown>
 					</Menu>

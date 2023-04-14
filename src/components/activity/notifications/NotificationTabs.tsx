@@ -1,14 +1,16 @@
 import { useEffect } from 'react';
 import useSWR from 'swr';
-import { Tabs, Center, Title, Space } from '@mantine/core';
+import { Tabs, Center, Title, Space, Badge } from '@mantine/core';
 
 import { NotificationItem } from './NotificationItem';
 import { TabsWrapper } from '../requests/_style';
 import { showAndLogErrorNotification } from '@/showerror';
-import { NotificationsResponse } from '@/types/api';
+import { NotificationsResponse, DefaultResponse } from '@/types/api';
 import { fetchWithToken } from '@/utils';
 import { useCurUserContext } from '@/components/utils/CurUserContext';
 import { NotificationType } from '@/types/notification';
+import { EmptyTab, LoadingTab } from '../TabStates';
+import { makeApiCall } from '@/utils';
 
 export const NotificationTabs = () => {
 	const { curUser } = useCurUserContext();
@@ -21,13 +23,49 @@ export const NotificationTabs = () => {
 		{ shouldRetryOnError: false }
 	);
 
-	const notificationsCount = data?.notifications.length;
+	const totalUnreadCount = data?.unreadCount;
+	const totalCount = data?.totalCount;
+
+	const commentNotifications = data?.notifications.filter(
+		notif => notif.body.type === NotificationType.COMMENT
+	);
+	const commentNotificationsCount = commentNotifications?.length;
+	const unreadCommentNotificationsCount = commentNotifications?.filter(
+		notif => notif.isUnread
+	).length;
+
+	const likeNotifications = data?.notifications.filter(
+		notif => notif.body.type === NotificationType.POST_LIKE
+	);
+	const likeNotificationsCount = likeNotifications?.length;
+	const unreadLikeNotificationsCount = likeNotifications?.filter(
+		notif => notif.isUnread
+	).length;
 
 	useEffect(() => {
 		if (error) {
 			showAndLogErrorNotification(`Couldn't load friend requests`, error);
 		}
 	}, [error]);
+
+	useEffect(() => {
+		const markNotificationsAsRead = async () => {
+			try {
+				const resp = await makeApiCall<DefaultResponse>({
+					uri: `/notifications/read`,
+					method: 'POST',
+					token,
+				});
+				if (!resp.success) {
+					throw new Error(resp.error);
+				}
+			} catch (err) {
+				showAndLogErrorNotification(`Couldn't mark notifications as read`, err);
+			}
+		};
+
+		markNotificationsAsRead();
+	}, []);
 
 	return (
 		<>
@@ -37,9 +75,66 @@ export const NotificationTabs = () => {
 					<Space h='xl' />
 					<Tabs color='grape' defaultValue='all'>
 						<Tabs.List>
-							<Tabs.Tab value='all'>All</Tabs.Tab>
-							<Tabs.Tab value='comments'>Comments</Tabs.Tab>
-							<Tabs.Tab value='likes'>Likes</Tabs.Tab>
+							<Tabs.Tab
+								value='all'
+								rightSection={
+									totalUnreadCount ? (
+										<Badge
+											w={16}
+											h={16}
+											sx={{ pointerEvents: 'none' }}
+											variant='filled'
+											size='sm'
+											p={0}
+											color='grape'
+										>
+											{totalUnreadCount}
+										</Badge>
+									) : null
+								}
+							>
+								⭐️ All
+							</Tabs.Tab>
+							<Tabs.Tab
+								value='comments'
+								rightSection={
+									unreadCommentNotificationsCount ? (
+										<Badge
+											w={16}
+											h={16}
+											sx={{ pointerEvents: 'none' }}
+											variant='filled'
+											size='sm'
+											p={0}
+											color='grape'
+										>
+											{unreadCommentNotificationsCount}
+										</Badge>
+									) : null
+								}
+							>
+								💬 Comments
+							</Tabs.Tab>
+							<Tabs.Tab
+								value='likes'
+								rightSection={
+									unreadLikeNotificationsCount ? (
+										<Badge
+											w={16}
+											h={16}
+											sx={{ pointerEvents: 'none' }}
+											variant='filled'
+											size='sm'
+											p={0}
+											color='grape'
+										>
+											{unreadLikeNotificationsCount}
+										</Badge>
+									) : null
+								}
+							>
+								💜 Likes
+							</Tabs.Tab>
 						</Tabs.List>
 						<Tabs.Panel value='all'>
 							{data &&
@@ -49,34 +144,30 @@ export const NotificationTabs = () => {
 										notification={notification}
 									/>
 								))}
+							{isLoading && <LoadingTab />}
+							{!isLoading && !totalCount && <EmptyTab />}
 						</Tabs.Panel>
 						<Tabs.Panel value='comments'>
-							{data &&
-								data.notifications
-									.filter(
-										notification =>
-											notification.body.type === NotificationType.COMMENT
-									)
-									.map(notification => (
-										<NotificationItem
-											key={`notif-${notification.id}`}
-											notification={notification}
-										/>
-									))}
+							{commentNotifications &&
+								commentNotifications.map(notification => (
+									<NotificationItem
+										key={`notif-${notification.id}`}
+										notification={notification}
+									/>
+								))}
+							{isLoading && <LoadingTab />}
+							{!isLoading && !commentNotificationsCount && <EmptyTab />}
 						</Tabs.Panel>
 						<Tabs.Panel value='likes'>
-							{data &&
-								data.notifications
-									.filter(
-										notification =>
-											notification.body.type === NotificationType.POST_LIKE
-									)
-									.map(notification => (
-										<NotificationItem
-											key={`notif-${notification.id}`}
-											notification={notification}
-										/>
-									))}
+							{likeNotifications &&
+								likeNotifications.map(notification => (
+									<NotificationItem
+										key={`notif-${notification.id}`}
+										notification={notification}
+									/>
+								))}
+							{isLoading && <LoadingTab />}
+							{!isLoading && !commentNotificationsCount && <EmptyTab />}
 						</Tabs.Panel>
 					</Tabs>
 				</TabsWrapper>
