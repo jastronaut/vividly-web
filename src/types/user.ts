@@ -19,9 +19,10 @@ export enum FriendType {
 
 export type Friend = {
 	id: number;
-	friendType: FriendType;
 	isFavorite: boolean;
-	user: User;
+	lastReadPostId: number | null;
+	lastReadPostTime: string;
+	friend: User;
 };
 
 export type FriendRequest = {

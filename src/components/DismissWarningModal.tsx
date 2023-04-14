@@ -3,8 +3,8 @@ import { Modal, Center, Text, Stack, Flex, Button, Space } from '@mantine/core';
 
 type Props = {
 	isOpen: boolean;
-	onClose: () => void;
-	onDeleteDraft: () => void;
+	onNo: () => void;
+	onYes: () => void;
 	message: string;
 };
 
@@ -23,11 +23,11 @@ export const DismissWarningModal = (props: Props) => {
 					<Text style={{ marginBottom: '0' }}>{props.message}</Text>
 					<Center>
 						<Flex>
-							<Button radius='xl' color='red' onClick={props.onDeleteDraft}>
+							<Button radius='lg' color='red' onClick={props.onYes}>
 								Yep
 							</Button>
 							<Space w='md' />
-							<Button radius='xl' color='gray' onClick={props.onClose}>
+							<Button radius='lg' color='gray' onClick={props.onNo}>
 								Nope
 							</Button>
 						</Flex>

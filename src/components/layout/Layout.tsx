@@ -13,7 +13,7 @@ const MainContent = styled.main``;
 
 export const Layout = ({ children }: Props) => {
 	return (
-		<VividlyThemeProvider theme={lightTheme}>
+		<VividlyThemeProvider>
 			<MainContent>{children}</MainContent>
 		</VividlyThemeProvider>
 	);

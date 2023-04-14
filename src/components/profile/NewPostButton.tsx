@@ -2,7 +2,7 @@ import { Affix, ActionIcon } from '@mantine/core';
 import { IconFeather } from '@tabler/icons-react';
 
 type Props = {
-	isOpen: boolean;
+	isVisible: boolean;
 	toggle: () => void;
 };
 
@@ -14,7 +14,7 @@ export const NewPostButton = (props: Props) => {
 				right: '1rem',
 			}}
 			style={{
-				visibility: props.isOpen ? 'hidden' : 'visible',
+				visibility: props.isVisible ? 'hidden' : 'visible',
 			}}
 		>
 			<ActionIcon

@@ -424,8 +424,8 @@ export const EditorModal = (props: EditorModalProps) => {
 		>
 			<DismissWarningModal
 				isOpen={isWarningModalOpen}
-				onClose={() => setIsWarningModalOpen(false)}
-				onDeleteDraft={() => {
+				onNo={() => setIsWarningModalOpen(false)}
+				onYes={() => {
 					props.onClose();
 					setIsWarningModalOpen(false);
 				}}

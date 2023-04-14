@@ -1,4 +1,4 @@
-import { User, FriendshipInfo, FriendRequest, CurUser } from './user';
+import { User, FriendshipInfo, FriendRequest, CurUser, Friend } from './user';
 import { Post } from './post';
 import { NotificationBody } from './notification';
 
@@ -15,6 +15,7 @@ export type UserResponse = {
 	user: User;
 	friendship: FriendshipInfo | null;
 	friendRequest: {
+		id: number;
 		fromUserId: number;
 		toUserId: number;
 	} | null;
@@ -68,8 +69,14 @@ export interface NotificationsResponse extends DefaultResponse {
 		isUnread: boolean;
 		sender: User;
 	}[];
+	unreadCount: number;
+	totalCount: number;
 }
 
 export interface LoginResponse extends DefaultResponse {
 	user: CurUser;
+}
+
+export interface FriendsRespose extends DefaultResponse {
+	friends: Friend[];
 }

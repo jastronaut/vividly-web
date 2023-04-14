@@ -72,8 +72,8 @@ export const CommentsModal = (props: Props) => {
 		>
 			<DismissWarningModal
 				isOpen={isWarningModalOpen}
-				onClose={() => setIsWarningModalOpen(false)}
-				onDeleteDraft={() => {
+				onNo={() => setIsWarningModalOpen(false)}
+				onYes={() => {
 					props.onClose();
 					setIsWarningModalOpen(false);
 					setDraft('');
