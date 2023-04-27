@@ -17,6 +17,7 @@ import {
 	IconClockHour9,
 	IconX,
 } from '@tabler/icons-react';
+import { BaseEditor, Transforms } from 'slate';
 
 import { BlockType as EditorBlockType } from '../../types/editor';
 import { EditorContainer, MagicTextWrapper } from './styles';
@@ -27,6 +28,8 @@ import { getWeatherEmoji, kelvinToFahrenheit } from './utils';
 import { Block, BlockType } from '@/types/post';
 
 import { OpenWeatherResponse } from '../../types/editor';
+
+type SlateEditor = BaseEditor & ReactEditor;
 
 const openWeatherKey =
 	process.env.REACT_APP_OPEN_WEATHER_API_KEY ||
@@ -161,16 +164,17 @@ const Editor = (props: EditorProps) => {
 		ReactEditor.focus(editor);
 	};
 
-	const addImage = () => {
-		editor.insertNode({
+	const addImage = (editor: SlateEditor) => {
+		const img = {
 			type: EditorBlockType.IMAGE,
 			url: 'https://i.ibb.co/CnxM4Hj/grid-0-2.jpg',
 			width: 100,
 			height: 100,
 			children: [{ text: '' }],
-		});
+		};
 
-		finishAddingBlock();
+		// @ts-ignore
+		Transforms.insertNodes(editor, img);
 	};
 
 	const onPaste = (event: React.ClipboardEvent<HTMLDivElement>) => {
@@ -302,7 +306,7 @@ const Editor = (props: EditorProps) => {
 					radius='xl'
 					color='grape'
 					size='lg'
-					onClick={addImage}
+					onClick={() => addImage(editor)}
 					title='Add Image'
 				>
 					<IconPhoto />
