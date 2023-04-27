@@ -11,7 +11,12 @@ type Props = {
 
 export const AddFriendForm = (props: Props) => {
 	const [username, setUsername] = useState<string>('');
-	const { addFriend, error, isAddingFriend, friendRequest } = useAddNewFriend();
+	const {
+		addFriend,
+		error,
+		isLoading: isAddingFriend,
+		friendRequest,
+	} = useAddNewFriend();
 
 	useEffect(() => {
 		if (friendRequest) {
