@@ -4,7 +4,11 @@ import styled from 'styled-components';
 import { IconPlus } from '@tabler/icons-react';
 import { useDisclosure } from '@mantine/hooks';
 
-import { UserResponse, FeedResponse as Feed } from '@/types/api';
+import {
+	UserResponse,
+	ProfileFeedResponse as Feed,
+	ProfileFeedResponse,
+} from '@/types/api';
 import { User } from '@/types/user';
 import { useCurUserContext } from '@/components/utils/CurUserContext';
 
@@ -19,7 +23,7 @@ const ContentWrapper = styled.div`
 type ProfileContentProps = {
 	user?: UserResponse;
 	isUserLoading: boolean;
-	feed?: Feed[];
+	feed?: ProfileFeedResponse[];
 	isPostsLoading: boolean;
 	onDeletePost: (id: number, pageIndex: number) => void;
 	children?: React.ReactNode;

@@ -62,12 +62,15 @@ export type LinkBlock = {
 
 export type Block = TextBlock | ImageBlock | MusicBlock | LinkBlock;
 
-export type Post = {
+export type BasePost = {
 	id: number;
 	authorId: number;
 	createdTime: number;
-	commentsDisabled: boolean;
 	content: Block[];
+};
+
+export interface Post extends BasePost {
+	commentsDisabled: boolean;
 	isUpdated: boolean;
 	likes: number;
 	comments: Comment[];
@@ -78,4 +81,4 @@ export type Post = {
 		username: string;
 		avatarSrc: string;
 	};
-};
+}

@@ -20,7 +20,7 @@ import {
 	useCurUserContext,
 } from '@/components/utils/CurUserContext';
 import AppShellLayout from '@/components/layout/AppShellLayout';
-import { UserResponse, FeedResponse } from '@/types/api';
+import { UserResponse, ProfileFeedResponse } from '@/types/api';
 
 type PageProps = {
 	id: string;
@@ -54,8 +54,8 @@ const Profile = (props: PageProps) => {
 		size,
 		setSize,
 		mutate,
-	} = useSWRInfinite<FeedResponse>(
-		(pageIndex: number, previousPageData: FeedResponse | null) => {
+	} = useSWRInfinite<ProfileFeedResponse>(
+		(pageIndex: number, previousPageData: ProfileFeedResponse | null) => {
 			// reached the end
 			if (
 				!token ||

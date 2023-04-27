@@ -1,5 +1,5 @@
 import { User, FriendshipInfo, FriendRequest, CurUser, Friend } from './user';
-import { Post } from './post';
+import { Post, BasePost } from './post';
 import { NotificationBody } from './notification';
 
 export type DefaultResponse = {
@@ -13,7 +13,7 @@ export type LikesResponse = {
 
 export type UserResponse = {
 	user: User;
-	friendship: FriendshipInfo | null;
+	friendship: Friend | null;
 	friendRequest: {
 		id: number;
 		fromUserId: number;
@@ -22,7 +22,7 @@ export type UserResponse = {
 	isBlocked: boolean;
 };
 
-export type FeedResponse = {
+export type ProfileFeedResponse = {
 	data: Post[];
 	cursor: number | null;
 };
@@ -54,7 +54,7 @@ export type FriendRequestsResponse = {
 	outbound: FriendRequest[];
 };
 export interface AcceptFriendRequestResponse extends DefaultResponse {
-	friendship: FriendshipInfo;
+	friendship: Friend;
 }
 
 export interface SendFriendRequestResponse extends DefaultResponse {
@@ -79,4 +79,11 @@ export interface LoginResponse extends DefaultResponse {
 
 export interface FriendsRespose extends DefaultResponse {
 	friends: Friend[];
+}
+
+export interface FeedResponse extends DefaultResponse {
+	userFeeds: {
+		user: User;
+		lastPost: BasePost;
+	}[];
 }
