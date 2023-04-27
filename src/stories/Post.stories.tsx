@@ -1,7 +1,7 @@
 import React from 'react';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 
-import { VividlyThemeProvider, lightTheme } from '../styles/Theme';
+import { VividlyThemeProvider } from '../styles/Theme';
 import { Post } from '../components/Post';
 import { BlockType } from '@/types/post';
 
@@ -11,7 +11,7 @@ export default {
 } as ComponentMeta<typeof Post>;
 
 const Template: ComponentStory<typeof Post> = args => (
-	<VividlyThemeProvider theme={lightTheme}>
+	<VividlyThemeProvider>
 		<Post {...args} />
 	</VividlyThemeProvider>
 );

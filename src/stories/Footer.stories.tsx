@@ -2,7 +2,7 @@ import React from 'react';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 import { Card } from '@mantine/core';
 
-import { VividlyThemeProvider, lightTheme } from '../styles/Theme';
+import { VividlyThemeProvider } from '../styles/Theme';
 import { Footer } from '../components/post/Footer';
 
 export default {
@@ -11,7 +11,7 @@ export default {
 } as ComponentMeta<typeof Footer>;
 
 const Template: ComponentStory<typeof Footer> = args => (
-	<VividlyThemeProvider theme={lightTheme}>
+	<VividlyThemeProvider>
 		<Card shadow='sm' p='xl' radius='md' withBorder style={{ width: '500px' }}>
 			<Footer {...args} />
 		</Card>

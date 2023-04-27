@@ -71,7 +71,11 @@ export const FriendsDrawer = (props: Props) => {
 			>
 				<Center>
 					<Link href='/friend-requests'>
-						<Button component='a' rightIcon={<IconArrowRight />}>
+						<Button
+							component='a'
+							rightIcon={<IconArrowRight />}
+							variant='outline'
+						>
 							Manage friend requests
 						</Button>
 					</Link>

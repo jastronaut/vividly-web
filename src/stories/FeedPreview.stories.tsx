@@ -1,7 +1,7 @@
 import React from 'react';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 
-import { VividlyThemeProvider, lightTheme } from '../styles/Theme';
+import { VividlyThemeProvider } from '../styles/Theme';
 import { FeedPreview } from '../components/FeedPreview';
 
 export default {
@@ -10,7 +10,7 @@ export default {
 } as ComponentMeta<typeof FeedPreview>;
 
 const Template: ComponentStory<typeof FeedPreview> = args => (
-	<VividlyThemeProvider theme={lightTheme}>
+	<VividlyThemeProvider>
 		<FeedPreview {...args} />
 	</VividlyThemeProvider>
 );

@@ -2,7 +2,7 @@ import React from 'react';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 
 import { ProfileHeaderComponent } from '../components/profile/header/header';
-import { VividlyThemeProvider, lightTheme } from '../styles/Theme';
+import { VividlyThemeProvider } from '../styles/Theme';
 
 export default {
 	title: 'Profile/Header',
@@ -10,7 +10,7 @@ export default {
 } as ComponentMeta<typeof ProfileHeaderComponent>;
 
 export const Primary: ComponentStory<typeof ProfileHeaderComponent> = args => (
-	<VividlyThemeProvider theme={lightTheme}>
+	<VividlyThemeProvider>
 		<ProfileHeaderComponent {...args} />
 	</VividlyThemeProvider>
 );

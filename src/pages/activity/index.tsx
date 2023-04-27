@@ -25,7 +25,11 @@ const FriendsPage: Page = () => {
 						<Space h='xl' />
 						<Center>
 							<Link href='/friend-requests'>
-								<Button component='a' rightIcon={<IconArrowRight />}>
+								<Button
+									component='a'
+									rightIcon={<IconArrowRight />}
+									variant='outline'
+								>
 									Manage friend requests
 								</Button>
 							</Link>

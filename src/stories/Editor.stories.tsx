@@ -2,7 +2,7 @@ import React from 'react';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 
 import Editor from '../components/editor';
-import { VividlyThemeProvider, lightTheme, darkTheme } from '../styles/Theme';
+import { VividlyThemeProvider } from '../styles/Theme';
 import { BlockType } from '@/types/editor';
 
 export default {
@@ -11,7 +11,7 @@ export default {
 } as ComponentMeta<typeof Editor>;
 
 const Template: ComponentStory<typeof Editor> = args => (
-	<VividlyThemeProvider theme={lightTheme}>
+	<VividlyThemeProvider>
 		<Editor {...args} />
 	</VividlyThemeProvider>
 );
