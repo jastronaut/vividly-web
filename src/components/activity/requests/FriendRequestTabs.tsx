@@ -6,7 +6,7 @@ import { notifications } from '@mantine/notifications';
 import { AddFriendForm } from './AddFriendForm';
 import { FriendRequest } from '@/types/user';
 import { showAndLogErrorNotification } from '@/showerror';
-import { fetchWithToken } from '@/utils';
+import { fetchWithToken, throwConfetti } from '@/utils';
 import { useCurUserContext } from '@/components/utils/CurUserContext';
 import { FriendRequestItem } from '@/components/activity/requests/FriendRequestItem';
 import { TabsWrapper } from './_style';
@@ -17,6 +17,12 @@ import {
 	FriendRequestsResponse,
 } from '@/types/api';
 import { EmptyTab, LoadingTab } from '../TabStates';
+import {
+	useAcceptFriendRequest,
+	useAddNewFriend,
+	useDeclineFriendRequest,
+	useCancelFriendRequest,
+} from './hooks';
 
 export const FriendRequestTabs = () => {
 	const { curUser } = useCurUserContext();
@@ -36,6 +42,24 @@ export const FriendRequestTabs = () => {
 	const outboundCount = data?.outbound.length;
 	const inboundCount = data?.inbound.length;
 
+	const {
+		acceptFriendRequest,
+		isLoading: acceptLoading,
+		error: acceptError,
+		friendship,
+	} = useAcceptFriendRequest();
+	const {
+		declineFriendRequest,
+		isLoading: declineLoading,
+		error: declineError,
+		declinedId,
+	} = useDeclineFriendRequest();
+	const {
+		cancelFriendRequest,
+		isLoading: cancelLoading,
+		error: cancelError,
+	} = useCancelFriendRequest();
+
 	const addFriendRequest = (friendRequest: FriendRequest) => {
 		mutate(data => {
 			if (data) {
@@ -51,43 +75,11 @@ export const FriendRequestTabs = () => {
 		});
 	};
 
-	const onClickAccept = useCallback(
-		async (id: number) => {
-			try {
-				const resp = await makeApiCall<AcceptFriendRequestResponse>({
-					uri: `/friends/accept/${id}`,
-					method: 'POST',
-					token,
-				});
-
-				if (!resp.success) {
-					throw new Error(resp.error);
-				}
-
-				mutate(data => {
-					if (data) {
-						return {
-							...data,
-							inbound: data.inbound.filter(
-								(req: FriendRequest) => req.user.id !== id
-							),
-						};
-					}
-
-					return data;
-				});
-			} catch (err) {
-				showAndLogErrorNotification(`Couldn't accept friend request`, err);
-			}
-		},
-		[token, mutate]
-	);
-
 	const onClickDecline = useCallback(
 		async (id: number) => {
 			try {
 				const resp = await makeApiCall<DefaultResponse>({
-					uri: `/friends/reject/${id}`,
+					uri: `/friends/requests/reject/${id}`,
 					method: 'POST',
 					token,
 				});
@@ -163,6 +155,72 @@ export const FriendRequestTabs = () => {
 		}
 	}, [loadFriendsError]);
 
+	useEffect(() => {
+		if (acceptError) {
+			showAndLogErrorNotification(
+				`Couldn't accept friend request`,
+				acceptError
+			);
+		}
+	}, [acceptError]);
+
+	useEffect(() => {
+		if (declineError) {
+			showAndLogErrorNotification(
+				`Couldn't decline friend request`,
+				declineError
+			);
+		}
+	}, [declineError]);
+
+	useEffect(() => {
+		if (cancelError) {
+			showAndLogErrorNotification(
+				`Couldn't cancel friend request`,
+				cancelError
+			);
+		}
+	}, [cancelError]);
+
+	useEffect(() => {
+		if (friendship && !isLoading) {
+			mutate(data => {
+				if (data) {
+					return {
+						...data,
+						inbound: data.inbound.filter(
+							(req: FriendRequest) => req.user.id !== friendship.friend.id
+						),
+					};
+				}
+
+				return data;
+			});
+			notifications.show({
+				message: `You're now friends with @${friendship.friend.username}!`,
+				color: 'teal',
+			});
+			throwConfetti();
+		}
+	}, [friendship, isLoading, mutate]);
+
+	useEffect(() => {
+		if (declinedId === null || declineLoading) {
+			return;
+		}
+
+		mutate(data => {
+			if (data) {
+				return {
+					...data,
+					inbound: data.inbound.filter(
+						(req: FriendRequest) => req.id !== declinedId
+					),
+				};
+			}
+		});
+	}, [declinedId, declineLoading, mutate]);
+
 	return (
 		<>
 			<Center>
@@ -218,8 +276,8 @@ export const FriendRequestTabs = () => {
 									<FriendRequestItem
 										key={friend.id}
 										user={friend.user}
-										onClickDecline={() => onClickDecline(friend.user.id)}
-										onClickAccept={() => onClickAccept(friend.user.id)}
+										onClickDecline={() => declineFriendRequest(friend.id)}
+										onClickAccept={() => acceptFriendRequest(friend.id)}
 										onClickBlock={() => onClickBlock(friend.user.id, true)}
 									/>
 								);

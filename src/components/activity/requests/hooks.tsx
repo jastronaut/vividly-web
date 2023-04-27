@@ -6,7 +6,7 @@ import {
 	AcceptFriendRequestResponse,
 	DefaultResponse,
 } from '@/types/api';
-import { FriendRequest, FriendshipInfo } from '@/types/user';
+import { FriendRequest, Friend } from '@/types/user';
 import { useCurUserContext } from '@/components/utils/CurUserContext';
 
 export const useAddNewFriend = () => {
@@ -19,6 +19,7 @@ export const useAddNewFriend = () => {
 
 	const addFriend = useCallback(
 		async (username: string) => {
+			if (!username) return;
 			setIsLoading(true);
 			try {
 				const resp = await makeApiCall<SendFriendRequestResponse>({
@@ -54,7 +55,7 @@ export const useAcceptFriendRequest = () => {
 	const { token } = useCurUserContext().curUser;
 	const [isLoading, setIsLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
-	const [friendship, setFriendship] = useState<FriendshipInfo | null>(null);
+	const [friendship, setFriendship] = useState<Friend | null>(null);
 
 	const acceptFriendRequest = useCallback(
 		async (id: number) => {
@@ -92,6 +93,7 @@ export const useDeclineFriendRequest = () => {
 	const { token } = useCurUserContext().curUser;
 	const [isLoading, setIsLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
+	const [declinedId, setDeclinedId] = useState<number | null>(null);
 
 	const declineFriendRequest = useCallback(
 		async (id: number) => {
@@ -106,6 +108,7 @@ export const useDeclineFriendRequest = () => {
 				if (!resp.success) {
 					throw new Error(resp.error);
 				}
+				setDeclinedId(id);
 			} catch (err) {
 				console.error(err);
 				setError(`Couldn't decline friend request`);
@@ -120,6 +123,7 @@ export const useDeclineFriendRequest = () => {
 		isLoading,
 		error,
 		declineFriendRequest,
+		declinedId,
 	};
 };
 

@@ -32,6 +32,7 @@ export const ActionsContainer = styled(Group)`
 
 export const LeftContent = styled(Flex)`
 	max-width: 80%;
+	cursor: pointer;
 	@media screen and (max-width: 800px) {
 		max-width: 100%;
 	}
