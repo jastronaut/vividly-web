@@ -76,7 +76,7 @@ const Profile = (props: PageProps) => {
 			// add the cursor to the API endpoint
 			if (previousPageData)
 				return [
-					`${uri}feed/uid/${id}?cursor=${previousPageData.cursor}`,
+					`${uri}/feed/uid/${id}?cursor=${previousPageData.cursor}`,
 					token,
 				];
 			return null;
@@ -194,30 +194,28 @@ const Profile = (props: PageProps) => {
 		}
 	}, [userError]);
 
-	// useEffect(() => {
-	// 	setInitLoad(false);
-	// }, [data]);
+	useEffect(() => {
+		setInitLoad(false);
+	}, [data]);
 
-	// useEffect(() => {
-	// 	return () => {
-	// 		setIsEditorOpen(false);
-	// 		setInitLoad(true);
-	// 	};
-	// }, []);
+	useEffect(() => {
+		return () => {
+			setIsEditorOpen(false);
+			setInitLoad(true);
+		};
+	}, [id]);
 
-	// useEffect(() => {
-	// 	// if (containerRef.current) {
-	// 	// 	containerRef.current.scrollTop = containerRef.current.scrollHeight;
-	// 	// }
-	// 	// scroll to bottom of page
-	// 	if (chatEndRef.current) {
-	// 		chatEndRef.current.scrollIntoView({ behavior: 'smooth' });
-	// 	}
-	// }, []);
+	useEffect(() => {
+		if (chatEndRef.current) {
+			console.log('scrolling in profile page');
+			chatEndRef.current.scrollIntoView({ behavior: 'smooth' });
+		}
+	}, []);
+
 	return (
 		<>
 			<ProfileContent
-				// initLoad={initLoad}
+				initLoad={initLoad}
 				user={user}
 				isUserLoading={isUserLoading}
 				isPostsLoading={isPostsLoading}
@@ -244,7 +242,7 @@ const Profile = (props: PageProps) => {
 					</>
 				)}
 			</ProfileContent>
-			{/* {initLoad && <div ref={chatEndRef} />} */}
+			{initLoad && <div ref={chatEndRef} />}
 		</>
 	);
 };

@@ -196,3 +196,36 @@ export const useCancelFriendRequest = () => {
 		cancelFriendRequest,
 	};
 };
+
+export const useToggleFavorite = () => {
+	const { token } = useCurUserContext().curUser;
+	const [isLoading, setIsLoading] = useState(false);
+	const [error, setError] = useState<string | null>(null);
+
+	const toggleFavorite = useCallback(
+		async (id: number, isFavorite: boolean) => {
+			setIsLoading(true);
+			try {
+				const resp = await makeApiCall<DefaultResponse>({
+					uri: `/friends/${isFavorite ? 'un' : ''}favorite/${id}`,
+					method: 'POST',
+					token,
+				});
+
+				if (!resp.success) {
+					throw new Error(resp.error);
+				}
+			} catch (err) {
+				console.error(err);
+				setError(`Couldn't ${isFavorite ? 'un' : ''}favorite!`);
+			}
+		},
+		[token]
+	);
+
+	return {
+		isLoading,
+		error,
+		toggleFavorite,
+	};
+};

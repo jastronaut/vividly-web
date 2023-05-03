@@ -1,5 +1,21 @@
-import { Flex, Space, Menu, ActionIcon, Text } from '@mantine/core';
-import { IconDots, IconUserMinus } from '@tabler/icons-react';
+import { useState } from 'react';
+import {
+	Flex,
+	Space,
+	Menu,
+	ActionIcon,
+	Text,
+	Container,
+	Badge,
+	Box,
+} from '@mantine/core';
+import {
+	IconDots,
+	IconUserMinus,
+	IconStarFilled,
+	IconStarOff,
+	IconStar,
+} from '@tabler/icons-react';
 import Link from 'next/link';
 import styled from 'styled-components';
 import { rem } from 'polished';
@@ -10,6 +26,7 @@ import { Avatar } from '@/components/Avatar';
 import { MenuContainer } from '@/components/post/comments/styles';
 import { TextContainer } from '@/components/activity/requests/styles';
 import { Wrapper } from '@/components/activity/requests/styles';
+import { DismissWarningModal } from '@/components/DismissWarningModal';
 
 const AvatarStyled = styled(Avatar)`
 	transition: 0.15s ease opacity;
@@ -32,15 +49,25 @@ type FriendItemProps = {
 	closeDrawer: () => void;
 	friendshipInfo: Friend;
 	unfriendUser: (id: number) => void;
+	toggleFavorite: (id: number, isFavorite: boolean) => void;
 };
 
 export const FriendItem = (props: FriendItemProps) => {
+	const [warningModalOpen, setWarningModalOpen] = useState(false);
 	const { friendshipInfo } = props;
 	const { friend } = friendshipInfo;
 	const router = useRouter();
 
+	const { isFavorite } = friendshipInfo;
+
 	return (
 		<>
+			<DismissWarningModal
+				isOpen={warningModalOpen}
+				message={'Are you sure you want to unfriend this user?'}
+				onNo={() => setWarningModalOpen(false)}
+				onYes={() => props.unfriendUser(friend.id)}
+			/>
 			<WrapperStyled withHover>
 				<Flex sx={{ justifyContent: 'space-between', flexGrow: 1 }}>
 					<Flex>
@@ -77,6 +104,16 @@ export const FriendItem = (props: FriendItemProps) => {
 										{` @`}
 										{friend.username}
 									</TextStyled>
+									{isFavorite && (
+										<Badge
+											sx={{ marginLeft: '5px', border: 'none' }}
+											color='yellow'
+											size='xs'
+											variant='outline'
+										>
+											<IconStarFilled size={14} />
+										</Badge>
+									)}
 								</Link>
 							</Flex>
 							{friend.bio ? (
@@ -97,9 +134,21 @@ export const FriendItem = (props: FriendItemProps) => {
 							</Menu.Target>
 							<Menu.Dropdown>
 								<Menu.Item
+									icon={
+										isFavorite ? (
+											<IconStarOff size={14} />
+										) : (
+											<IconStar size={14} />
+										)
+									}
+									onClick={() => props.toggleFavorite(friend.id, isFavorite)}
+								>
+									{isFavorite ? 'Unfavorite' : 'Favorite'}
+								</Menu.Item>
+								<Menu.Item
 									color='red'
 									icon={<IconUserMinus size={14} />}
-									onClick={() => props.unfriendUser(friend.id)}
+									onClick={() => setWarningModalOpen(true)}
 								>
 									Unfriend
 								</Menu.Item>

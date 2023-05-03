@@ -11,7 +11,10 @@ import { FriendItem } from './FriendItem';
 import { showAndLogErrorNotification } from '@/showerror';
 import { useCurUserContext } from '@/components/utils/CurUserContext';
 import { MiniLoader } from '@/components/utils/Loading';
-import { useUnfriend } from '@/components/activity/requests/hooks';
+import {
+	useUnfriend,
+	useToggleFavorite,
+} from '@/components/activity/requests/hooks';
 
 type Props = {
 	isOpen: boolean;
@@ -34,6 +37,12 @@ export const FriendsDrawer = (props: Props) => {
 		error: unfriendError,
 	} = useUnfriend();
 
+	const {
+		toggleFavorite,
+		isLoading: toggleFavoriteLoading,
+		error: toggleFavoriteError,
+	} = useToggleFavorite();
+
 	const showLoading = isLoading || !data;
 
 	const unfriendAndUpdate = (id: number) => {
@@ -43,6 +52,27 @@ export const FriendsDrawer = (props: Props) => {
 				return {
 					...data,
 					friends: data.friends.filter(friend => friend.friend.id !== id),
+				};
+			}
+			return data;
+		}, false);
+	};
+
+	const toggleFavoriteAndUpdate = (id: number, isFavorite: boolean) => {
+		toggleFavorite(id, isFavorite);
+		mutate(data => {
+			if (data) {
+				return {
+					...data,
+					friends: data.friends.map(friend => {
+						if (friend.friend.id === id) {
+							return {
+								...friend,
+								isFavorite: !friend.isFavorite,
+							};
+						}
+						return friend;
+					}),
 				};
 			}
 			return data;
@@ -98,6 +128,7 @@ export const FriendsDrawer = (props: Props) => {
 								friendshipInfo={friend}
 								closeDrawer={props.close}
 								unfriendUser={unfriendAndUpdate}
+								toggleFavorite={toggleFavoriteAndUpdate}
 							/>
 						);
 					})}

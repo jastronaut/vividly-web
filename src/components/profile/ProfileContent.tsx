@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from 'react';
 import { Button, Skeleton, Stack, Space, Center, Text } from '@mantine/core';
 import { rem } from 'polished';
 import styled from 'styled-components';
@@ -22,6 +23,7 @@ const ContentWrapper = styled.div`
 
 type ProfileContentProps = {
 	user?: UserResponse;
+	initLoad: boolean;
 	isUserLoading: boolean;
 	feed?: ProfileFeedResponse[];
 	isPostsLoading: boolean;
@@ -81,8 +83,9 @@ const PrivateProfileMessage = () => {
 
 export const ProfileContent = (props: ProfileContentProps) => {
 	const { curUser } = useCurUserContext();
-	const { isUserLoading, isPostsLoading } = props;
+	const { isUserLoading, isPostsLoading, initLoad } = props;
 	const [friendsDrawerOpen, { open, close }] = useDisclosure(false);
+	const containerRef = useRef<HTMLDivElement>(null);
 
 	const user = props.user;
 	const feed: Feed[] = props.feed || [];
@@ -94,6 +97,17 @@ export const ProfileContent = (props: ProfileContentProps) => {
 	const showLoadingState = isUserLoading || isPostsLoading;
 	const showPrivateProfileMessage =
 		!isUserLoading && !isLoggedInUser && !user?.friendship;
+
+	useEffect(() => {
+		// if (containerRef.current) {
+		// 	containerRef.current.scrollTop = containerRef.current.scrollHeight;
+		// }
+		// scroll to bottom of page
+		if (!initLoad && containerRef.current) {
+			console.log('scrolling in componnet');
+			containerRef.current.scrollIntoView({ behavior: 'smooth' });
+		}
+	}, [initLoad]);
 
 	return (
 		<div>
@@ -108,12 +122,26 @@ export const ProfileContent = (props: ProfileContentProps) => {
 				closeFriendsDrawer={close}
 			/>
 
-			<FriendsDrawer isOpen={friendsDrawerOpen} close={close} />
+			{isLoggedInUser && (
+				<FriendsDrawer isOpen={friendsDrawerOpen} close={close} />
+			)}
 			{props.children}
 
-			<ContentWrapper>
+			<ContentWrapper
+				style={{
+					display: 'flex',
+					flexDirection: 'column-reverse',
+					minHeight: '70vh',
+				}}
+			>
 				{feed.map((posts, index) => (
-					<div key={`page-${index}-${posts.cursor}`}>
+					<div
+						key={`page-${index}-${posts.cursor}`}
+						style={{
+							display: 'flex',
+							flexDirection: 'column-reverse',
+						}}
+					>
 						{posts.data
 							? posts.data.map(post => (
 									<PostPreview
@@ -149,6 +177,7 @@ export const ProfileContent = (props: ProfileContentProps) => {
 					<Button onClick={props.onClickLoadMore}>Load More</Button>
 				)}
 			</ContentWrapper>
+			<div ref={containerRef} />
 		</div>
 	);
 };
