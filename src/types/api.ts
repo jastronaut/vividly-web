@@ -74,7 +74,8 @@ export interface NotificationsResponse extends DefaultResponse {
 }
 
 export interface LoginResponse extends DefaultResponse {
-	user: CurUser;
+	token: string;
+	user: User;
 }
 
 export interface FriendsRespose extends DefaultResponse {
