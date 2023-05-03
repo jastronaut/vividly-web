@@ -11,13 +11,14 @@ import { useCurUserContext } from '@/components/utils/CurUserContext';
 import { NotificationType } from '@/types/notification';
 import { EmptyTab, LoadingTab } from '../TabStates';
 import { makeApiCall } from '@/utils';
+import { URL_PREFIX } from '@/constants';
 
 export const NotificationTabs = () => {
 	const { curUser } = useCurUserContext();
 	const { token } = curUser;
 
 	const { data, isLoading, error, mutate } = useSWR<NotificationsResponse>(
-		[token ? `http://localhost:1337/v0/notifications` : '', token],
+		[token ? `${URL_PREFIX}/notifications` : '', token],
 		// @ts-ignore
 		([url, token]) => fetchWithToken(url, token),
 		{ shouldRetryOnError: false }

@@ -11,6 +11,7 @@ import { useCurUserContext } from '@/components/utils/CurUserContext';
 import { FriendRequestItem } from '@/components/activity/requests/FriendRequestItem';
 import { TabsWrapper } from './_style';
 import { makeApiCall } from '@/utils';
+import { URL_PREFIX } from '@/constants';
 import {
 	AcceptFriendRequestResponse,
 	DefaultResponse,
@@ -33,7 +34,7 @@ export const FriendRequestTabs = () => {
 		error: loadFriendsError,
 		mutate,
 	} = useSWR<FriendRequestsResponse>(
-		[token ? `http://localhost:1337/v0/friends/requests` : '', token],
+		[token ? `${URL_PREFIX}/friends/requests` : '', token],
 		// @ts-ignore
 		([url, token]) => fetchWithToken(url, token),
 		{ shouldRetryOnError: false }

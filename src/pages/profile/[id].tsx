@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { GetStaticPropsContext } from 'next';
 import useSWR from 'swr';
 import useSWRInfinite from 'swr/infinite';
@@ -35,13 +35,16 @@ const Profile = (props: PageProps) => {
 
 	const router = useRouter();
 
+	const [initLoad, setInitLoad] = useState(true);
+	const chatEndRef = useRef<HTMLDivElement>(null);
+
 	const {
 		data: user,
 		error: userError,
 		isLoading: isUserLoading,
 		mutate: mutateUser,
 	} = useSWR<UserResponse>(
-		[id && token ? `${uri}users/${id}` : '', token],
+		[id && token ? `${uri}/users/${id}` : '', token],
 		// @ts-ignore
 		([url, token]) => fetchWithToken(url, token),
 		{ shouldRetryOnError: false }
@@ -68,7 +71,7 @@ const Profile = (props: PageProps) => {
 				return null;
 			// first page, we don't have `previousPageData`
 			if (pageIndex === 0 && !previousPageData)
-				return [`${uri}feed/uid/${id}`, token];
+				return [`${uri}/feed/uid/${id}`, token];
 
 			// add the cursor to the API endpoint
 			if (previousPageData)
@@ -87,7 +90,8 @@ const Profile = (props: PageProps) => {
 	const hasMorePosts = lastPage ? !!lastPage.cursor : false;
 
 	const onSubmitPost = (blocks: Block[]) => {
-		fetch('http://localhost:1337/v0/posts', {
+		setInitLoad(false);
+		fetch(`${uri}/posts`, {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
@@ -115,10 +119,11 @@ const Profile = (props: PageProps) => {
 			.catch(err => {
 				showAndLogErrorNotification('Failed to create post', err);
 			});
+		setInitLoad(true);
 	};
 
 	const onDeletePost = (postId: number, pageIndex: number) => {
-		fetch(`http://localhost:1337/v0/posts/${postId}`, {
+		fetch(`${uri}/posts/${postId}`, {
 			method: 'DELETE',
 			headers: {
 				'Content-Type': 'application/json',
@@ -189,9 +194,30 @@ const Profile = (props: PageProps) => {
 		}
 	}, [userError]);
 
+	// useEffect(() => {
+	// 	setInitLoad(false);
+	// }, [data]);
+
+	// useEffect(() => {
+	// 	return () => {
+	// 		setIsEditorOpen(false);
+	// 		setInitLoad(true);
+	// 	};
+	// }, []);
+
+	// useEffect(() => {
+	// 	// if (containerRef.current) {
+	// 	// 	containerRef.current.scrollTop = containerRef.current.scrollHeight;
+	// 	// }
+	// 	// scroll to bottom of page
+	// 	if (chatEndRef.current) {
+	// 		chatEndRef.current.scrollIntoView({ behavior: 'smooth' });
+	// 	}
+	// }, []);
 	return (
 		<>
 			<ProfileContent
+				// initLoad={initLoad}
 				user={user}
 				isUserLoading={isUserLoading}
 				isPostsLoading={isPostsLoading}
@@ -218,6 +244,7 @@ const Profile = (props: PageProps) => {
 					</>
 				)}
 			</ProfileContent>
+			{/* {initLoad && <div ref={chatEndRef} />} */}
 		</>
 	);
 };

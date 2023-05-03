@@ -11,6 +11,7 @@ import { PostResponse } from '@/types/api';
 import { fetchWithToken } from '@/utils';
 import { SinglePostView } from '@/components/post/SinglePostView';
 import { PostProvider } from '@/components/post/PostContext';
+import { URL_PREFIX } from '@/constants';
 
 type PageProps = {
 	id: string;
@@ -23,7 +24,7 @@ const PostPage: Page<PageProps> = (props: PageProps) => {
 	const { token = null } = curUser;
 
 	const { data, error, isLoading } = useSWR<PostResponse>(
-		[id && token ? `http://localhost:1337/v0/posts/${id}` : '', token],
+		[id && token ? `${URL_PREFIX}/posts/${id}` : '', token],
 		// @ts-ignore
 		([url, token]) => fetchWithToken(url, token)
 	);
