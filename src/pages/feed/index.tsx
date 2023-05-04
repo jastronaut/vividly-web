@@ -4,6 +4,7 @@ import {
 	useCurUserContext,
 } from '@/components/utils/CurUserContext';
 import AppShellLayout from '@/components/layout/AppShellLayout';
+import Link from 'next/link';
 
 import { useEffect } from 'react';
 import useSWR from 'swr';
@@ -12,7 +13,7 @@ import { URL_PREFIX } from '@/constants';
 import { fetchWithToken } from '@/utils';
 import { FeedResponse, sortFeedFriendships } from '@/types/feed';
 import { showAndLogErrorNotification } from '@/showerror';
-import { FeedItem } from '@/components/feed/FeedItem';
+import { FeedPreview } from '@/components/feed/FeedPreview';
 
 export const Feed = () => {
 	const { curUser } = useCurUserContext();
@@ -44,7 +45,9 @@ export const Feed = () => {
 	return (
 		<>
 			{items.map(item => (
-				<FeedItem key={item.id} item={item} />
+				<Link href={`/profile/${item.friend.id}`} key={item.id}>
+					<FeedPreview key={item.id} item={item} />
+				</Link>
 			))}
 		</>
 	);

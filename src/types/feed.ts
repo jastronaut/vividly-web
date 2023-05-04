@@ -6,7 +6,7 @@ export type FeedFriendship = {
 	id: number;
 	isFavorite: boolean;
 	lastReadPostId: number;
-	lastReadPostTime: string;
+	lastReadPostTime: number;
 	friend: User & {
 		posts?: BasePost[];
 	};

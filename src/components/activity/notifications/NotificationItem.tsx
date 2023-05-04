@@ -1,4 +1,4 @@
-import { Flex, Avatar, Text, Space } from '@mantine/core';
+import { Flex, Avatar, Text } from '@mantine/core';
 import Link from 'next/link';
 import styled from 'styled-components';
 import { rem } from 'polished';
@@ -11,22 +11,8 @@ import {
 
 import { Wrapper, TextContainer } from '../requests/styles';
 import { DEFAULT_AVATAR } from '@/constants';
-import { Block, BlockType } from '@/types/post';
 
-function getBlockPreview(block: Block) {
-	switch (block.type) {
-		case BlockType.TEXT:
-			return block.text;
-		case BlockType.IMAGE:
-			return 'Image';
-		case BlockType.LINK:
-			return block.url;
-		case BlockType.MUSIC:
-			return `🎧 ${block.music.title}`;
-		default:
-			return '';
-	}
-}
+import { getBlockPreview } from '@/components/utils/getBlockPreview';
 
 function getNotificationActionMessage(notification: NotificationBody) {
 	switch (notification.type) {

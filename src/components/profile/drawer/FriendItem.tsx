@@ -1,18 +1,8 @@
 import { useState } from 'react';
-import {
-	Flex,
-	Space,
-	Menu,
-	ActionIcon,
-	Text,
-	Container,
-	Badge,
-	Box,
-} from '@mantine/core';
+import { Flex, Space, Menu, ActionIcon, Text } from '@mantine/core';
 import {
 	IconDots,
 	IconUserMinus,
-	IconStarFilled,
 	IconStarOff,
 	IconStar,
 } from '@tabler/icons-react';
@@ -27,6 +17,7 @@ import { MenuContainer } from '@/components/post/comments/styles';
 import { TextContainer } from '@/components/activity/requests/styles';
 import { Wrapper } from '@/components/activity/requests/styles';
 import { DismissWarningModal } from '@/components/DismissWarningModal';
+import { FavoriteBadge } from '@/components/utils/FavoriteBadge';
 
 const AvatarStyled = styled(Avatar)`
 	transition: 0.15s ease opacity;
@@ -104,16 +95,7 @@ export const FriendItem = (props: FriendItemProps) => {
 										{` @`}
 										{friend.username}
 									</TextStyled>
-									{isFavorite && (
-										<Badge
-											sx={{ marginLeft: '5px', border: 'none' }}
-											color='yellow'
-											size='xs'
-											variant='outline'
-										>
-											<IconStarFilled size={14} />
-										</Badge>
-									)}
+									{isFavorite && <FavoriteBadge />}
 								</Link>
 							</Flex>
 							{friend.bio ? (
