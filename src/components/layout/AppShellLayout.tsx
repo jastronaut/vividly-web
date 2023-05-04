@@ -133,6 +133,20 @@ export default function AppShellLayout(props: Props) {
 								</Link>
 							</Navbar.Section>
 							<Navbar.Section>
+								<Link href='/feed'>
+									<NavButton>
+										<UnstyledButton>
+											<Group>
+												<ThemeIcon variant='light'>
+													<IconAddressBook size={18} />
+												</ThemeIcon>
+												<Text>Feed</Text>
+											</Group>
+										</UnstyledButton>
+									</NavButton>
+								</Link>
+							</Navbar.Section>
+							<Navbar.Section>
 								<Link href={`/activity`}>
 									<NavButton>
 										<Group>
@@ -167,18 +181,6 @@ export default function AppShellLayout(props: Props) {
 										</Group>
 									</NavButton>
 								</Link>
-							</Navbar.Section>
-							<Navbar.Section>
-								<NavButton>
-									<UnstyledButton>
-										<Group>
-											<ThemeIcon variant='light'>
-												<IconAddressBook size={18} />
-											</ThemeIcon>
-											<Text>Feed</Text>
-										</Group>
-									</UnstyledButton>
-								</NavButton>
 							</Navbar.Section>
 							<Navbar.Section>
 								<Divider />
