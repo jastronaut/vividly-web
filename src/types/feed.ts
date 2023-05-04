@@ -41,8 +41,8 @@ export function sortFeedFriendships(items: FeedFriendship[]): FeedFriendship[] {
 		}
 
 		// rule 4: items with last read post after created time come last
-		const aLastReadTime = Date.parse(a.lastReadPostTime);
-		const bLastReadTime = Date.parse(b.lastReadPostTime);
+		const aLastReadTime = a.lastReadPostTime;
+		const bLastReadTime = b.lastReadPostTime;
 		const createdTime = lastPostA.createdTime;
 		if (aLastReadTime >= createdTime && bLastReadTime >= createdTime) {
 			return bLastReadTime - aLastReadTime;
