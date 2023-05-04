@@ -20,7 +20,7 @@ import {
 import confetti from 'canvas-confetti';
 
 import { makeApiCall } from '@/utils';
-import { DEFAULT_AVATAR, uri } from '../../../constants';
+import { DEFAULT_AVATAR, URL_PREFIX } from '../../../constants';
 import { User } from '@/types/user';
 import { UserResponse, DefaultResponse } from '@/types/api';
 import { SettingsModal } from '../SettingsModal';
@@ -193,17 +193,13 @@ export const ProfileHeaderComponent = (props: ProfileHeaderProps) => {
 		}
 
 		const resp: { [key: string]: string } = {};
-		if (name) {
-			resp['name'] = name;
-		}
-		if (bio) {
-			resp['bio'] = bio;
-		}
+		resp['name'] = name;
+		resp['bio'] = bio;
 		if (avatarSrc) {
 			resp['avatarSrc'] = avatarSrc;
 		}
 
-		fetch(`${uri}users/info/change`, {
+		fetch(`${URL_PREFIX}/users/info/change`, {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',

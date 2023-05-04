@@ -99,7 +99,7 @@ export const Footer = (props: FooterProps) => {
 								icon={<IconBan size={14} />}
 								onClick={props.toggleDisableComments}
 							>
-								<Tooltip label='Delete post' position='bottom'>
+								<Tooltip label='Disable/enable comments' position='bottom'>
 									<span>
 										{props.commentsDisabled
 											? 'Enable comments'
