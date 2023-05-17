@@ -42,6 +42,7 @@ specifiers:
   react-dom: 18.2.0
   react-is: '>= 16.8.0'
   slate: ^0.91.4
+  slate-history: ^0.93.0
   slate-react: ^0.91.10
   storybook: ^6.5.16
   styled-components: ^5.3.6
@@ -75,6 +76,7 @@ dependencies:
   react-dom: 18.2.0_react@18.2.0
   react-is: 18.2.0
   slate: 0.91.4
+  slate-history: 0.93.0_slate@0.91.4
   slate-react: 0.91.11_6tgy34rvmll7duwkm4ydcekf3u
   storybook: 6.5.16_thg4xgkqzam43wvb4m4gitomxu
   styled-components: 5.3.9_7i5myeigehqah43i5u7wbekgba
@@ -7668,7 +7670,7 @@ packages:
     resolution: {integrity: sha512-oWb1Z6mkHIskLzEJ/XWX0srkpkTQ7vaopMQkyaEIoq0fmtFVxOthb8cCxeT+p3ynTdkk/RZwbgG4brR5BeWECw==}
     engines: {node: '>= 4.0'}
     os: [darwin]
-    deprecated: fsevents 1 will break on node v14+ and could be using insecure binaries. Upgrade to fsevents 2.
+    deprecated: The v1 package contains DANGEROUS / INSECURE binaries. Upgrade to safe fsevents v2
     requiresBuild: true
     dependencies:
       bindings: 1.5.0
@@ -11619,6 +11621,15 @@ packages:
   /slash/4.0.0:
     resolution: {integrity: sha512-3dOsAHXXUkQTpOYcoAxLIorMTp4gIQr5IW3iVb7A7lFIp0VHhnynm9izx6TssdrIcVIESAlVjtnO2K8bg+Coew==}
     engines: {node: '>=12'}
+    dev: false
+
+  /slate-history/0.93.0_slate@0.91.4:
+    resolution: {integrity: sha512-Gr1GMGPipRuxIz41jD2/rbvzPj8eyar56TVMyJBvBeIpQSSjNISssvGNDYfJlSWM8eaRqf6DAcxMKzsLCYeX6g==}
+    peerDependencies:
+      slate: '>=0.65.3'
+    dependencies:
+      is-plain-object: 5.0.0
+      slate: 0.91.4
     dev: false
 
   /slate-react/0.91.11_6tgy34rvmll7duwkm4ydcekf3u:

@@ -38,6 +38,7 @@
     "react-dom": "18.2.0",
     "react-is": ">= 16.8.0",
     "slate": "^0.91.4",
+    "slate-history": "^0.93.0",
     "slate-react": "^0.91.10",
     "storybook": "^6.5.16",
     "styled-components": "^5.3.6",

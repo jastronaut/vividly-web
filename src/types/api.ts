@@ -88,3 +88,18 @@ export interface FeedResponse extends DefaultResponse {
 		lastPost: BasePost;
 	}[];
 }
+
+export type ImgBBUploadResponse = {
+	data: {
+		id: string;
+		url: string;
+		display_url: string;
+		width: number;
+		height: number;
+		image: {
+			url: string;
+		};
+	};
+	success: boolean;
+	status: number;
+};

@@ -12,9 +12,8 @@ export const EditorContainer = styled.div`
 
 export const MagicTextWrapper = styled.div`
 	margin: ${rem(16)} 0;
-	// fix for dark mode
 	display: inline;
 	padding: ${rem(8)} ${rem(12)};
 	border-radius: ${rem(8)};
-	background-color: #c7c9d2;
+	background-color: ${props => props.theme.background.hover};
 `;

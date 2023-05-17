@@ -10,7 +10,7 @@ export enum BlockType {
 	VIDEO = 'video',
 }
 
-export type CustomText = { text: string };
+export type CustomText = { type?: BlockType.TEXT; text: string };
 
 export type CustomElement = { type: BlockType.TEXT; children: CustomText[] };
 

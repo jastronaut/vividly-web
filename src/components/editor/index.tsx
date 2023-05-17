@@ -6,9 +6,18 @@ import {
 	Editor as SlateEditorType,
 } from 'slate';
 import { Slate, Editable, withReact, ReactEditor } from 'slate-react';
+import { withHistory } from 'slate-history';
 import * as linkify from 'linkifyjs';
 import dayjs from 'dayjs';
-import { Text, Modal, Button, Flex, Space, ActionIcon } from '@mantine/core';
+import {
+	Text,
+	Modal,
+	Button,
+	Flex,
+	Space,
+	ActionIcon,
+	FileButton,
+} from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import {
 	IconPhoto,
@@ -17,110 +26,38 @@ import {
 	IconClockHour9,
 	IconX,
 } from '@tabler/icons-react';
-import { BaseEditor, Transforms } from 'slate';
 
 import { BlockType as EditorBlockType } from '../../types/editor';
-import { EditorContainer, MagicTextWrapper } from './styles';
-import { ImageBlock as ImageBlockContent } from '../post/blocks/blocks';
-import { LinkBlockContent } from '../post/blocks/LinkBlockContent';
+import { EditorContainer } from './styles';
 import { DismissWarningModal } from '../DismissWarningModal';
-import { getWeatherEmoji, kelvinToFahrenheit } from './utils';
+import {
+	getWeatherEmoji,
+	kelvinToFahrenheit,
+	addDate,
+	addTime,
+	removeBlankBlock,
+	finishAddingBlock,
+	addLink,
+	addImage,
+} from './utils';
 import { Block, BlockType } from '@/types/post';
 
 import { OpenWeatherResponse } from '../../types/editor';
 
-type SlateEditor = BaseEditor & ReactEditor;
+import { ImageBlock, LinkBlock, MagicBlock } from './Nodes';
 
 const openWeatherKey =
 	process.env.REACT_APP_OPEN_WEATHER_API_KEY ||
 	process.env.OPEN_WEATHER_API_KEY ||
 	process.env.NEXT_PUBLIC_OPEN_WEATHER_API_KEY;
 
-const LinkBlock = (props: BaseElementProps) => {
-	const { attributes, children, element } = props;
-	if (element.type !== EditorBlockType.LINK) {
-		return null;
-	}
-
-	return (
-		<div {...attributes}>
-			<div contentEditable={false}>
-				{element.url}
-				<LinkBlockContent {...element} />
-			</div>
-			{children}
-		</div>
-	);
-};
-
-const MagicBlock = (props: BaseElementProps) => {
-	const { attributes, children, element } = props;
-	if (element.type !== EditorBlockType.MAGIC) {
-		return null;
-	}
-
-	return (
-		<div {...attributes}>
-			<div contentEditable={false}>
-				<MagicTextWrapper>
-					<Text style={{ display: 'inline' }}>{element.data}</Text>
-				</MagicTextWrapper>
-			</div>
-
-			{children}
-		</div>
-	);
-};
-
-const ImageBlock = (props: BaseElementProps) => {
-	const { attributes, children, element } = props;
-	// const editor = useSlateStatic();
-	// const path = ReactEditor.findPath(editor, element);
-
-	// const selected = useSelected();
-	// const focused = useFocused();
-	if (element.type !== EditorBlockType.IMAGE) {
-		return null;
-	}
-
-	return (
-		<div {...attributes}>
-			{children}
-			<div
-				contentEditable={false}
-				style={{
-					position: 'relative',
-				}}
-			>
-				<ImageBlockContent
-					url={element.url}
-					width={element.width}
-					height={element.height}
-				/>
-				{/* <Button
-          active
-          onClick={() => Transforms.removeNodes(editor, { at: path })}
-          className={css`
-            display: ${selected && focused ? 'inline' : 'none'};
-            position: absolute;
-            top: 0.5em;
-            left: 0.5em;
-            background-color: white;
-          `}
-        >
-          <Icon>delete</Icon>
-        </Button> */}
-			</div>
-		</div>
-	);
-};
-
 const withEmbeds = (props: SlateEditorType) => {
 	const editor = props;
 	const { isVoid } = editor;
 	editor.isVoid = element =>
 		element.type === EditorBlockType.IMAGE ||
-		element.type === EditorBlockType.LINK
+		element.type === EditorBlockType.LINK ||
+		element.type === EditorBlockType.MAGIC
 			? true
 			: isVoid(element);
 	return editor;
@@ -152,32 +89,15 @@ type EditorProps = {
 };
 
 const Editor = (props: EditorProps) => {
-	const [editor] = useState(() => withReact(withEmbeds(createEditor())));
+	const [editor] = useState(() =>
+		withHistory(withReact(withEmbeds(createEditor())))
+	);
+	const [file, setFile] = useState<File | null>(null);
 
-	const finishAddingBlock = () => {
-		editor.insertNode({
-			type: EditorBlockType.TEXT,
-			children: [{ text: ' ' }],
-		});
-		editor.insertBreak();
-
-		ReactEditor.focus(editor);
-	};
-
-	const addImage = (editor: SlateEditor) => {
-		const img = {
-			type: EditorBlockType.IMAGE,
-			url: 'https://i.ibb.co/CnxM4Hj/grid-0-2.jpg',
-			width: 100,
-			height: 100,
-			children: [{ text: '' }],
-		};
-
-		// @ts-ignore
-		Transforms.insertNodes(editor, img);
-	};
-
-	const onPaste = (event: React.ClipboardEvent<HTMLDivElement>) => {
+	const onPaste = (
+		event: React.ClipboardEvent<HTMLDivElement>,
+		editor: ReactEditor
+	) => {
 		const { clipboardData } = event;
 		if (!clipboardData) {
 			ReactEditor.focus(editor);
@@ -197,41 +117,12 @@ const Editor = (props: EditorProps) => {
 			const url = link.href;
 			if (url) {
 				event.preventDefault();
-
-				editor.insertNode({
-					type: EditorBlockType.LINK,
-					url,
-					children: [{ text: url }],
-				});
+				addLink(editor, url);
 			}
 		}
-
-		finishAddingBlock();
 	};
 
-	const addDate = () => {
-		const now = dayjs().format('dddd, MMMM D, YYYY');
-		const formattedDate = `📰 ${now}`;
-		editor.insertNode({
-			type: EditorBlockType.MAGIC,
-			data: formattedDate,
-			children: [{ text: '' }],
-		});
-		finishAddingBlock();
-	};
-
-	const addTime = () => {
-		const now = dayjs().format('h:mm A');
-		const formattedTime = `🕓 ${now}`;
-		editor.insertNode({
-			type: EditorBlockType.MAGIC,
-			data: formattedTime,
-			children: [{ text: '' }],
-		});
-		finishAddingBlock();
-	};
-
-	const addWeather = () => {
+	const addWeather = (editor: ReactEditor) => {
 		const positionSuccess = (position: GeolocationPosition) => {
 			const { longitude, latitude } = position.coords;
 
@@ -246,12 +137,15 @@ const Editor = (props: EditorProps) => {
 					const temp = kelvinToFahrenheit(data.main.temp);
 					const hour = parseInt(dayjs().format('H'));
 					const emoji = getWeatherEmoji(data.weather[0], hour);
+					const displayText = `${emoji} ${temp}º F`;
+
+					removeBlankBlock(editor);
 					editor.insertNode({
 						type: EditorBlockType.MAGIC,
-						data: `${emoji} ${temp}º F`,
-						children: [{ text: '' }],
+						data: displayText,
+						children: [{ text: displayText }],
 					});
-					finishAddingBlock();
+					finishAddingBlock(editor);
 				});
 		};
 
@@ -294,29 +188,39 @@ const Editor = (props: EditorProps) => {
 						}}
 						renderElement={props => <Element {...props} />}
 						placeholder='Write something...'
-						onPaste={onPaste}
+						onPaste={(event: React.ClipboardEvent<HTMLDivElement>) =>
+							onPaste(event, editor)
+						}
 						autoFocus
 					/>
 				</Slate>
 			</EditorContainer>
 			<Space h='md' />
 			<Flex gap='md'>
-				<ActionIcon
-					variant='light'
-					radius='xl'
-					color='grape'
-					size='lg'
-					onClick={() => addImage(editor)}
-					title='Add Image'
+				<FileButton
+					onChange={(f: File | null) => addImage(editor, f)}
+					accept='image/png,image/jpeg'
 				>
-					<IconPhoto />
-				</ActionIcon>
+					{props => (
+						<ActionIcon
+							variant='light'
+							radius='xl'
+							color='grape'
+							size='lg'
+							// onClick={() => addImage(editor)}
+							title='Add Image'
+							{...props}
+						>
+							<IconPhoto />
+						</ActionIcon>
+					)}
+				</FileButton>
 				<ActionIcon
 					variant='light'
 					radius='xl'
 					color='grape'
 					size='lg'
-					onClick={addTime}
+					onClick={() => addTime(editor)}
 					title='Add Current Time'
 				>
 					<IconClockHour9 />
@@ -326,7 +230,7 @@ const Editor = (props: EditorProps) => {
 					radius='xl'
 					color='grape'
 					size='lg'
-					onClick={addDate}
+					onClick={() => addDate(editor)}
 					title='Add Current Date'
 				>
 					<IconCalendar />
@@ -336,7 +240,7 @@ const Editor = (props: EditorProps) => {
 					radius='xl'
 					color='grape'
 					size='lg'
-					onClick={addWeather}
+					onClick={() => addWeather(editor)}
 					title='Add Current Weather'
 				>
 					<IconTemperature />
@@ -415,7 +319,8 @@ export const EditorModal = (props: EditorModalProps) => {
 			}
 		}
 
-		props.onSubmit(blocks);
+		console.log(blocks);
+		// props.onSubmit(blocks);
 	};
 
 	return (

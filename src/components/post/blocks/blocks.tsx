@@ -8,6 +8,6 @@ type ImageBlockProps = {
 };
 
 export const ImageBlock = (props: ImageBlockProps) => {
-	const { url, width, height } = props;
-	return <Image src={url} width={width} height={height} alt={url} />;
+	const { url } = props;
+	return <Image sx={{ maxWidth: '90%' }} src={url} alt={url} />;
 };
