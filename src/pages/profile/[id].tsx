@@ -199,6 +199,11 @@ const Profile = (props: PageProps) => {
 	}, [data]);
 
 	useEffect(() => {
+		setInitLoad(true);
+		if (chatEndRef.current) {
+			console.log('scrolling in profile page (id effect)');
+			chatEndRef.current.scrollIntoView({ behavior: 'smooth' });
+		}
 		return () => {
 			setIsEditorOpen(false);
 			setInitLoad(true);
@@ -206,10 +211,9 @@ const Profile = (props: PageProps) => {
 	}, [id]);
 
 	useEffect(() => {
-		if (chatEndRef.current) {
-			console.log('scrolling in profile page');
-			chatEndRef.current.scrollIntoView({ behavior: 'smooth' });
-		}
+		return () => {
+			setInitLoad(true);
+		};
 	}, []);
 
 	return (
