@@ -8,6 +8,7 @@ export enum BlockType {
 	LINK = 'link',
 	MAGIC = 'magic',
 	VIDEO = 'video',
+	ORACLE = 'oracle',
 }
 
 export type CustomText = { type?: BlockType.TEXT; text: string };
@@ -42,12 +43,19 @@ export type MagicElement = {
 	children: CustomText[];
 };
 
+export type OracleElement = {
+	type: BlockType.ORACLE;
+	question: string;
+	children: CustomText[];
+};
+
 export type ElementType =
 	| CustomElement
 	| ImageElement
 	| VideoElementType
 	| LinkElement
-	| MagicElement;
+	| MagicElement
+	| OracleElement;
 
 export type Weather = {
 	id: number;

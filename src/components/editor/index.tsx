@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import {
 	createEditor,
 	Descendant,
@@ -17,6 +17,8 @@ import {
 	Space,
 	ActionIcon,
 	FileButton,
+	Collapse,
+	TextInput,
 } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import {
@@ -25,9 +27,11 @@ import {
 	IconTemperature,
 	IconClockHour9,
 	IconX,
+	IconCloud,
+	IconCrystalBall,
 } from '@tabler/icons-react';
 
-import { BlockType as EditorBlockType } from '../../types/editor';
+import { BlockType as EditorBlockType, MagicSubtype } from '../../types/editor';
 import { EditorContainer } from './styles';
 import { DismissWarningModal } from '../DismissWarningModal';
 import {
@@ -39,12 +43,16 @@ import {
 	finishAddingBlock,
 	addLink,
 	addImage,
+	addOracleResponsePreview,
+	generateOracleResponse,
+	isDraftEmpty,
+	stripBlocks,
 } from './utils';
 import { Block, BlockType } from '@/types/post';
 
 import { OpenWeatherResponse } from '../../types/editor';
 
-import { ImageBlock, LinkBlock, MagicBlock } from './Nodes';
+import { ImageBlock, LinkBlock, MagicBlock, OracleBlock } from './Nodes';
 
 const openWeatherKey =
 	process.env.REACT_APP_OPEN_WEATHER_API_KEY ||
@@ -57,7 +65,8 @@ const withEmbeds = (props: SlateEditorType) => {
 	editor.isVoid = element =>
 		element.type === EditorBlockType.IMAGE ||
 		element.type === EditorBlockType.LINK ||
-		element.type === EditorBlockType.MAGIC
+		element.type === EditorBlockType.MAGIC ||
+		element.type === EditorBlockType.ORACLE
 			? true
 			: isVoid(element);
 	return editor;
@@ -78,6 +87,8 @@ const Element = (props: BaseElementProps) => {
 			return <LinkBlock {...props} />;
 		case EditorBlockType.MAGIC:
 			return <MagicBlock {...props} />;
+		case EditorBlockType.ORACLE:
+			return <OracleBlock {...props} />;
 		default:
 			return <Text {...attributes}>{children}</Text>;
 	}
@@ -92,7 +103,8 @@ const Editor = (props: EditorProps) => {
 	const [editor] = useState(() =>
 		withHistory(withReact(withEmbeds(createEditor())))
 	);
-	const [file, setFile] = useState<File | null>(null);
+	const [isOracleInputShowing, setIsOracleInputShowing] = useState(false);
+	const [oracleInput, setOracleInput] = useState('');
 
 	const onPaste = (
 		event: React.ClipboardEvent<HTMLDivElement>,
@@ -144,6 +156,7 @@ const Editor = (props: EditorProps) => {
 						type: EditorBlockType.MAGIC,
 						data: displayText,
 						children: [{ text: displayText }],
+						subtype: MagicSubtype.DEFAULT,
 					});
 					finishAddingBlock(editor);
 				});
@@ -160,6 +173,24 @@ const Editor = (props: EditorProps) => {
 			});
 		});
 	};
+
+	const toggleOracleInput = useCallback(() => {
+		if (isOracleInputShowing) {
+			setIsOracleInputShowing(false);
+			setOracleInput('');
+		} else {
+			setIsOracleInputShowing(true);
+		}
+	}, [isOracleInputShowing]);
+
+	const onClickAskOracle = useCallback(() => {
+		if (oracleInput.length < 1) {
+			return;
+		}
+		addOracleResponsePreview(editor, oracleInput);
+		setIsOracleInputShowing(false);
+		setOracleInput('');
+	}, [oracleInput, editor]);
 
 	useEffect(() => {
 		ReactEditor.focus(editor);
@@ -207,8 +238,7 @@ const Editor = (props: EditorProps) => {
 							radius='xl'
 							color='grape'
 							size='lg'
-							// onClick={() => addImage(editor)}
-							title='Add Image'
+							title='Upload image'
 							{...props}
 						>
 							<IconPhoto />
@@ -221,7 +251,7 @@ const Editor = (props: EditorProps) => {
 					color='grape'
 					size='lg'
 					onClick={() => addTime(editor)}
-					title='Add Current Time'
+					title='Add current time'
 				>
 					<IconClockHour9 />
 				</ActionIcon>
@@ -231,7 +261,7 @@ const Editor = (props: EditorProps) => {
 					color='grape'
 					size='lg'
 					onClick={() => addDate(editor)}
-					title='Add Current Date'
+					title='Add current date'
 				>
 					<IconCalendar />
 				</ActionIcon>
@@ -241,11 +271,48 @@ const Editor = (props: EditorProps) => {
 					color='grape'
 					size='lg'
 					onClick={() => addWeather(editor)}
-					title='Add Current Weather'
+					title='Add current weather'
 				>
 					<IconTemperature />
 				</ActionIcon>
+				<ActionIcon
+					variant={isOracleInputShowing ? 'filled' : 'light'}
+					radius='xl'
+					color='grape'
+					size='lg'
+					onClick={toggleOracleInput}
+					title='Ask the oracle'
+				>
+					<IconCrystalBall />
+				</ActionIcon>
 			</Flex>
+			<Collapse in={isOracleInputShowing}>
+				<>
+					<Space h='md' />
+					<Flex sx={{ justifyContent: 'space-between', width: '100%' }}>
+						<TextInput
+							sx={{ flex: 1, paddingRight: '1rem' }}
+							value={oracleInput}
+							radius='md'
+							onChange={e => setOracleInput(e.currentTarget.value)}
+							placeholder='Ask a yes or no question...'
+							maxLength={200}
+							icon={<IconCloud />}
+						/>
+						<Button
+							variant='light'
+							color='grape'
+							radius='lg'
+							size='sm'
+							onClick={onClickAskOracle}
+							disabled={oracleInput.length < 1}
+						>
+							Ask
+						</Button>
+					</Flex>
+					<Space h='xs' />
+				</>
+			</Collapse>
 		</>
 	);
 };
@@ -260,18 +327,10 @@ type EditorModalProps = {
 export const EditorModal = (props: EditorModalProps) => {
 	const [isWarningModalOpen, setIsWarningModalOpen] = useState(false);
 	const [draft, setDraft] = useState<ElementType[]>([]);
+	const draftEmpty = useMemo(() => isDraftEmpty(draft), [draft]);
 
 	const tryDismissModal = () => {
-		if (isWarningModalOpen || draft.length === 0) {
-			props.onClose();
-			return;
-		}
-
-		if (
-			draft.length === 1 &&
-			draft[0].type === EditorBlockType.TEXT &&
-			draft[0].children[0].text === ''
-		) {
+		if (isWarningModalOpen || draftEmpty) {
 			props.onClose();
 			return;
 		}
@@ -279,7 +338,11 @@ export const EditorModal = (props: EditorModalProps) => {
 		setIsWarningModalOpen(true);
 	};
 
-	const processDraftAndSubmit = () => {
+	const processDraftAndSubmit = useCallback(() => {
+		if (draftEmpty) {
+			return;
+		}
+
 		const blocks: Block[] = [];
 
 		for (const node of draft) {
@@ -314,14 +377,29 @@ export const EditorModal = (props: EditorModalProps) => {
 						title: node.title,
 					});
 					break;
+				case EditorBlockType.ORACLE:
+					blocks.push({
+						type: BlockType.TEXT,
+						text: `☁️ ${node.question}\n🔮 ${generateOracleResponse()}`,
+					});
 				default:
 					break;
 			}
 		}
 
-		console.log(blocks);
-		// props.onSubmit(blocks);
-	};
+		const strippedBlocks = stripBlocks(blocks);
+		if (strippedBlocks.length < 1) {
+			return;
+		}
+		props.onSubmit(strippedBlocks);
+
+		setDraft([
+			{
+				type: EditorBlockType.TEXT,
+				children: [{ text: '' }],
+			},
+		]);
+	}, [draft]);
 
 	return (
 		<Modal
@@ -330,6 +408,7 @@ export const EditorModal = (props: EditorModalProps) => {
 			centered
 			withCloseButton={false}
 			padding='xl'
+			trapFocus={false}
 		>
 			<DismissWarningModal
 				isOpen={isWarningModalOpen}
@@ -352,7 +431,12 @@ export const EditorModal = (props: EditorModalProps) => {
 			/>
 			<Space h='md' />
 			<Flex justify='flex-end'>
-				<Button color='grape' radius='lg' onClick={processDraftAndSubmit}>
+				<Button
+					color='grape'
+					radius='lg'
+					onClick={processDraftAndSubmit}
+					disabled={draftEmpty}
+				>
 					Post
 				</Button>
 			</Flex>

@@ -11,8 +11,7 @@ export const EditorContainer = styled.div`
 `;
 
 export const MagicTextWrapper = styled.div`
-	margin: ${rem(16)} 0;
-	display: inline;
+	display: inline-block;
 	padding: ${rem(8)} ${rem(12)};
 	border-radius: ${rem(8)};
 	background-color: ${props => props.theme.background.hover};
