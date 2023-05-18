@@ -1,4 +1,11 @@
-import { ActionIcon, Text, Skeleton, Title, Tooltip } from '@mantine/core';
+import {
+	ActionIcon,
+	Text,
+	Skeleton,
+	Title,
+	Tooltip,
+	Group,
+} from '@mantine/core';
 import styled from 'styled-components';
 import { rem } from 'polished';
 import { IconStar } from '@tabler/icons-react';
@@ -26,8 +33,13 @@ export const FavoriteButton = (props: FavoriteButtonProps) => {
 export const ProfileHeaderContent = styled.div`
 	background-color: ${props => props.theme.background.primary};
 	display: flex;
-	padding: ${rem(10)} ${rem(36)} ${rem(16)};
+	padding: ${rem(10)} ${rem(36)};
 	border-bottom: ${rem(1)} solid ${props => props.theme.background.secondary};
+
+	position: sticky;
+	top: ${rem(50)};
+	left: 0;
+	z-index: 99;
 
 	@media screen and (max-width: 500px) {
 		padding-bottom: ${rem(16)};
@@ -36,11 +48,15 @@ export const ProfileHeaderContent = styled.div`
 		align-items: center;
 		text-align: center;
 	}
+
+	@media screen and (min-width: 1024px) {
+		top: ${rem(70)};
+	}
 `;
 
 export const ProfileHeaderText = styled.div`
 	flex: 9;
-	margin: ${rem(16)};
+	margin: 0 ${rem(16)};
 
 	a,
 	a:visited {
@@ -80,7 +96,10 @@ type HeaderTextProps = {
 
 export const HeaderText = (props: HeaderTextProps) => (
 	<>
-		<Title order={2}>{props.name ?? props.username}</Title>
+		<Group spacing='xs'>
+			<Text fw={700}>{props.name ?? props.username}</Text>
+			<Text c='dimmed'>@{props.username}</Text>
+		</Group>
 		<Text>{props.bio}</Text>
 	</>
 );

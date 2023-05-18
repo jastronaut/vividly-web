@@ -15,7 +15,7 @@ export const ProfileActions = (props: Props) => {
 				variant='outline'
 				aria-label='See friends'
 			>
-				<Tooltip withArrow label='See friends'>
+				<Tooltip withArrow label='See friends' position='bottom'>
 					<IconUsers size={16} />
 				</Tooltip>
 			</ActionIcon>

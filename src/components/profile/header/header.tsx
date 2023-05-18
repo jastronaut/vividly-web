@@ -366,13 +366,13 @@ export const ProfileHeaderComponent = (props: ProfileHeaderProps) => {
 			)}
 			<ProfileHeaderContent>
 				{isLoading ? (
-					<Skeleton height={100} circle mb='xl' />
+					<Skeleton height={50} circle mb='xl' />
 				) : (
 					<Avatar
 						src={avatarSrc || DEFAULT_AVATAR}
-						width={100}
-						height={100}
-						size={100}
+						width={50}
+						height={50}
+						size={50}
 						alt={`${user?.user.username}'s avatar.`}
 					/>
 				)}
