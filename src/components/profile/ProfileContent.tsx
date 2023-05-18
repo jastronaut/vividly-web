@@ -99,10 +99,6 @@ export const ProfileContent = (props: ProfileContentProps) => {
 		!isUserLoading && !isLoggedInUser && !user?.friendship;
 
 	useEffect(() => {
-		// if (containerRef.current) {
-		// 	containerRef.current.scrollTop = containerRef.current.scrollHeight;
-		// }
-		// scroll to bottom of page
 		if (!initLoad && containerRef.current) {
 			console.log('scrolling in componnet');
 			containerRef.current.scrollIntoView({ behavior: 'smooth' });
@@ -174,7 +170,9 @@ export const ProfileContent = (props: ProfileContentProps) => {
 				)}
 
 				{!props.isPostsLoading && props.hasMorePosts && (
-					<Button onClick={props.onClickLoadMore}>Load More</Button>
+					<Center>
+						<Button onClick={props.onClickLoadMore}>Load More</Button>
+					</Center>
 				)}
 			</ContentWrapper>
 			<div ref={containerRef} />

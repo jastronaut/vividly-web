@@ -1,6 +1,7 @@
 import { useState, useCallback } from 'react';
 import styled from 'styled-components';
 import { rem } from 'polished';
+import { Text } from '@mantine/core';
 
 import { Post, BlockType, Block } from '@/types/post';
 import { showAndLogErrorNotification } from '@/showerror';
@@ -17,6 +18,20 @@ import {
 } from '@/types/api';
 import { DismissWarningModal } from '../DismissWarningModal';
 
+export const addNewlines = (txt: string, id: string) =>
+	txt.length < 1 ? (
+		<br />
+	) : txt.indexOf('\n') < 0 ? (
+		<Text>{txt}</Text>
+	) : (
+		txt.split('\n').map((item, index) => (
+			<Text key={`${id}-${index}`}>
+				{item}
+				<br />
+			</Text>
+		))
+	);
+
 const PostContentWrapper = styled.div`
 	margin: 0 ${rem(16)};
 `;
@@ -24,7 +39,7 @@ const PostContentWrapper = styled.div`
 function renderPostContent(content: Block, key: string) {
 	switch (content.type) {
 		case BlockType.TEXT:
-			return <p key={key}>{content.text}</p>;
+			return addNewlines(content.text, key);
 		case BlockType.IMAGE:
 			return (
 				<ImageBlock
@@ -162,7 +177,7 @@ export const PostPreview = (props: Props) => {
 	}, [post.id, commentsDisabled, token]);
 
 	return (
-		<div>
+		<div style={{ marginBottom: '16px' }}>
 			<PostContentWrapper>
 				{post.content.map((block, index) =>
 					renderPostContent(block, index.toString())
