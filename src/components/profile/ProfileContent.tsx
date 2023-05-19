@@ -155,6 +155,18 @@ export const ProfileContent = (props: ProfileContentProps) => {
 
 				{showPrivateProfileMessage && <PrivateProfileMessage />}
 
+				{!props.isPostsLoading && props.hasMorePosts && (
+					<Center>
+						<Button onClick={props.onClickLoadMore}>Load More</Button>
+					</Center>
+				)}
+
+				{!props.isPostsLoading && !props.hasMorePosts && !showEmptyState && (
+					<Center>
+						<Text c='dimmed'>{`You've reached the end!`}</Text>
+					</Center>
+				)}
+
 				{showEmptyState && (
 					<EmptyPosts>
 						{isLoggedInUser ? (
@@ -167,12 +179,6 @@ export const ProfileContent = (props: ProfileContentProps) => {
 							</Button>
 						) : null}
 					</EmptyPosts>
-				)}
-
-				{!props.isPostsLoading && props.hasMorePosts && (
-					<Center>
-						<Button onClick={props.onClickLoadMore}>Load More</Button>
-					</Center>
 				)}
 			</ContentWrapper>
 			<div ref={containerRef} />
