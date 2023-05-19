@@ -122,10 +122,10 @@ export const FriendsDrawer = (props: Props) => {
 					</Center>
 				)}
 				{!showLoading &&
-					data.friends.map(friend => {
+					data?.friends.map(friend => {
 						return (
 							<FriendItem
-								key={`friend${friend.friend.id}-${friend.id}`}
+								key={`friend-list-${friend.id}`}
 								friendshipInfo={friend}
 								closeDrawer={props.close}
 								unfriendUser={unfriendAndUpdate}
