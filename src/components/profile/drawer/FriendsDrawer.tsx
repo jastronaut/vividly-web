@@ -15,6 +15,7 @@ import {
 	useUnfriend,
 	useToggleFavorite,
 } from '@/components/activity/requests/hooks';
+import { URL_PREFIX } from '@/constants';
 
 type Props = {
 	isOpen: boolean;
@@ -25,7 +26,7 @@ export const FriendsDrawer = (props: Props) => {
 	const { curUser } = useCurUserContext();
 	const { token } = curUser;
 	const { data, error, isLoading, mutate } = useSWR<FriendsRespose>(
-		[token ? `http://localhost:1337/v0/friends` : '', token],
+		[token ? `${URL_PREFIX}/friends` : '', token],
 		// @ts-ignore
 		([url, token]) => fetchWithToken(url, token),
 		{ shouldRetryOnError: false }
