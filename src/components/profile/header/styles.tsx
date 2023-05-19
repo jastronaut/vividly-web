@@ -1,11 +1,4 @@
-import {
-	ActionIcon,
-	Text,
-	Skeleton,
-	Title,
-	Tooltip,
-	Group,
-} from '@mantine/core';
+import { ActionIcon, Text, Skeleton, Tooltip, Flex } from '@mantine/core';
 import styled from 'styled-components';
 import { rem } from 'polished';
 import { IconStar } from '@tabler/icons-react';
@@ -46,7 +39,6 @@ export const ProfileHeaderContent = styled.div`
 		flex-direction: column;
 		justify-content: center;
 		align-items: center;
-		text-align: center;
 	}
 
 	@media screen and (min-width: 1024px) {
@@ -76,6 +68,10 @@ export const ProfileHeaderText = styled.div`
 		margin: 0 auto;
 		word-break: break-word;
 	}
+
+	@media screen and (max-width: 500px) {
+		margin: ${rem(8)} 0 ${rem(8)} ${rem(8)};
+	}
 `;
 
 export const HeaderTextLoading = () => {
@@ -96,10 +92,35 @@ type HeaderTextProps = {
 
 export const HeaderText = (props: HeaderTextProps) => (
 	<>
-		<Group spacing='xs'>
-			<Text fw={700}>{props.name ?? props.username}</Text>
-			<Text c='dimmed'>@{props.username}</Text>
-		</Group>
+		<Flex>
+			<Text
+				fw={700}
+				sx={{
+					marginRight: '0.25rem',
+					lineHeight: '1',
+				}}
+			>
+				{props.name ?? props.username}
+			</Text>
+			<Text
+				c='dimmed'
+				sx={{
+					lineHeight: '1',
+				}}
+			>
+				{` @`}
+				{props.username}
+			</Text>
+		</Flex>
 		<Text>{props.bio}</Text>
 	</>
 );
+
+export const UserInfoSection = styled.div`
+	display: flex;
+	flex: 1;
+	justify-content: start;
+	@media screen and (max-width: 500px) {
+		width: 100%;
+	}
+`;

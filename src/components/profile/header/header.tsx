@@ -7,6 +7,7 @@ import {
 	ActionIcon,
 	Menu,
 	Tooltip,
+	Avatar,
 	Indicator,
 } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
@@ -17,7 +18,6 @@ import {
 	IconUserOff,
 	IconUsers,
 } from '@tabler/icons-react';
-import confetti from 'canvas-confetti';
 
 import { makeApiCall } from '@/utils';
 import { DEFAULT_AVATAR, URL_PREFIX } from '../../../constants';
@@ -30,11 +30,11 @@ import {
 	ProfileHeaderText,
 	HeaderText,
 	HeaderTextLoading,
+	UserInfoSection,
 } from './styles';
 import { useCurUserContext } from '@/components/utils/CurUserContext';
 import { showAndLogErrorNotification } from '@/showerror';
 import { DismissWarningModal } from '@/components/DismissWarningModal';
-import { Avatar } from '@/components/Avatar';
 import { ProfileActions } from './ProfileActions';
 
 import {
@@ -365,28 +365,29 @@ export const ProfileHeaderComponent = (props: ProfileHeaderProps) => {
 				/>
 			)}
 			<ProfileHeaderContent>
-				{isLoading ? (
-					<Skeleton height={50} circle mb='xl' />
-				) : (
-					<Avatar
-						src={avatarSrc || DEFAULT_AVATAR}
-						width={50}
-						height={50}
-						size={50}
-						alt={`${user?.user.username}'s avatar.`}
-					/>
-				)}
-				<ProfileHeaderText>
-					{isLoading || !user ? (
-						<HeaderTextLoading />
+				<UserInfoSection>
+					{isLoading ? (
+						<Skeleton height={50} circle mb='xl' />
 					) : (
-						<HeaderText
-							name={user.user.name}
-							username={user.user.username}
-							bio={user.user.bio}
+						<Avatar
+							src={avatarSrc || DEFAULT_AVATAR}
+							size={50}
+							radius='xl'
+							alt={`${user?.user.username}'s avatar.`}
 						/>
 					)}
-				</ProfileHeaderText>
+					<ProfileHeaderText>
+						{isLoading || !user ? (
+							<HeaderTextLoading />
+						) : (
+							<HeaderText
+								name={user.user.name}
+								username={user.user.username}
+								bio={user.user.bio}
+							/>
+						)}
+					</ProfileHeaderText>
+				</UserInfoSection>
 				<>
 					<Flex>
 						{isLoading || !user ? null : isLoggedInUser ? (
