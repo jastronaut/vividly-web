@@ -1,11 +1,10 @@
-import { Flex, Space, Text, Menu, ActionIcon } from '@mantine/core';
+import { Flex, Space, Text, Menu, ActionIcon, Avatar } from '@mantine/core';
 import { IconDots, IconTrash } from '@tabler/icons-react';
 import Link from 'next/link';
 
 import { Comment as CommentType } from '@/types/post';
 import { TextContainer } from '../../activity/requests/styles';
 import { MenuContainer, Wrapper } from './styles';
-import { Avatar } from '@/components/Avatar';
 
 type CommentProps = {
 	onDelete: () => void;
@@ -21,10 +20,9 @@ export const Comment = (props: CommentProps) => {
 					<Flex>
 						<Avatar
 							src={props.author.avatarSrc}
-							width={30}
-							height={30}
 							size={30}
 							alt={`${props.author.username}'s avatar`}
+							radius='xl'
 						/>
 						<TextContainer>
 							<Flex>

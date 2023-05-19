@@ -8,6 +8,8 @@ import {
 	Button,
 	Space,
 	FileButton,
+	Avatar,
+	Center,
 } from '@mantine/core';
 import { IconPhotoPlus } from '@tabler/icons-react';
 
@@ -17,7 +19,6 @@ import { IMGBBResponse } from '@/types/api';
 import { useCurUserContext } from '@/components/utils/CurUserContext';
 import { showAndLogErrorNotification } from '@/showerror';
 import { MiniLoader } from '../utils/Loading';
-import { Avatar } from '../Avatar';
 
 const ImageEditContainer = styled.div`
 	position: absolute;
@@ -99,33 +100,37 @@ export const SettingsModal = (props: Props) => {
 					position: 'relative',
 				}}
 			>
-				<Avatar
-					src={newAvatarSrc || curUser.user.avatarSrc}
-					size={150}
-					width={150}
-					height={150}
-					alt={`${curUser.user.username}'s avatar}`}
-				/>
+				<Center>
+					<div>
+						<Avatar
+							src={newAvatarSrc || curUser.user.avatarSrc}
+							size={150}
+							alt={`${curUser.user.username}'s avatar}`}
+							radius='xl'
+						/>
 
-				{uploadingAvatar && (
-					<ImageEditContainer>
-						<MiniLoader />
-					</ImageEditContainer>
-				)}
-
-				<FileButton
-					onChange={uploadImage}
-					accept='image/png,image/jpeg'
-					// @ts-ignore
-					leftIcon={<IconPhotoPlus size={16} />}
-					variant='outline'
-					size='xs'
-					radius='md'
-					loading={uploadingAvatar}
-					sx={{ marginTop: rem(10), marginBottom: rem(10) }}
-				>
-					{props => <Button {...props}>Upload image</Button>}
-				</FileButton>
+						{uploadingAvatar && (
+							<ImageEditContainer>
+								<MiniLoader />
+							</ImageEditContainer>
+						)}
+						<Center>
+							<FileButton
+								onChange={uploadImage}
+								accept='image/png,image/jpeg'
+								// @ts-ignore
+								leftIcon={<IconPhotoPlus size={16} />}
+								variant='outline'
+								size='xs'
+								radius='md'
+								loading={uploadingAvatar}
+								sx={{ marginTop: rem(10), marginBottom: rem(10) }}
+							>
+								{props => <Button {...props}>Upload image</Button>}
+							</FileButton>
+						</Center>
+					</div>
+				</Center>
 			</div>
 			<form
 				onSubmit={e => {

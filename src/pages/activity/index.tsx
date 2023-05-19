@@ -30,7 +30,7 @@ const FriendsPage: Page = () => {
 									rightIcon={<IconArrowRight />}
 									variant='outline'
 								>
-									Manage friend requests
+									Friend requests
 								</Button>
 							</Link>
 						</Center>

@@ -2,7 +2,6 @@ import styled from 'styled-components';
 import { rem } from 'polished';
 
 export const TabsWrapper = styled.div`
-	background: ${props => props.theme.background.primary};
 	color: ${props => props.theme.text.primary};
 	padding: ${rem(16)} ${rem(24)};
 	margin: ${rem(16)};
@@ -15,5 +14,6 @@ export const TabsWrapper = styled.div`
 
 	@media screen and (max-width: 800px) {
 		margin: ${rem(8)} 0;
+		width: 100%;
 	}
 `;

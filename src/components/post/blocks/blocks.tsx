@@ -9,5 +9,5 @@ type ImageBlockProps = {
 
 export const ImageBlock = (props: ImageBlockProps) => {
 	const { url } = props;
-	return <Image sx={{ maxWidth: '90%' }} src={url} alt={url} />;
+	return <Image sx={{ maxWidth: '90%' }} src={url} alt={url} withPlaceholder />;
 };

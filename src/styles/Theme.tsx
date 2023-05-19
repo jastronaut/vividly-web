@@ -112,6 +112,11 @@ export const VividlyThemeProvider = (props: { children: React.ReactNode }) => {
 								radius: 'md',
 							},
 						},
+						Avatar: {
+							defaultProps: {
+								radius: 'xl',
+							},
+						},
 					},
 				}}
 			>
