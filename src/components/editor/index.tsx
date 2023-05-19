@@ -413,8 +413,14 @@ export const EditorModal = (props: EditorModalProps) => {
 				isOpen={isWarningModalOpen}
 				onNo={() => setIsWarningModalOpen(false)}
 				onYes={() => {
-					props.onClose();
+					setDraft([
+						{
+							type: EditorBlockType.TEXT,
+							children: [{ text: '' }],
+						},
+					]);
 					setIsWarningModalOpen(false);
+					props.onClose();
 				}}
 				message='Abandon this post? 😳'
 			/>

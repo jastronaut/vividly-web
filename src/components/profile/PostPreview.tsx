@@ -22,7 +22,7 @@ export const addNewlines = (txt: string, id: string) =>
 	txt.length < 1 ? (
 		<br />
 	) : txt.indexOf('\n') < 0 ? (
-		<Text>{txt}</Text>
+		<Text key={`${id}-0`}>{txt}</Text>
 	) : (
 		txt.split('\n').map((item, index) => (
 			<Text key={`${id}-${index}`}>
