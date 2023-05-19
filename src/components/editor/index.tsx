@@ -31,7 +31,7 @@ import {
 	IconCrystalBall,
 } from '@tabler/icons-react';
 
-import { BlockType as EditorBlockType, MagicSubtype } from '../../types/editor';
+import { BlockType as EditorBlockType } from '../../types/editor';
 import { EditorContainer } from './styles';
 import { DismissWarningModal } from '../DismissWarningModal';
 import {
@@ -156,7 +156,6 @@ const Editor = (props: EditorProps) => {
 						type: EditorBlockType.MAGIC,
 						data: displayText,
 						children: [{ text: displayText }],
-						subtype: MagicSubtype.DEFAULT,
 					});
 					finishAddingBlock(editor);
 				});
