@@ -31,6 +31,7 @@ import {
 	HeaderText,
 	HeaderTextLoading,
 	UserInfoSection,
+	FriendActionsMenuContainer,
 } from './styles';
 import { useCurUserContext } from '@/components/utils/CurUserContext';
 import { showAndLogErrorNotification } from '@/showerror';
@@ -389,99 +390,112 @@ export const ProfileHeaderComponent = (props: ProfileHeaderProps) => {
 					</ProfileHeaderText>
 				</UserInfoSection>
 				<>
-					<Flex>
+					<Flex
+						sx={{
+							alignSelf: 'flex-start',
+						}}
+					>
 						{isLoading || !user ? null : isLoggedInUser ? (
-							<ProfileActions
-								onClickFriends={props.openFriendsDrawer}
-								onClickEdit={() => setIsSettingsModalOpen(true)}
-							/>
+							<>
+								<ProfileActions
+									onClickFriends={props.openFriendsDrawer}
+									onClickEdit={() => setIsSettingsModalOpen(true)}
+								/>
+							</>
 						) : (
-							<Group>
-								<Menu position='bottom-end' withArrow offset={0}>
-									<Menu.Target>
-										<Indicator
-											color='green'
-											processing
-											disabled={user.friendRequest === null}
-										>
-											<ActionIcon
-												onClick={() => null}
-												color='grape'
-												variant={!!friendship ? 'filled' : 'outline'}
-												aria-label='Manage friendship'
+							<FriendActionsMenuContainer id='friend-menu-container'>
+								<Group>
+									<Menu position='bottom-end' withArrow offset={0}>
+										<Menu.Target>
+											<Indicator
+												color='green'
+												processing
+												disabled={user.friendRequest === null}
 											>
-												<Tooltip withArrow label='Manage friendship'>
-													<IconMoodSmileBeam size={16} />
-												</Tooltip>
-											</ActionIcon>
-										</Indicator>
-									</Menu.Target>
-									<Menu.Dropdown>
-										{friendButtonAction === 'inbound' && user.friendRequest ? (
-											<>
-												<Menu.Item
-													icon={<IconUserPlus size={14} />}
-													onClick={() => {
-														setChosenFriendButtonAction('accept');
-														// @ts-ignore
-														acceptFriendRequest(user?.friendRequest?.id);
-													}}
+												<ActionIcon
+													onClick={() => null}
+													color='grape'
+													variant={!!friendship ? 'filled' : 'outline'}
+													aria-label='Manage friendship'
 												>
-													Accept friend request
-												</Menu.Item>
+													<Tooltip
+														withArrow
+														label='Manage friendship'
+														position='bottom-end'
+													>
+														<IconMoodSmileBeam size={16} />
+													</Tooltip>
+												</ActionIcon>
+											</Indicator>
+										</Menu.Target>
+										<Menu.Dropdown>
+											{friendButtonAction === 'inbound' &&
+											user.friendRequest ? (
+												<>
+													<Menu.Item
+														icon={<IconUserPlus size={14} />}
+														onClick={() => {
+															setChosenFriendButtonAction('accept');
+															// @ts-ignore
+															acceptFriendRequest(user?.friendRequest?.id);
+														}}
+													>
+														Accept friend request
+													</Menu.Item>
+													<Menu.Item
+														icon={<IconUserOff size={14} />}
+														onClick={() => {
+															setChosenFriendButtonAction('decline');
+															// @ts-ignore
+															declineFriendRequest(user.friendRequest.id);
+														}}
+														color='red'
+													>
+														Decline friend request
+													</Menu.Item>
+												</>
+											) : friendButtonAction === 'outbound' &&
+											  user.friendRequest ? (
 												<Menu.Item
 													icon={<IconUserOff size={14} />}
 													onClick={() => {
-														setChosenFriendButtonAction('decline');
+														setChosenFriendButtonAction('cancel');
 														// @ts-ignore
-														declineFriendRequest(user.friendRequest.id);
+														cancelFriendRequest(user.friendRequest.id);
 													}}
+												>
+													Cancel friend request
+												</Menu.Item>
+											) : friendButtonAction === 'friends' ? (
+												<Menu.Item
+													icon={<IconUserMinus size={14} />}
+													onClick={onClickUnfriend}
 													color='red'
 												>
-													Decline friend request
+													Unfriend
 												</Menu.Item>
-											</>
-										) : friendButtonAction === 'outbound' &&
-										  user.friendRequest ? (
-											<Menu.Item
-												icon={<IconUserOff size={14} />}
-												onClick={() => {
-													setChosenFriendButtonAction('cancel');
-													// @ts-ignore
-													cancelFriendRequest(user.friendRequest.id);
-												}}
-											>
-												Cancel friend request
-											</Menu.Item>
-										) : friendButtonAction === 'friends' ? (
-											<Menu.Item
-												icon={<IconUserMinus size={14} />}
-												onClick={onClickUnfriend}
-												color='red'
-											>
-												Unfriend
-											</Menu.Item>
-										) : friendButtonAction === 'none' ? (
-											<Menu.Item
-												icon={<IconUserPlus size={14} />}
-												onClick={() => {
-													setChosenFriendButtonAction('add');
-													addFriend(user.user.username);
-												}}
-											>
-												Add friend
-											</Menu.Item>
-										) : null}
-									</Menu.Dropdown>
-								</Menu>
+											) : friendButtonAction === 'none' ? (
+												<Menu.Item
+													icon={<IconUserPlus size={14} />}
+													onClick={() => {
+														setChosenFriendButtonAction('add');
+														addFriend(user.user.username);
+													}}
+												>
+													Add friend
+												</Menu.Item>
+											) : null}
+										</Menu.Dropdown>
+									</Menu>
 
-								{friendButtonAction === 'friends' && user.friendship && (
-									<FavoriteButton
-										isFavorite={user.friendship.isFavorite}
-										toggleFavorite={toggleFavorite}
-									/>
-								)}
-							</Group>
+									{friendButtonAction === 'friends' && user.friendship && (
+										<FavoriteButton
+											isFavorite={user.friendship.isFavorite}
+											toggleFavorite={toggleFavorite}
+										/>
+									)}
+								</Group>
+							</FriendActionsMenuContainer>
 						)}
 					</Flex>
 				</>
