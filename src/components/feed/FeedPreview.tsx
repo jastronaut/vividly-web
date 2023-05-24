@@ -24,11 +24,12 @@ export const UnreadBadge = () => {
 	);
 };
 
-const WrapperStyled = styled(Wrapper)`
+const WrapperStyled = styled(Wrapper)<{ isUnread?: boolean }>`
 	@media (max-width: 800px) {
 		padding: ${rem(10)};
 		min-width: ${rem(295)};
 	}
+	${props => !props.isUnread && `opacity: 0.5;`}
 `;
 
 interface Props {
@@ -55,7 +56,7 @@ export const FeedPreview = (props: Props) => {
 	}
 
 	return (
-		<WrapperStyled withHover>
+		<WrapperStyled withHover isUnread={isUnread}>
 			<Flex>
 				<Avatar
 					src={friend.avatarSrc || DEFAULT_AVATAR}
@@ -74,7 +75,17 @@ export const FeedPreview = (props: Props) => {
 						<Flex sx={{ justifyContent: 'space-between', width: '100%' }}>
 							<Flex sx={{ flex: 1 }}>
 								{isUnread && <UnreadBadge />}
-								<Text c='dimmed'>{blockPreview}</Text>
+								<Text
+									c='dimmed'
+									sx={{
+										maxWidth: '300px',
+										overflow: 'hidden',
+										textOverflow: 'ellipsis',
+										whiteSpace: 'nowrap',
+									}}
+								>
+									{blockPreview}
+								</Text>
 							</Flex>
 							<Text c='dimmed' sx={{ marginLeft: rem(5) }}>
 								{getPostTime(post.createdTime)}

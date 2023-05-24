@@ -212,7 +212,7 @@ const Editor = (props: EditorProps) => {
 				>
 					<Editable
 						style={{
-							minHeight: '150px',
+							minHeight: '300px',
 							maxHeight: '300px',
 							overflow: 'auto',
 						}}

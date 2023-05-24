@@ -22,7 +22,6 @@ const FriendsPage: Page = () => {
 				) : (
 					<>
 						<NotificationTabs />
-						<Space h='xl' />
 						<Center>
 							<Link href='/friend-requests'>
 								<Button

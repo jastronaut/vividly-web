@@ -16,7 +16,7 @@ export const FavoriteButton = (props: FavoriteButtonProps) => {
 			variant={props.isFavorite ? 'filled' : 'outline'}
 			aria-label={label}
 		>
-			<Tooltip withArrow label={label}>
+			<Tooltip withArrow label={label} position='bottom-end'>
 				<IconStar size={16} />
 			</Tooltip>
 		</ActionIcon>
@@ -35,8 +35,7 @@ export const ProfileHeaderContent = styled.div`
 	z-index: 99;
 
 	@media screen and (max-width: 500px) {
-		padding-bottom: ${rem(16)};
-		flex-direction: column;
+		padding: ${rem(10)} ${rem(18)} ${rem(16)};
 		justify-content: center;
 		align-items: center;
 	}
@@ -122,5 +121,13 @@ export const UserInfoSection = styled.div`
 	justify-content: start;
 	@media screen and (max-width: 500px) {
 		width: 100%;
+	}
+`;
+
+export const FriendActionsMenuContainer = styled.div`
+	@media screen and (max-width: 500px) {
+		> div {
+			gap: ${rem(8)};
+		}
 	}
 `;

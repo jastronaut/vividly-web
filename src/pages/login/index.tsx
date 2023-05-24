@@ -25,7 +25,7 @@ const StyledContainer = styled.div`
 	color: ${props => props.theme.text.primary};
 	padding: ${rem(16)} ${rem(32)};
 
-	@media screen and (max-width: 800px) {
+	@media screen and (max-width: 600px) {
 		width: 80%;
 	}
 `;

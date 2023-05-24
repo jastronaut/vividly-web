@@ -16,6 +16,7 @@ export const NewPostButton = (props: Props) => {
 			style={{
 				visibility: props.isVisible ? 'hidden' : 'visible',
 			}}
+			zIndex={99}
 		>
 			<ActionIcon
 				variant='filled'

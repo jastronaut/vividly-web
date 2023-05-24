@@ -147,6 +147,7 @@ export const SettingsModal = (props: Props) => {
 						setName(e.currentTarget.value);
 					}}
 					placeholder='Enter your name'
+					maxLength={20}
 				/>
 				<Space h='sm' />
 				<Textarea
@@ -157,6 +158,7 @@ export const SettingsModal = (props: Props) => {
 						setBio(e.currentTarget.value);
 					}}
 					placeholder='Tell us about yourself!'
+					maxLength={150}
 				/>
 				<Space h='md' />
 				<Button size='sm' color='grape' radius='xl' type='submit'>

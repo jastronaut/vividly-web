@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Flex, Space, Menu, ActionIcon, Text } from '@mantine/core';
+import { Flex, Space, Menu, ActionIcon, Text, Avatar } from '@mantine/core';
 import {
 	IconDots,
 	IconUserMinus,
@@ -12,20 +12,11 @@ import { rem } from 'polished';
 import { useRouter } from 'next/router';
 
 import { Friend } from '@/types/user';
-import { Avatar } from '@/components/Avatar';
 import { MenuContainer } from '@/components/post/comments/styles';
 import { TextContainer } from '@/components/activity/requests/styles';
 import { Wrapper } from '@/components/activity/requests/styles';
 import { DismissWarningModal } from '@/components/DismissWarningModal';
 import { FavoriteBadge } from '@/components/utils/FavoriteBadge';
-
-const AvatarStyled = styled(Avatar)`
-	transition: 0.15s ease opacity;
-	:hover {
-		cursor: pointer;
-		opacity: 0.5;
-	}
-`;
 
 const TextStyled = styled(Text)`
 	line-height: ${rem(16)};
@@ -62,11 +53,9 @@ export const FriendItem = (props: FriendItemProps) => {
 			<WrapperStyled withHover>
 				<Flex sx={{ justifyContent: 'space-between', flexGrow: 1 }}>
 					<Flex>
-						<AvatarStyled
+						<Avatar
 							src={friend.avatarSrc}
-							width={45}
-							height={45}
-							size={45}
+							size={30}
 							alt={`${friend.username}'s avatar`}
 							onClick={() => {
 								props.closeDrawer();

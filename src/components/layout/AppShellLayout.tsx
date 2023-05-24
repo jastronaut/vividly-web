@@ -28,6 +28,7 @@ import {
 	IconSun,
 } from '@tabler/icons-react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 import { useVividlyTheme, ThemeName } from '@/styles/Theme';
 
@@ -71,12 +72,12 @@ const HeaderStyled = styled(Header)`
 export default function AppShellLayout(props: Props) {
 	const theme = useMantineTheme();
 	const { setTheme, theme: vividlyTheme } = useVividlyTheme();
+	const pathname = usePathname();
 
 	const onClickChangeTheme = () => {
 		setTheme(
 			vividlyTheme === ThemeName.Light ? ThemeName.Dark : ThemeName.Light
 		);
-		console.log('here!');
 	};
 
 	const [opened, setOpened] = useState(false);
@@ -127,7 +128,11 @@ export default function AppShellLayout(props: Props) {
 											<ThemeIcon variant='light'>
 												<IconUser size={18} />
 											</ThemeIcon>
-											<Text>Profile</Text>
+											<Text
+												fw={pathname === `/profile/${props.id}` ? 700 : 200}
+											>
+												Profile
+											</Text>
 										</Group>
 									</NavButton>
 								</Link>
@@ -140,7 +145,7 @@ export default function AppShellLayout(props: Props) {
 												<ThemeIcon variant='light'>
 													<IconAddressBook size={18} />
 												</ThemeIcon>
-												<Text>Feed</Text>
+												<Text fw={pathname === '/feed' ? 700 : 200}>Feed</Text>
 											</Group>
 										</UnstyledButton>
 									</NavButton>
@@ -153,7 +158,9 @@ export default function AppShellLayout(props: Props) {
 											<ThemeIcon variant='light'>
 												<IconBellRinging size={18} />
 											</ThemeIcon>
-											<Text>Activity</Text>
+											<Text fw={pathname === '/activity' ? 700 : 200}>
+												Activity
+											</Text>
 										</Group>
 									</NavButton>
 								</Link>

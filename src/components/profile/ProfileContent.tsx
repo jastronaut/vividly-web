@@ -19,6 +19,11 @@ import { FriendsDrawer } from './drawer/FriendsDrawer';
 
 const ContentWrapper = styled.div`
 	padding: ${rem(8)} ${rem(24)};
+	margin-bottom: ${rem(24)};
+
+	@media screen and (max-width: 500px) {
+		padding: ${rem(8)} ${rem(12)};
+	}
 `;
 
 type ProfileContentProps = {
@@ -123,64 +128,69 @@ export const ProfileContent = (props: ProfileContentProps) => {
 			)}
 			{props.children}
 
-			<ContentWrapper
+			<div
 				style={{
-					display: 'flex',
-					flexDirection: 'column-reverse',
 					minHeight: '70vh',
 				}}
 			>
-				{feed.map((posts, index) => (
-					<div
-						key={`page-${index}-${posts.cursor}`}
-						style={{
-							display: 'flex',
-							flexDirection: 'column-reverse',
-						}}
-					>
-						{posts.data
-							? posts.data.map(post => (
-									<PostPreview
-										key={post.id}
-										post={post}
-										onDeletePost={id => props.onDeletePost(id, index)}
-										isOwnPost={isLoggedInUser}
-									/>
-							  ))
-							: null}
-					</div>
-				))}
+				<ContentWrapper
+					style={{
+						display: 'flex',
+						flexDirection: 'column-reverse',
+					}}
+				>
+					{feed.map((posts, index) => (
+						<div
+							key={`page-${index}-${posts.cursor}`}
+							style={{
+								display: 'flex',
+								flexDirection: 'column-reverse',
+							}}
+						>
+							{posts.data
+								? posts.data.map(post => (
+										<PostPreview
+											key={post.id}
+											post={post}
+											onDeletePost={id => props.onDeletePost(id, index)}
+											isOwnPost={isLoggedInUser}
+										/>
+								  ))
+								: null}
+						</div>
+					))}
 
-				{showLoadingState && <PostsLoading />}
+					{showLoadingState && <PostsLoading />}
 
-				{showPrivateProfileMessage && <PrivateProfileMessage />}
+					{showPrivateProfileMessage && <PrivateProfileMessage />}
 
-				{!props.isPostsLoading && props.hasMorePosts && (
-					<Center>
-						<Button onClick={props.onClickLoadMore}>Load More</Button>
-					</Center>
-				)}
+					{!props.isPostsLoading && props.hasMorePosts && (
+						<Center>
+							<Button onClick={props.onClickLoadMore}>Load More</Button>
+						</Center>
+					)}
 
-				{!props.isPostsLoading && !props.hasMorePosts && !showEmptyState && (
-					<Center>
-						<Text c='dimmed'>{`You've reached the end!`}</Text>
-					</Center>
-				)}
+					{!props.isPostsLoading && !props.hasMorePosts && !showEmptyState && (
+						<Center>
+							<Text c='dimmed'>{`You've reached the end!`}</Text>
+						</Center>
+					)}
 
-				{showEmptyState && (
-					<EmptyPosts>
-						{isLoggedInUser ? (
-							<Button
-								size='sm'
-								onClick={props.openEditor}
-								leftIcon={<IconPlus />}
-							>
-								Create a post
-							</Button>
-						) : null}
-					</EmptyPosts>
-				)}
-			</ContentWrapper>
+					{showEmptyState && (
+						<EmptyPosts>
+							{isLoggedInUser ? (
+								<Button
+									size='sm'
+									onClick={props.openEditor}
+									leftIcon={<IconPlus />}
+								>
+									Create a post
+								</Button>
+							) : null}
+						</EmptyPosts>
+					)}
+				</ContentWrapper>
+			</div>
 			<div ref={containerRef} />
 		</div>
 	);

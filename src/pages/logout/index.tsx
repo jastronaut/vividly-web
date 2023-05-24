@@ -4,7 +4,7 @@ import { STORAGE_CUR_USER_KEY } from '@/constants';
 export default function Feed() {
 	return (
 		<>
-			<Center>
+			<Center sx={{ height: '100vh' }}>
 				<Container>
 					<Button
 						onClick={() => {
