@@ -14,6 +14,7 @@ export const GlobalStyle = createGlobalStyle`
         overflow: auto;
         background-color: ${props => props.theme.background.accented};
         font-family: 'Lato', sans-serif;
+        transition: all 0.2s ease-in;
     }
     
     h1, h2, h3 {
