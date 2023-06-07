@@ -10,12 +10,12 @@ import {
 	ProfileFeedResponse as Feed,
 	ProfileFeedResponse,
 } from '@/types/api';
-import { User } from '@/types/user';
 import { useCurUserContext } from '@/components/utils/CurUserContext';
 
 import { ProfileHeaderComponent } from './header/header';
 import { PostPreview } from './PostPreview';
 import { FriendsDrawer } from './drawer/FriendsDrawer';
+import { ProfileContentContainer } from './_styles';
 
 const ContentWrapper = styled.div`
 	padding: ${rem(8)} ${rem(24)};
@@ -128,11 +128,7 @@ export const ProfileContent = (props: ProfileContentProps) => {
 			)}
 			{props.children}
 
-			<div
-				style={{
-					minHeight: '70vh',
-				}}
-			>
+			<ProfileContentContainer>
 				<ContentWrapper
 					style={{
 						display: 'flex',
@@ -190,7 +186,7 @@ export const ProfileContent = (props: ProfileContentProps) => {
 						</EmptyPosts>
 					)}
 				</ContentWrapper>
-			</div>
+			</ProfileContentContainer>
 			<div ref={containerRef} />
 		</div>
 	);

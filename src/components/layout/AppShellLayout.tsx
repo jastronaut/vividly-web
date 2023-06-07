@@ -15,6 +15,7 @@ import {
 	Switch,
 	Divider,
 	Space,
+	ActionIcon,
 } from '@mantine/core';
 import styled from 'styled-components';
 import { parseToRgb, rgba, darken, rem } from 'polished';
@@ -32,13 +33,84 @@ import { usePathname } from 'next/navigation';
 
 import { useVividlyTheme, ThemeName } from '@/styles/Theme';
 
+const Navigation = styled.header`
+	top: 0;
+	left: 0;
+	right: 0;
+	z-index: 100;
+	position: fixed;
+	height: ${rem(50)};
+	padding: ${rem(8)} ${rem(16)};
+
+	background-color: ${props =>
+		getRgba(props.theme.background.primary, 0.7, false)};
+
+	backdrop-filter: blur(12px);
+	-webkit-backdrop-filter: blur(12px);
+	-o-backdrop-filter: blur(12px);
+	-moz-backdrop-filter: blur(12px);
+
+	@media screen and (min-width: 801px) {
+		border-bottom: ${rem(1)} solid ${props => props.theme.background.secondary};
+	}
+
+	@media screen and (max-width: 800px) {
+		top: unset;
+		bottom: 0;
+		border-top: ${rem(1)} solid ${props => props.theme.background.secondary};
+		padding: ${rem(8)} ${rem(32)};
+	}
+`;
+
+const NavItem = styled.div`
+	border-radius: ${rem(4)};
+	:hover {
+		cursor: pointer;
+		background-color: ${props => props.theme.accent}50;
+		transform: scale(1.1);
+	}
+
+	@media screen and (min-width: 801px) {
+		margin-left: ${rem(16)};
+	}
+`;
+
+const NavInner = styled.nav`
+	display: flex;
+	justify-content: right;
+
+	@media screen and (max-width: 800px) {
+		justify-content: space-between;
+	}
+`;
+
+const PageContentContainer = styled.main`
+	margin-top: ${rem(50)};
+	margin-left: ${rem(64)};
+	margin-right: ${rem(64)};
+
+	@media screen and (max-width: 800px) {
+		margin-left: 0;
+		margin-right: 0;
+	}
+
+	@media screen and (min-width: 1000px) {
+		margin-left: ${rem(128)};
+		margin-right: ${rem(128)};
+	}
+
+	@media screen and (min-width: 1200px) {
+		margin-left: ${rem(256)};
+		margin-right: ${rem(256)};
+	}
+`;
+
 const NavButton = styled.div`
 	padding: ${rem(8)} ${rem(16)};
 	display: flex;
 	border-radius: ${rem(4)};
 	:hover {
 		cursor: pointer;
-		background-color: ${props => props.theme.background.hover};
 	}
 `;
 
@@ -81,6 +153,49 @@ export default function AppShellLayout(props: Props) {
 	};
 
 	const [opened, setOpened] = useState(false);
+
+	const NavContent = (
+		<NavInner>
+			<NavItem>
+				<Link href={`/profile/${props.id}`} title='Profile'>
+					<ActionIcon color='grape' variant='transparent'>
+						<IconUser size={18} />
+					</ActionIcon>
+				</Link>
+			</NavItem>
+			<NavItem>
+				<Link href='/feed' title='Feed'>
+					<UnstyledButton>
+						<ActionIcon color='grape' variant='transparent'>
+							<IconAddressBook size={18} />
+						</ActionIcon>
+					</UnstyledButton>
+				</Link>
+			</NavItem>
+			<NavItem>
+				<Link href={`/activity`} title='Notifications'>
+					<ActionIcon color='grape' variant='transparent'>
+						<IconBellRinging size={18} />
+					</ActionIcon>
+				</Link>
+			</NavItem>
+			<NavItem>
+				<Link href='/settings' title='Settings'>
+					<ActionIcon color='grape' variant='transparent'>
+						<IconSettings size={18} />
+					</ActionIcon>
+				</Link>
+			</NavItem>
+		</NavInner>
+	);
+
+	return (
+		<>
+			<Navigation>{NavContent}</Navigation>
+			<PageContentContainer>{props.children} </PageContentContainer>
+		</>
+	);
+
 	return (
 		<AppShell
 			styles={{

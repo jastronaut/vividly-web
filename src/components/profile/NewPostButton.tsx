@@ -1,5 +1,19 @@
-import { Affix, ActionIcon } from '@mantine/core';
+import { ActionIcon } from '@mantine/core';
 import { IconFeather } from '@tabler/icons-react';
+import styled from 'styled-components';
+import { rem } from 'polished';
+
+const Container = styled.div<{ isVisible: boolean }>`
+	position: fixed;
+	bottom: ${rem(16)};
+	right: ${rem(16)};
+	visibility: ${props => (props.isVisible ? 'hidden' : 'visible')};
+	z-index: 99;
+
+	@media screen and (max-width: 800px) {
+		bottom: ${rem(70)};
+	}
+`;
 
 type Props = {
 	isVisible: boolean;
@@ -8,16 +22,7 @@ type Props = {
 
 export const NewPostButton = (props: Props) => {
 	return (
-		<Affix
-			position={{
-				bottom: '1rem',
-				right: '1rem',
-			}}
-			style={{
-				visibility: props.isVisible ? 'hidden' : 'visible',
-			}}
-			zIndex={99}
-		>
+		<Container isVisible={props.isVisible}>
 			<ActionIcon
 				variant='filled'
 				radius='xl'
@@ -27,6 +32,6 @@ export const NewPostButton = (props: Props) => {
 			>
 				<IconFeather size='1.25rem' />
 			</ActionIcon>
-		</Affix>
+		</Container>
 	);
 };

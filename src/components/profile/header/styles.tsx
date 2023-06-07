@@ -29,19 +29,31 @@ export const ProfileHeaderContent = styled.div`
 	padding: ${rem(10)} ${rem(36)};
 	border-bottom: ${rem(1)} solid ${props => props.theme.background.secondary};
 
-	position: sticky;
-	top: ${rem(50)};
+	position: fixed;
+	top: 0;
 	left: 0;
 	z-index: 99;
+	width: 100%;
+	max-height: ${rem(75)};
 
-	@media screen and (max-width: 500px) {
-		padding: ${rem(10)} ${rem(18)} ${rem(16)};
+	@media screen and (max-width: 801px) {
+		padding: ${rem(10)} ${rem(18)} ${rem(6)};
 		justify-content: center;
 		align-items: center;
 	}
 
-	@media screen and (min-width: 1024px) {
-		top: ${rem(70)};
+	@media screen and (min-width: 800px) {
+		top: ${rem(50)};
+	}
+
+	@media screen and (min-width: 1000px) {
+		padding-left: ${rem(200)};
+		padding-right: ${rem(200)};
+	}
+
+	@media screen and (min-width: 1200px) {
+		padding-left: ${rem(312)};
+		padding-right: ${rem(312)};
 	}
 `;
 

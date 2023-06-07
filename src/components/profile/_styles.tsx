@@ -11,3 +11,12 @@ export const ProfileHeaderContainer = styled.div`
 		margin: 0;
 	}
 `;
+
+export const ProfileContentContainer = styled.div`
+	min-height: 70vh;
+	padding-top: ${rem(70)};
+
+	@media screen and (max-width: 800px) {
+		padding-top: ${rem(25)};
+	}
+`;
