@@ -45,8 +45,11 @@ export const Feed = () => {
 	return (
 		<>
 			{items.map(item => (
-				<Link href={`/profile/${item.friend.id}`} key={item.id}>
-					<FeedPreview key={item.id} item={item} />
+				<Link
+					href={`/profile/${item.friend.id}`}
+					key={`link-${item.friend.id}`}
+				>
+					<FeedPreview item={item} />
 				</Link>
 			))}
 		</>

@@ -20,7 +20,7 @@ import { DismissWarningModal } from '../DismissWarningModal';
 
 export const addNewlines = (txt: string, id: string) =>
 	txt.length < 1 ? (
-		<br />
+		<br key={`${id}-br-1`} />
 	) : txt.indexOf('\n') < 0 ? (
 		<Text key={`${id}-0`}>{txt}</Text>
 	) : (

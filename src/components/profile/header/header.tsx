@@ -16,7 +16,6 @@ import {
 	IconUserPlus,
 	IconUserMinus,
 	IconUserOff,
-	IconUsers,
 } from '@tabler/icons-react';
 
 import { makeApiCall } from '@/utils';

@@ -120,7 +120,7 @@ export const VividlyThemeProvider = (props: { children: React.ReactNode }) => {
 					},
 				}}
 			>
-				<ThemeProvider theme={theme === 'light' ? lightTheme : darkTheme}>
+				<ThemeProvider theme={theme === 'dark' ? darkTheme : lightTheme}>
 					<>
 						<GlobalStyle />
 						<Notifications />
