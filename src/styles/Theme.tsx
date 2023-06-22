@@ -1,4 +1,4 @@
-import React, { useState, createContext, useContext } from 'react';
+import React, { useEffect, createContext, useContext } from 'react';
 import { ThemeProvider } from 'styled-components';
 import { MantineProvider } from '@mantine/core';
 import { useLocalStorage } from '@mantine/hooks';
@@ -66,14 +66,18 @@ export const darkTheme = {
 	...baseTheme,
 };
 
-type VividlyThemeContext = {
+type VividlyThemeContextType = {
 	theme: ThemeName;
 	setTheme: (theme: ThemeName) => void;
+	useSystemTheme: boolean;
+	setUseSystemTheme: (_useSystemTheme: boolean) => void;
 };
 
-export const VividlyThemeContext = createContext<VividlyThemeContext>({
+export const VividlyThemeContext = createContext<VividlyThemeContextType>({
 	theme: ThemeName.Light,
 	setTheme: (theme: ThemeName) => {},
+	useSystemTheme: false,
+	setUseSystemTheme: (_useSystemTheme: boolean) => {},
 });
 
 export const useVividlyTheme = () => useContext(VividlyThemeContext);
@@ -83,11 +87,35 @@ export const VividlyThemeProvider = (props: { children: React.ReactNode }) => {
 		key: STORAGE_THEME_KEY,
 		defaultValue: 'light' as ThemeName,
 	});
+
+	const [useSystemTheme, setUseSystemTheme] = useLocalStorage({
+		key: 'useSystemTheme',
+		defaultValue: false,
+	});
+
+	const checkPrefersColorScheme = () => {
+		if (!window.matchMedia) return;
+
+		if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+			setTheme(ThemeName.Dark);
+		} else {
+			setTheme(ThemeName.Light);
+		}
+	};
+
+	useEffect(() => {
+		if (useSystemTheme) {
+			checkPrefersColorScheme();
+		}
+	}, []);
+
 	return (
 		<VividlyThemeContext.Provider
 			value={{
 				theme,
 				setTheme,
+				useSystemTheme,
+				setUseSystemTheme,
 			}}
 		>
 			<MantineProvider
