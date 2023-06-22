@@ -1,4 +1,4 @@
-import { User, FriendshipInfo, FriendRequest, CurUser, Friend } from './user';
+import { User, FriendRequest, Friend, AuthUser } from './user';
 import { Post, BasePost } from './post';
 import { NotificationBody } from './notification';
 
@@ -103,3 +103,7 @@ export type ImgBBUploadResponse = {
 	success: boolean;
 	status: number;
 };
+
+export interface AuthInfoResponse extends DefaultResponse {
+	authUser: AuthUser;
+}

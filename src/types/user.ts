@@ -36,3 +36,8 @@ export type FriendshipInfo = {
 	lastReadPostId?: string;
 	lastReadPostTime: string;
 };
+
+export type AuthUser = {
+	email: string;
+	emailVerified: boolean;
+};
