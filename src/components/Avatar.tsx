@@ -42,12 +42,14 @@ export const Avatar = ({
 	size = 50,
 	src,
 	alt,
+	onClick,
 }: {
 	size?: number;
 	src: string;
 	alt: string;
+	onClick?: () => void;
 }) => (
-	<AvatarRoot size={size}>
+	<AvatarRoot onClick={onClick} size={size}>
 		<AvatarImg src={src} alt={alt} width={size} height={size} />
 	</AvatarRoot>
 );

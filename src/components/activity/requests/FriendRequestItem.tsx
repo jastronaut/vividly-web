@@ -31,10 +31,7 @@ export const FriendRequestItem = (props: Props) => {
 				<LeftContent>
 					<Avatar
 						src={avatarSrc || DEFAULT_AVATAR}
-						style={{ alignSelf: 'flex-start' }}
 						onClick={() => router.push(profileLink)}
-						width={40}
-						height={40}
 						size={40}
 						alt={`${username}'s avatar`}
 					/>
