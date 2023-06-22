@@ -58,7 +58,7 @@ const Navigation = styled.header`
 		top: unset;
 		bottom: 0;
 		border-top: ${rem(1)} solid ${props => props.theme.background.secondary};
-		padding: ${rem(8)} ${rem(32)};
+		padding: ${rem(8)} ${rem(64)};
 	}
 `;
 
@@ -92,6 +92,7 @@ const PageContentContainer = styled.main`
 	@media screen and (max-width: 800px) {
 		margin-left: 0;
 		margin-right: 0;
+		margin-top: 0;
 	}
 
 	@media screen and (min-width: 1000px) {

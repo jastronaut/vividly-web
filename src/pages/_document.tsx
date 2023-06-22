@@ -6,13 +6,11 @@ import {
 	DocumentContext,
 	DocumentInitialProps,
 } from 'next/document';
-import { createGetInitialProps } from '@mantine/next';
 import Document from 'next/document';
 import { ServerStyles, createStylesServer } from '@mantine/next';
 import { ServerStyleSheet } from 'styled-components';
-const stylesServer = createStylesServer();
 
-const getInitialProps = createGetInitialProps();
+const stylesServer = createStylesServer();
 
 export default class _Document extends Document {
 	static async getInitialProps(

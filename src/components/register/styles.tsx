@@ -1,4 +1,3 @@
-import { Container, Text } from '@mantine/core';
 import styled, { createGlobalStyle } from 'styled-components';
 import { rem } from 'polished';
 
