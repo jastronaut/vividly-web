@@ -2,9 +2,52 @@ import styled from 'styled-components';
 import { rem } from 'polished';
 import Image from 'next/image';
 
-export const Avatar = styled(Image)<{ size?: number }>`
-	border-radius: ${props => (props.size ? rem(props.size / 2) : rem(50))};
-	width: ${props => (props.size ? rem(props.size) : rem(50))};
-	height: ${props => (props.size ? rem(props.size) : rem(50))};
-	display: flex;
+const DEFAULT_SIZE = 50;
+const SMALLER_DEFAULT_SIZE = 50 * 0.75;
+
+const AvatarRoot = styled.div<{ size?: number }>`
+	box-sizing: border-box;
+	position: relative;
+	display: block;
+	user-select: none;
+	overflow: hidden;
+	border-radius: 0.25rem;
+	text-decoration: none;
+	border: 0px none;
+	background-color: transparent;
+	padding: 0px;
+	width: ${props => rem(props.size || DEFAULT_SIZE)};
+	min-width: ${props => rem(props.size || DEFAULT_SIZE / 2)};
+	height: ${props => rem(props.size || DEFAULT_SIZE)};
+
+	@media screen and (max-width: 800px) {
+		width: ${props =>
+			rem(props.size ? props.size * 0.75 : SMALLER_DEFAULT_SIZE)};
+		min-width: ${props =>
+			rem(props.size ? props.size * 0.75 : SMALLER_DEFAULT_SIZE / 2)};
+		height: ${props =>
+			rem(props.size ? props.size * 0.75 : SMALLER_DEFAULT_SIZE)};
+	}
 `;
+
+const AvatarImg = styled(Image)`
+	object-fit: cover;
+	width: 100%;
+	height: 100%;
+	display: block;
+	border-radius: 50%;
+`;
+
+export const Avatar = ({
+	size = 50,
+	src,
+	alt,
+}: {
+	size?: number;
+	src: string;
+	alt: string;
+}) => (
+	<AvatarRoot size={size}>
+		<AvatarImg src={src} alt={alt} width={size} height={size} />
+	</AvatarRoot>
+);

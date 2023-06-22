@@ -1,16 +1,14 @@
 import { useState, useEffect, useCallback } from 'react';
 import {
 	Skeleton,
-	Flex,
-	Button,
 	Group,
 	ActionIcon,
 	Menu,
 	Tooltip,
-	Avatar,
 	Indicator,
 } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
+import { useDisclosure } from '@mantine/hooks';
 import {
 	IconMoodSmileBeam,
 	IconUserPlus,
@@ -18,6 +16,7 @@ import {
 	IconUserOff,
 } from '@tabler/icons-react';
 
+import { Avatar } from '@/components/Avatar';
 import { makeApiCall } from '@/utils';
 import { DEFAULT_AVATAR, URL_PREFIX } from '../../../constants';
 import { User } from '@/types/user';
@@ -25,12 +24,14 @@ import { UserResponse, DefaultResponse } from '@/types/api';
 import { SettingsModal } from '../SettingsModal';
 import {
 	FavoriteButton,
+	InformationButton,
 	ProfileHeaderContent,
 	ProfileHeaderText,
 	HeaderText,
 	HeaderTextLoading,
 	UserInfoSection,
 	FriendActionsMenuContainer,
+	RightContent,
 } from './styles';
 import { useCurUserContext } from '@/components/utils/CurUserContext';
 import { showAndLogErrorNotification } from '@/showerror';
@@ -63,6 +64,7 @@ type ProfileHeaderProps = {
 	friendsDrawerOpen: boolean;
 	openFriendsDrawer: () => void;
 	closeFriendsDrawer: () => void;
+	pinned: boolean;
 };
 
 /**
@@ -78,12 +80,14 @@ export const ProfileHeaderComponent = (props: ProfileHeaderProps) => {
 		isLoggedInUser,
 		updateUserProfileInfo,
 		refetchFeed,
+		pinned,
 	} = props;
 	const { avatarSrc, name, username, bio } = user?.user ?? {};
 	const [avatar, setAvatar] = useState<string>(avatarSrc || DEFAULT_AVATAR);
 	const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
 	const { curUser, updateCurUser } = useCurUserContext();
 	const [warningModalOpen, setWarningModalOpen] = useState(false);
+	const [bioExpanded, { toggle }] = useDisclosure(false);
 
 	// this will indicate which action the user just triggered by clicking
 	// the friend button
@@ -364,15 +368,13 @@ export const ProfileHeaderComponent = (props: ProfileHeaderProps) => {
 					onClickSave={onClickSaveSettings}
 				/>
 			)}
-			<ProfileHeaderContent>
+			<ProfileHeaderContent expanded={pinned}>
 				<UserInfoSection>
 					{isLoading ? (
 						<Skeleton height={50} circle mb='xl' />
 					) : (
 						<Avatar
 							src={avatarSrc || DEFAULT_AVATAR}
-							size={50}
-							radius='xl'
 							alt={`${user?.user.username}'s avatar.`}
 						/>
 					)}
@@ -381,6 +383,7 @@ export const ProfileHeaderComponent = (props: ProfileHeaderProps) => {
 							<HeaderTextLoading />
 						) : (
 							<HeaderText
+								bioExpanded={bioExpanded}
 								name={user.user.name}
 								username={user.user.username}
 								bio={user.user.bio}
@@ -389,21 +392,19 @@ export const ProfileHeaderComponent = (props: ProfileHeaderProps) => {
 					</ProfileHeaderText>
 				</UserInfoSection>
 				<>
-					<Flex
-						sx={{
-							alignSelf: 'flex-start',
-						}}
-					>
+					<RightContent>
 						{isLoading || !user ? null : isLoggedInUser ? (
 							<>
 								<ProfileActions
 									onClickFriends={props.openFriendsDrawer}
 									onClickEdit={() => setIsSettingsModalOpen(true)}
+									toggleInformation={toggle}
 								/>
 							</>
 						) : (
 							<FriendActionsMenuContainer id='friend-menu-container'>
 								<Group>
+									<InformationButton toggleInformation={toggle} />
 									<Menu position='bottom-end' withArrow offset={0}>
 										<Menu.Target>
 											<Indicator
@@ -496,7 +497,7 @@ export const ProfileHeaderComponent = (props: ProfileHeaderProps) => {
 								</Group>
 							</FriendActionsMenuContainer>
 						)}
-					</Flex>
+					</RightContent>
 				</>
 			</ProfileHeaderContent>
 		</>

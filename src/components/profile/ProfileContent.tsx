@@ -1,9 +1,9 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { Button, Skeleton, Stack, Space, Center, Text } from '@mantine/core';
 import { rem } from 'polished';
 import styled from 'styled-components';
 import { IconPlus } from '@tabler/icons-react';
-import { useDisclosure } from '@mantine/hooks';
+import { useDisclosure, useHeadroom } from '@mantine/hooks';
 
 import {
 	UserResponse,
@@ -92,6 +92,8 @@ export const ProfileContent = (props: ProfileContentProps) => {
 	const [friendsDrawerOpen, { open, close }] = useDisclosure(false);
 	const containerRef = useRef<HTMLDivElement>(null);
 
+	const pinned = useHeadroom({ fixedAt: 120 });
+
 	const user = props.user;
 	const feed: Feed[] = props.feed || [];
 	const isLoggedInUser = !!user && curUser.user.id === user.user.id;
@@ -121,6 +123,7 @@ export const ProfileContent = (props: ProfileContentProps) => {
 				friendsDrawerOpen={friendsDrawerOpen}
 				openFriendsDrawer={open}
 				closeFriendsDrawer={close}
+				pinned={pinned}
 			/>
 
 			{isLoggedInUser && (
@@ -146,7 +149,7 @@ export const ProfileContent = (props: ProfileContentProps) => {
 							{posts.data
 								? posts.data.map(post => (
 										<PostPreview
-											key={post.id}
+											key={`ppp-${post.id}`}
 											post={post}
 											onDeletePost={id => props.onDeletePost(id, index)}
 											isOwnPost={isLoggedInUser}
