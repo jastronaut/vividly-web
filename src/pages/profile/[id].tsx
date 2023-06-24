@@ -177,6 +177,29 @@ const Profile = (props: PageProps) => {
 		if (user?.user.id === curUser.user.id) {
 			updateCurUser(user.user);
 		}
+
+		// mark feed as read
+		if (!user?.friendship || curUser.user.id === user.user.id) {
+			return;
+		}
+
+		const { lastReadPostId, newestPostId } = user.friendship;
+		if (lastReadPostId !== newestPostId) {
+			fetch(`${uri}/feed/uid/${user.user.id}/read`, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${token}`,
+				},
+			})
+				.then(res => res.json())
+				.then(resp => {
+					console.log({ resp });
+				})
+				.catch(err => {
+					console.log({ err });
+				});
+		}
 	}, [user]);
 
 	const loadMore = React.useCallback(() => {

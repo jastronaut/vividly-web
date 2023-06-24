@@ -23,6 +23,7 @@ export type Friend = {
 	lastReadPostId: number | null;
 	lastReadPostTime: string;
 	friend: User;
+	newestPostId: number | null;
 };
 
 export type FriendRequest = {
