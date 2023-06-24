@@ -5,6 +5,7 @@ import { NotificationBody } from './notification';
 export type DefaultResponse = {
 	success: boolean;
 	error?: string;
+	errorCode?: string;
 };
 
 export type LikesResponse = {
