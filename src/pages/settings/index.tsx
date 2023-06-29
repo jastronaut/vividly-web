@@ -10,7 +10,6 @@ import {
 	CurUserProvider,
 	useCurUserContext,
 } from '@/components/utils/CurUserContext';
-import AppShellLayout from '@/components/layout/AppShellLayout';
 import { Loading } from '@/components/utils/Loading';
 import {
 	AccountInfoProvider,
@@ -18,6 +17,7 @@ import {
 } from '@/components/utils/AccountInfoContext';
 import { TextInputSetting } from '@/components/settings/TextInputSetting';
 import { showAndLogErrorNotification } from '@/showerror';
+import AppLayout from '@/components/layout/AppLayout';
 
 const PageContent = (props: { token: string }) => {
 	const { accountInfo } = useAccountInfoContext();
@@ -177,9 +177,7 @@ const SettingsPage: Page = () => {
 
 	return (
 		<>
-			<AppShellLayout id={curUser.user?.id}>
-				<PageContent token={curUser.token} />
-			</AppShellLayout>
+			<PageContent token={curUser.token} />
 		</>
 	);
 };
@@ -187,7 +185,9 @@ const SettingsPage: Page = () => {
 SettingsPage.getLayout = (page: React.ReactNode) => {
 	return (
 		<CurUserProvider>
-			<AccountInfoProvider>{page}</AccountInfoProvider>
+			<AccountInfoProvider>
+				<AppLayout>{page}</AppLayout>
+			</AccountInfoProvider>
 		</CurUserProvider>
 	);
 };

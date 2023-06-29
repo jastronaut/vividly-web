@@ -10,7 +10,9 @@ import {
 } from '@tabler/icons-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useRouter } from 'next/router';
+import { FadeIn } from '@/styles/Animations';
+import { useVividlyTheme, ThemeName } from '@/styles/Theme';
+import { useCurUserContext } from '../utils/CurUserContext';
 
 const NavInner = styled.nav`
 	display: flex;
@@ -21,10 +23,6 @@ const NavInner = styled.nav`
 		justify-content: space-between;
 	}
 `;
-
-import { useVividlyTheme, ThemeName } from '@/styles/Theme';
-import { useCurUserContext } from '../utils/CurUserContext';
-
 const Navigation = styled.header`
 	top: 0;
 	left: 0;
@@ -35,7 +33,7 @@ const Navigation = styled.header`
 	padding: ${rem(8)} ${rem(16)};
 
 	background-color: ${props =>
-		getRgba(props.theme.background.primary, 0.7, false)};
+		getRgba(props.theme.background.primary, 0.8, false)};
 
 	transition: all 0.2s ease-in;
 
@@ -78,6 +76,7 @@ const PageContentContainer = styled.main`
 		margin-left: 0;
 		margin-right: 0;
 		margin-top: 0;
+		margin-bottom: ${rem(25)};
 	}
 
 	@media screen and (min-width: 1000px) {
@@ -107,7 +106,11 @@ const NavbarInner = styled.div`
 	}
 `;
 
-const getRgba = (color: string, opacity: number, isDarkened: boolean) => {
+export const getRgba = (
+	color: string,
+	opacity: number,
+	isDarkened: boolean
+) => {
 	const rgb = parseToRgb(isDarkened ? darken(0.1, color) : color);
 	return `${rgba(rgb.red, rgb.green, rgb.blue, opacity)}`;
 };
@@ -127,7 +130,7 @@ const HeaderStyled = styled(Header)`
 	-moz-backdrop-filter: blur(12px);
 `;
 
-export default function AppShellLayout(props: Props) {
+export default function NavigationLayout(props: Props) {
 	const theme = useMantineTheme();
 	const { setTheme, theme: vividlyTheme } = useVividlyTheme();
 	const pathname = usePathname();
@@ -179,7 +182,9 @@ export default function AppShellLayout(props: Props) {
 	return (
 		<>
 			<Navigation>{NavContent}</Navigation>
-			<PageContentContainer>{props.children} </PageContentContainer>
+			<PageContentContainer>
+				<FadeIn>{props.children}</FadeIn>
+			</PageContentContainer>
 		</>
 	);
 }

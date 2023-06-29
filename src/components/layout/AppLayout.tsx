@@ -1,5 +1,5 @@
 import { CurUserProvider } from '../utils/CurUserContext';
-import AppShellLayout from './AppShellLayout';
+import NavigationLayout from './NavigationLayout';
 
 type Props = {
 	children: React.ReactNode;
@@ -8,7 +8,7 @@ type Props = {
 const AppLayout = ({ children }: Props) => {
 	return (
 		<CurUserProvider>
-			<AppShellLayout>{children}</AppShellLayout>
+			<NavigationLayout>{children}</NavigationLayout>
 		</CurUserProvider>
 	);
 };

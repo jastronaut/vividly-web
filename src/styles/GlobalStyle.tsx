@@ -30,14 +30,12 @@ export const GlobalStyle = createGlobalStyle`
         box-sizing: border-box;
     }
 
-	@keyframes riseandfade {
+	@keyframes fadein {
 		from {
 			opacity: 0;
-			transform: translateY(${rem(10)});
 		}
 
 		to {
-			transform: translateY(0);
             opacity: 1;
 		}
 	}
