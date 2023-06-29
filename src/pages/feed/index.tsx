@@ -1,9 +1,5 @@
 import { Page } from '../_app';
-import {
-	CurUserProvider,
-	useCurUserContext,
-} from '@/components/utils/CurUserContext';
-import AppShellLayout from '@/components/layout/AppShellLayout';
+import { useCurUserContext } from '@/components/utils/CurUserContext';
 import Link from 'next/link';
 
 import { useEffect } from 'react';
@@ -14,6 +10,7 @@ import { fetchWithToken } from '@/utils';
 import { FeedResponse, sortFeedFriendships } from '@/types/feed';
 import { showAndLogErrorNotification } from '@/showerror';
 import { FeedPreview } from '@/components/feed/FeedPreview';
+import AppLayout from '@/components/layout/AppLayout';
 
 export const Feed = () => {
 	const { curUser } = useCurUserContext();
@@ -57,25 +54,15 @@ export const Feed = () => {
 };
 
 const FeedPage: Page = () => {
-	const { curUser, isLoading } = useCurUserContext();
-
 	return (
 		<>
-			<AppShellLayout id={curUser.user?.id}>
-				{!curUser.token || isLoading ? (
-					<div>Loading</div>
-				) : (
-					<>
-						<Feed />
-					</>
-				)}
-			</AppShellLayout>
+			<Feed />
 		</>
 	);
 };
 
 FeedPage.getLayout = (page: React.ReactNode) => {
-	return <CurUserProvider>{page}</CurUserProvider>;
+	return <AppLayout>{page}</AppLayout>;
 };
 
 export default FeedPage;

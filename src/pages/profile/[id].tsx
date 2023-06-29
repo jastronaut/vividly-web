@@ -15,12 +15,9 @@ import { ProfileContent } from '@/components/profile/ProfileContent';
 import { EditorModal } from '../../components/editor';
 import { NewPostButton } from '@/components/profile/NewPostButton';
 import { Loading } from '@/components/utils/Loading';
-import {
-	CurUserProvider,
-	useCurUserContext,
-} from '@/components/utils/CurUserContext';
-import AppShellLayout from '@/components/layout/AppShellLayout';
+import { useCurUserContext } from '@/components/utils/CurUserContext';
 import { UserResponse, ProfileFeedResponse } from '@/types/api';
+import AppLayout from '@/components/layout/AppLayout';
 
 type PageProps = {
 	id: string;
@@ -193,9 +190,6 @@ const Profile = (props: PageProps) => {
 				},
 			})
 				.then(res => res.json())
-				.then(resp => {
-					console.log({ resp });
-				})
 				.catch(err => {
 					console.log({ err });
 				});
@@ -278,16 +272,10 @@ const ProfilePage: Page<PageProps> = props => {
 	const { id } = props;
 	const { curUser, isLoading } = useCurUserContext();
 
-	return (
-		<>
-			<AppShellLayout id={curUser?.user?.id}>
-				{!curUser.token || isLoading ? <Loading /> : <Profile id={id} />}
-			</AppShellLayout>
-		</>
-	);
+	return <>{!curUser.token || isLoading ? <Loading /> : <Profile id={id} />}</>;
 };
 
-ProfilePage.getLayout = page => <CurUserProvider>{page}</CurUserProvider>;
+ProfilePage.getLayout = page => <AppLayout>{page}</AppLayout>;
 
 export const getStaticProps = (
 	context: GetStaticPropsContext<{ id: string }>

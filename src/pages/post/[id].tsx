@@ -5,13 +5,14 @@ import {
 } from '@/components/utils/CurUserContext';
 import { GetStaticPropsContext } from 'next';
 import useSWR from 'swr';
+
 import { Page } from '../_app';
-import AppShellLayout from '@/components/layout/AppShellLayout';
 import { PostResponse } from '@/types/api';
 import { fetchWithToken } from '@/utils';
 import { SinglePostView } from '@/components/post/SinglePostView';
 import { PostProvider } from '@/components/post/PostContext';
 import { URL_PREFIX } from '@/constants';
+import AppLayout from '@/components/layout/AppLayout';
 
 type PageProps = {
 	id: string;
@@ -36,7 +37,7 @@ const PostPage: Page<PageProps> = (props: PageProps) => {
 	}, [error, isLoading, data]);
 
 	return (
-		<AppShellLayout id={curUser?.user?.id}>
+		<>
 			{data?.post && !isLoading ? (
 				<PostProvider post={data.post} curUser={curUser}>
 					<SinglePostView />
@@ -44,11 +45,11 @@ const PostPage: Page<PageProps> = (props: PageProps) => {
 			) : (
 				'lol'
 			)}
-		</AppShellLayout>
+		</>
 	);
 };
 
-PostPage.getLayout = page => <CurUserProvider>{page}</CurUserProvider>;
+PostPage.getLayout = page => <AppLayout>{page}</AppLayout>;
 
 export const getStaticProps = (
 	context: GetStaticPropsContext<{ id: string }>
