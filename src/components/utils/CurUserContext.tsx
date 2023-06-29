@@ -29,6 +29,7 @@ export const CurUserProvider = ({ children }: Props) => {
 
 	const updateCurUser = useCallback(
 		async (user: User) => {
+			setIsLoading(true);
 			const newCurUser = {
 				...curUserData,
 				user: {
@@ -37,6 +38,7 @@ export const CurUserProvider = ({ children }: Props) => {
 				},
 			};
 			setCurUserData(newCurUser);
+			setIsLoading(false);
 		},
 		[curUserData]
 	);

@@ -11,7 +11,7 @@ import { showAndLogErrorNotification } from '@/showerror';
 import { uri } from '@/constants';
 import { Block } from '@/types/post';
 
-import { ProfileContent } from '@/components/profile/ProfileContent';
+import { ProfileContent } from '@/components/profile/content/ProfileContent';
 import { EditorModal } from '../../components/editor';
 import { NewPostButton } from '@/components/profile/NewPostButton';
 import { Loading } from '@/components/utils/Loading';
