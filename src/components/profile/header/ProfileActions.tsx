@@ -1,9 +1,8 @@
-import { Button, Group, ActionIcon, Tooltip, Menu } from '@mantine/core';
+import { Group, ActionIcon, Tooltip, Menu } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
-import { IconUsers, IconDots, IconEdit } from '@tabler/icons-react';
+import { IconUsers, IconDots, IconEdit, IconTool } from '@tabler/icons-react';
 import styled from 'styled-components';
 import { rem } from 'polished';
-import { InformationButton } from './styles';
 
 const MobileMenuContainer = styled.div`
 	display: flex;
@@ -24,7 +23,6 @@ export const ProfileActions = (props: Props) => {
 		return (
 			<>
 				<MobileMenuContainer id='mobile-menu-container'>
-					<InformationButton toggleInformation={props.toggleInformation} />
 					<Menu withArrow offset={0} position='bottom'>
 						<Menu.Target>
 							<ActionIcon>
@@ -53,7 +51,6 @@ export const ProfileActions = (props: Props) => {
 
 	return (
 		<Group>
-			<InformationButton toggleInformation={props.toggleInformation} />
 			<ActionIcon
 				onClick={props.onClickFriends}
 				color='grape'
@@ -64,15 +61,14 @@ export const ProfileActions = (props: Props) => {
 					<IconUsers size={16} />
 				</Tooltip>
 			</ActionIcon>
-			<Button
+			<ActionIcon
 				variant='outline'
-				size='sm'
 				color='grape'
-				radius='xl'
 				onClick={props.onClickEdit}
+				aria-label='Edit profile'
 			>
-				Edit profile
-			</Button>
+				<IconTool size={16} />
+			</ActionIcon>
 		</Group>
 	);
 };
