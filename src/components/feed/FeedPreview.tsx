@@ -1,4 +1,4 @@
-import { Flex, Avatar, Text, Badge } from '@mantine/core';
+import { Flex, Text, Badge } from '@mantine/core';
 import styled from 'styled-components';
 import { rem } from 'polished';
 import { IconPointFilled } from '@tabler/icons-react';
@@ -10,6 +10,7 @@ import { getPostTime } from '../utils/time';
 
 import { Wrapper, TextContainer } from '@/components/activity/requests/styles';
 import { FavoriteBadge } from '../utils/FavoriteBadge';
+import { Avatar } from '@mantine/core';
 
 export const UnreadBadge = () => {
 	return (
@@ -58,11 +59,7 @@ export const FeedPreview = (props: Props) => {
 	return (
 		<WrapperStyled withHover isUnread={isUnread}>
 			<Flex>
-				<Avatar
-					src={friend.avatarSrc || DEFAULT_AVATAR}
-					radius='xl'
-					style={{ alignSelf: 'flex-start' }}
-				/>
+				<Avatar src={friend.avatarSrc || DEFAULT_AVATAR} />
 				<TextContainer style={{ width: '100%' }}>
 					<Text>
 						<Text fw={700} component='span'>

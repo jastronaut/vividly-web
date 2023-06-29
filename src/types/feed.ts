@@ -22,7 +22,7 @@ export function sortFeedFriendships(items: FeedFriendship[]): FeedFriendship[] {
 		const lastPostB = b.friend.posts && b.friend.posts[0];
 		// rule 1: items without posts come last
 		if (!lastPostA && !lastPostB) {
-			return 0;
+			return b.isFavorite ? 1 : -1;
 		} else if (!lastPostA) {
 			return 1;
 		} else if (!lastPostB) {
