@@ -21,6 +21,7 @@ import { showAndLogErrorNotification } from '@/showerror';
 
 const PageContent = (props: { token: string }) => {
 	const { accountInfo } = useAccountInfoContext();
+	const { curUser } = useCurUserContext();
 	const {
 		setTheme,
 		theme: vividlyTheme,
@@ -83,6 +84,29 @@ const PageContent = (props: { token: string }) => {
 		}
 	};
 
+	const submitUsername = async (username: string) => {
+		try {
+			const res = await makeApiCall<DefaultResponse>({
+				uri: '/users/username/change',
+				method: 'POST',
+				body: { username },
+				token: props.token,
+			});
+
+			if (res.error) {
+				throw new Error(res.error);
+			}
+
+			notifications.show({
+				message: 'Username updated successfully.',
+				color: 'green',
+				title: 'Success',
+			});
+		} catch (err) {
+			showAndLogErrorNotification(`Couldn't update username.`, err);
+		}
+	};
+
 	if (!accountInfo || !accountInfo.authUser)
 		return (
 			<>
@@ -134,6 +158,16 @@ const PageContent = (props: { token: string }) => {
 				onSave={submitEmail}
 			/>
 			<Divider size='xs' />
+
+			<Space h='sm' />
+			<TextInputSetting
+				title='Username'
+				data={curUser.user?.username}
+				placeholder='New username'
+				type='text'
+				onSave={submitUsername}
+			/>
+			<Divider size='xs' />
 		</>
 	);
 };
@@ -144,11 +178,7 @@ const SettingsPage: Page = () => {
 	return (
 		<>
 			<AppShellLayout id={curUser.user?.id}>
-				{!curUser.token || isLoading ? (
-					<Loading />
-				) : (
-					<PageContent token={curUser.token} />
-				)}
+				<PageContent token={curUser.token} />
 			</AppShellLayout>
 		</>
 	);

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Flex, Space, Menu, ActionIcon, Text, Avatar } from '@mantine/core';
+import { Flex, Space, Menu, ActionIcon, Text } from '@mantine/core';
 import {
 	IconDots,
 	IconUserMinus,
@@ -17,6 +17,7 @@ import { TextContainer } from '@/components/activity/requests/styles';
 import { Wrapper } from '@/components/activity/requests/styles';
 import { DismissWarningModal } from '@/components/DismissWarningModal';
 import { FavoriteBadge } from '@/components/utils/FavoriteBadge';
+import { Avatar } from '@/components/Avatar';
 
 const TextStyled = styled(Text)`
 	line-height: ${rem(16)};

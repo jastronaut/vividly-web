@@ -1,47 +1,34 @@
 import { Center, Button, Space } from '@mantine/core';
-import Link from 'next/link';
 import { IconArrowRight } from '@tabler/icons-react';
+import { useRouter } from 'next/router';
 
 import { NotificationTabs } from '@/components/activity/notifications/NotificationTabs';
 
 import { Page } from '../_app';
-import {
-	CurUserProvider,
-	useCurUserContext,
-} from '@/components/utils/CurUserContext';
-import AppShellLayout from '@/components/layout/AppShellLayout';
+import AppLayout from '@/components/layout/AppLayout';
 
 const FriendsPage: Page = () => {
-	const { curUser, isLoading } = useCurUserContext();
+	const router = useRouter();
 
 	return (
 		<>
-			<AppShellLayout id={curUser.user?.id}>
-				{!curUser.token || isLoading ? (
-					<div>Loading</div>
-				) : (
-					<>
-						<NotificationTabs />
-						<Center>
-							<Link href='/friend-requests'>
-								<Button
-									component='a'
-									rightIcon={<IconArrowRight />}
-									variant='outline'
-								>
-									Friend requests
-								</Button>
-							</Link>
-						</Center>
-					</>
-				)}
-			</AppShellLayout>
+			<NotificationTabs />
+			<Center>
+				<Button
+					component='a'
+					href='/friend-requests'
+					rightIcon={<IconArrowRight />}
+					variant='outline'
+				>
+					{'Friend requests'}
+				</Button>
+			</Center>
 		</>
 	);
 };
 
 FriendsPage.getLayout = (page: React.ReactNode) => {
-	return <CurUserProvider>{page}</CurUserProvider>;
+	return <AppLayout>{page}</AppLayout>;
 };
 
 export default FriendsPage;

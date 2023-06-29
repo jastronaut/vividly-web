@@ -8,17 +8,18 @@ import {
 	Button,
 	Space,
 	FileButton,
-	Avatar,
 	Center,
 } from '@mantine/core';
 import { IconPhotoPlus } from '@tabler/icons-react';
 
-import { IMGBB_API_KEY } from '@/constants';
-import { IMGBBResponse } from '@/types/api';
+import { DEFAULT_AVATAR, IMGBB_API_KEY } from '@/constants';
 
+import { Avatar } from '@/components/Avatar';
 import { useCurUserContext } from '@/components/utils/CurUserContext';
 import { showAndLogErrorNotification } from '@/showerror';
 import { MiniLoader } from '../utils/Loading';
+import { DismissWarningModal } from '../DismissWarningModal';
+import { User } from '@/types/user';
 
 const ImageEditContainer = styled.div`
 	position: absolute;
@@ -46,15 +47,23 @@ function createImageUploadRequest(file: File) {
 type Props = {
 	isOpen: boolean;
 	onClose: () => void;
-	onClickSave: (name: string, bio: string, avatarSrc: string) => void;
+	onClickSave: (newUser: User) => void;
 };
 
 export const SettingsModal = (props: Props) => {
 	const { curUser } = useCurUserContext();
 	const [name, setName] = useState(curUser.user.name);
+	const [username, setUsername] = useState(curUser.user.username);
 	const [bio, setBio] = useState(curUser.user.bio);
 	const [newAvatarSrc, setNewAvatarSrc] = useState('');
 	const [uploadingAvatar, setUploadingAvatar] = useState(false);
+	const [isWarningModalOpen, setIsWarningModalOpen] = useState(false);
+
+	const formIsDirty =
+		name !== curUser.user.name ||
+		bio !== curUser.user.bio ||
+		username !== curUser.user.username ||
+		newAvatarSrc !== '';
 
 	const uploadImage = (file: File | null) => {
 		if (file === null || file.length < 1) {
@@ -87,14 +96,51 @@ export const SettingsModal = (props: Props) => {
 		upload();
 	};
 
-	useEffect(() => {
-		if (props.isOpen) {
-			setNewAvatarSrc('');
+	const tryClose = () => {
+		if (formIsDirty) {
+			setIsWarningModalOpen(true);
+		} else {
+			props.onClose();
 		}
-	}, [props.isOpen]);
+	};
+
+	// useEffect(() => {
+	// if (props.isOpen) {
+	// 	setNewAvatarSrc('');
+	// 	setName(curUser.user.name);
+	// 	setUsername(curUser.user.username);
+	// }
+
+	// 	return () => {
+	// 		setNewAvatarSrc('');
+	// 		setName(curUser.user.name);
+	// 		setUsername(curUser.user.username);
+	// 	};
+	// }, []);
+
+	useEffect(() => {
+		setUsername(curUser.user.username);
+	}, [curUser.user.username]);
+
+	useEffect(() => {
+		setName(curUser.user.name);
+	}, [curUser.user.name]);
+
+	useEffect(() => {
+		setBio(curUser.user.bio);
+	}, [curUser.user.bio]);
 
 	return (
-		<Modal opened={props.isOpen} onClose={props.onClose} title='Edit profile'>
+		<Modal opened={props.isOpen} onClose={tryClose} title='Edit profile'>
+			<DismissWarningModal
+				isOpen={isWarningModalOpen}
+				onNo={() => setIsWarningModalOpen(false)}
+				onYes={() => {
+					setIsWarningModalOpen(false);
+					props.onClose();
+				}}
+				message='Abandon your changes? 😳'
+			/>
 			<div
 				style={{
 					position: 'relative',
@@ -103,17 +149,10 @@ export const SettingsModal = (props: Props) => {
 				<Center>
 					<div>
 						<Avatar
-							src={newAvatarSrc || curUser.user.avatarSrc}
+							src={newAvatarSrc || curUser.user.avatarSrc || DEFAULT_AVATAR}
 							size={150}
-							alt={`${curUser.user.username}'s avatar}`}
-							radius='xl'
+							alt={`${curUser.user.username}'s avatar`}
 						/>
-
-						{uploadingAvatar && (
-							<ImageEditContainer>
-								<MiniLoader />
-							</ImageEditContainer>
-						)}
 						<Center>
 							<FileButton
 								onChange={uploadImage}
@@ -135,7 +174,13 @@ export const SettingsModal = (props: Props) => {
 			<form
 				onSubmit={e => {
 					e.preventDefault();
-					props.onClickSave(name, bio, newAvatarSrc);
+					props.onClickSave({
+						...curUser.user,
+						name,
+						username,
+						bio,
+						avatarSrc: newAvatarSrc,
+					});
 					props.onClose();
 				}}
 			>
@@ -150,6 +195,18 @@ export const SettingsModal = (props: Props) => {
 					maxLength={20}
 				/>
 				<Space h='sm' />
+				<TextInput
+					label='Username'
+					radius='md'
+					value={username}
+					onChange={e => {
+						setUsername(e.currentTarget.value);
+					}}
+					placeholder='Enter your username'
+					maxLength={20}
+					minLength={3}
+				/>
+				<Space h='sm' />
 				<Textarea
 					label='Bio'
 					radius='md'
@@ -161,7 +218,16 @@ export const SettingsModal = (props: Props) => {
 					maxLength={150}
 				/>
 				<Space h='md' />
-				<Button size='sm' color='grape' radius='xl' type='submit'>
+				<Button
+					size='sm'
+					color='grape'
+					radius='xl'
+					type='submit'
+					disabled={!formIsDirty}
+					sx={{
+						boxShadow: '0 4px 0 pink',
+					}}
+				>
 					Save
 				</Button>
 			</form>

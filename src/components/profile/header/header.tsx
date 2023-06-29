@@ -137,8 +137,14 @@ export const ProfileHeaderComponent = (props: ProfileHeaderProps) => {
 	const friendship = user?.friendship;
 	const friendRequest = user?.friendRequest;
 
-	const hasInboundRequest = friendRequest?.toUserId === curUser.user.id;
-	const hasOutboundRequest = friendRequest?.fromUserId === curUser.user.id;
+	const curUserId = curUser.user?.id;
+
+	const hasInboundRequest = curUserId
+		? friendRequest?.toUserId === curUserId
+		: false;
+	const hasOutboundRequest = curUserId
+		? friendRequest?.fromUserId === curUserId
+		: false;
 
 	// this indicates which set of actions the friend button should allow
 	let friendButtonAction = 'none';
@@ -187,20 +193,16 @@ export const ProfileHeaderComponent = (props: ProfileHeaderProps) => {
 		setWarningModalOpen(false);
 	};
 
-	const onClickSaveSettings = (
-		name: string,
-		bio: string,
-		avatarSrc: string
-	) => {
+	const onClickSaveSettings = (newUser: User) => {
 		if (!user || user.user.id !== curUser.user.id) {
 			return;
 		}
 
 		const resp: { [key: string]: string } = {};
-		resp['name'] = name;
-		resp['bio'] = bio;
-		if (avatarSrc) {
-			resp['avatarSrc'] = avatarSrc;
+		resp['name'] = newUser.name;
+		resp['bio'] = newUser.bio;
+		if (newUser.avatarSrc && newUser.avatarSrc !== user.user.avatarSrc) {
+			resp['avatarSrc'] = newUser.avatarSrc;
 		}
 
 		fetch(`${URL_PREFIX}/users/info/change`, {
