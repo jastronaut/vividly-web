@@ -20,6 +20,7 @@ import { ProfileContentContainer } from './_styles';
 const ContentWrapper = styled.div`
 	padding: ${rem(8)} ${rem(24)};
 	margin-bottom: ${rem(24)};
+	border: 1px solid ${props => props.theme.border.secondary};
 
 	@media screen and (max-width: 500px) {
 		padding: ${rem(8)} ${rem(12)};
@@ -164,10 +165,22 @@ export const ProfileContent = (props: ProfileContentProps) => {
 					{showPrivateProfileMessage && <PrivateProfileMessage />}
 
 					{!props.isPostsLoading && props.hasMorePosts && (
-						<Center>
-							<Button onClick={props.onClickLoadMore}>Load More</Button>
-						</Center>
+						<div>
+							<Center>
+								<Button onClick={props.onClickLoadMore}>Load More</Button>
+							</Center>
+							<Space h='sm' />
+						</div>
 					)}
+
+					{props.isUserLoading ||
+						(props.isPostsLoading && (
+							<>
+								<Skeleton height={8} radius='xl' />
+								<Skeleton height={8} mt={6} radius='xl' />
+								<Skeleton height={8} mt={6} width='70%' radius='xl' />
+							</>
+						))}
 
 					{!props.isPostsLoading && !props.hasMorePosts && !showEmptyState && (
 						<Center>

@@ -1,4 +1,4 @@
-import { Flex, Avatar, Text } from '@mantine/core';
+import { Flex, Text } from '@mantine/core';
 import Link from 'next/link';
 import styled from 'styled-components';
 import { rem } from 'polished';
@@ -13,6 +13,7 @@ import { Wrapper, TextContainer } from '../requests/styles';
 import { DEFAULT_AVATAR } from '@/constants';
 
 import { getBlockPreview } from '@/components/utils/getBlockPreview';
+import { Avatar } from '@/components/Avatar';
 
 function getNotificationActionMessage(notification: NotificationBody) {
 	switch (notification.type) {
@@ -73,8 +74,8 @@ export const NotificationItem = (props: Props) => {
 				<Flex>
 					<Avatar
 						src={notification.sender.avatarSrc || DEFAULT_AVATAR}
-						radius='xl'
-						style={{ alignSelf: 'flex-start' }}
+						alt={`${notification.sender.name}'s avatar`}
+						size={30}
 					/>
 					<TextContainer>
 						<Text>

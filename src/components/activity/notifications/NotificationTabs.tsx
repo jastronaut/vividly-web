@@ -51,6 +51,7 @@ export const NotificationTabs = () => {
 
 	useEffect(() => {
 		const markNotificationsAsRead = async () => {
+			if (!token || !totalUnreadCount) return;
 			try {
 				const resp = await makeApiCall<DefaultResponse>({
 					uri: `/notifications/read`,
@@ -66,7 +67,7 @@ export const NotificationTabs = () => {
 		};
 
 		markNotificationsAsRead();
-	}, []);
+	}, [totalUnreadCount]);
 
 	return (
 		<>

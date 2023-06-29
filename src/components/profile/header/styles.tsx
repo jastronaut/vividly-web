@@ -153,7 +153,13 @@ export const HeaderText = (props: HeaderTextProps) => (
 			</Text>
 		</NamesContainer>
 		<Collapse in={props.bioExpanded}>
-			<Text fz='sm'>{props.bio}</Text>
+			{props.bio ? (
+				<Text fz='sm'>{props.bio}</Text>
+			) : (
+				<Text fz='sm' fs='italic'>
+					No bio yet.
+				</Text>
+			)}
 		</Collapse>
 	</>
 );

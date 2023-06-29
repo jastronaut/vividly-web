@@ -14,7 +14,4 @@ export const ProfileHeaderContainer = styled.div`
 
 export const ProfileContentContainer = styled.div`
 	min-height: 70vh;
-	border: 1px solid ${props => props.theme.border.secondary};
-	border-top: none;
-	border-bottom: none;
 `;

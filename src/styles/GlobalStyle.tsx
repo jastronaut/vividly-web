@@ -16,7 +16,7 @@ export const GlobalStyle = createGlobalStyle`
         font-family: 'Lato', sans-serif;
         transition: all 0.2s ease-in;
     }
-    
+
     h1, h2, h3 {
         font-family: 'Montserrat', sans-serif;
     }
