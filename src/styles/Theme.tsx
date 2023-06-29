@@ -1,4 +1,4 @@
-import React, { useEffect, createContext, useContext } from 'react';
+import React, { useEffect, createContext, useContext, useState } from 'react';
 import { ThemeProvider } from 'styled-components';
 import { MantineProvider } from '@mantine/core';
 import { useLocalStorage } from '@mantine/hooks';
@@ -93,6 +93,8 @@ export const VividlyThemeProvider = (props: { children: React.ReactNode }) => {
 		defaultValue: false,
 	});
 
+	const [mounted, setMounted] = useState(false);
+
 	const checkPrefersColorScheme = () => {
 		if (!window.matchMedia) return;
 
@@ -104,12 +106,13 @@ export const VividlyThemeProvider = (props: { children: React.ReactNode }) => {
 	};
 
 	useEffect(() => {
+		setMounted(true);
 		if (useSystemTheme) {
 			checkPrefersColorScheme();
 		}
 	}, []);
 
-	return (
+	const body = (
 		<VividlyThemeContext.Provider
 			value={{
 				theme,
@@ -158,4 +161,10 @@ export const VividlyThemeProvider = (props: { children: React.ReactNode }) => {
 			</MantineProvider>
 		</VividlyThemeContext.Provider>
 	);
+
+	if (!mounted) {
+		return <div style={{ visibility: 'hidden' }}>{body}</div>;
+	}
+
+	return body;
 };
