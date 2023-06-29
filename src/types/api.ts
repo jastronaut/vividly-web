@@ -79,7 +79,7 @@ export interface LoginResponse extends DefaultResponse {
 	user: User;
 }
 
-export interface FriendsRespose extends DefaultResponse {
+export interface FriendsResponse extends DefaultResponse {
 	friends: Friend[];
 }
 

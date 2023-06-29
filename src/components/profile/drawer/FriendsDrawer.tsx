@@ -5,7 +5,7 @@ import { IconArrowRight } from '@tabler/icons-react';
 import Link from 'next/link';
 import { rem } from 'polished';
 
-import { FriendsRespose } from '@/types/api';
+import { FriendsResponse } from '@/types/api';
 import { fetchWithToken } from '@/utils';
 import { FriendItem } from './FriendItem';
 import { showAndLogErrorNotification } from '@/showerror';
@@ -16,6 +16,7 @@ import {
 	useToggleFavorite,
 } from '@/components/activity/requests/hooks';
 import { URL_PREFIX } from '@/constants';
+import { sortFriends } from '../utils';
 
 type Props = {
 	isOpen: boolean;
@@ -25,7 +26,7 @@ type Props = {
 export const FriendsDrawer = (props: Props) => {
 	const { curUser } = useCurUserContext();
 	const { token } = curUser;
-	const { data, error, isLoading, mutate } = useSWR<FriendsRespose>(
+	const { data, error, isLoading, mutate } = useSWR<FriendsResponse>(
 		[token ? `${URL_PREFIX}/friends` : '', token],
 		// @ts-ignore
 		([url, token]) => fetchWithToken(url, token),
@@ -45,6 +46,8 @@ export const FriendsDrawer = (props: Props) => {
 	} = useToggleFavorite();
 
 	const showLoading = isLoading || !data;
+
+	const sortedFriends = data?.friends.sort(sortFriends);
 
 	const unfriendAndUpdate = (id: number) => {
 		unfriend(id);
@@ -121,8 +124,8 @@ export const FriendsDrawer = (props: Props) => {
 						<MiniLoader />
 					</Center>
 				)}
-				{!showLoading &&
-					data?.friends.map(friend => {
+				{sortedFriends &&
+					sortedFriends.map(friend => {
 						return (
 							<FriendItem
 								key={`friend-list-${friend.id}`}
