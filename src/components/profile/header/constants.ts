@@ -1,0 +1,2 @@
+export const HEADER_SCROLL_HEIGHT = 200;
+export const HEADER_SCROLL_HEIGHT_MOBILE = 150;

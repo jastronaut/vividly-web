@@ -1,14 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
-import {
-	Skeleton,
-	Group,
-	ActionIcon,
-	Menu,
-	Tooltip,
-	Indicator,
-} from '@mantine/core';
+import { Group, ActionIcon, Menu, Tooltip, Indicator } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
-import { useDisclosure } from '@mantine/hooks';
+import { useDisclosure, useWindowScroll, useMediaQuery } from '@mantine/hooks';
 import {
 	IconMoodSmileBeam,
 	IconUserPlus,
@@ -16,19 +9,16 @@ import {
 	IconUserOff,
 } from '@tabler/icons-react';
 
-import { Avatar } from '@/components/Avatar';
 import { makeApiCall } from '@/utils';
-import { DEFAULT_AVATAR, URL_PREFIX } from '../../../constants';
+import { DEFAULT_AVATAR } from '../../../constants';
 import { User } from '@/types/user';
 import { UserResponse, DefaultResponse } from '@/types/api';
-import { SettingsModal } from '../SettingsModal';
+import { SettingsModal } from './SettingsModal';
 import {
 	FavoriteButton,
-	InformationButton,
 	ProfileHeaderContent,
 	ProfileHeaderText,
 	HeaderText,
-	HeaderTextLoading,
 	UserInfoSection,
 	FriendActionsMenuContainer,
 	RightContent,
@@ -46,6 +36,8 @@ import {
 	useCancelFriendRequest,
 } from '@/components/activity/requests/hooks';
 import { throwConfetti } from '@/utils';
+import { HeaderAvatar } from './HeaderAvatar';
+import { HEADER_SCROLL_HEIGHT, HEADER_SCROLL_HEIGHT_MOBILE } from './constants';
 
 function showSuccessNotification(message: string) {
 	notifications.show({
@@ -88,6 +80,9 @@ export const ProfileHeaderComponent = (props: ProfileHeaderProps) => {
 	const { curUser, updateCurUser } = useCurUserContext();
 	const [warningModalOpen, setWarningModalOpen] = useState(false);
 	const [bioExpanded, { toggle }] = useDisclosure(false);
+	const [scroll, scrollTo] = useWindowScroll();
+	// usemediaquery
+	const isMobile = useMediaQuery('(max-width: 800px)');
 
 	// this will indicate which action the user just triggered by clicking
 	// the friend button
@@ -147,13 +142,20 @@ export const ProfileHeaderComponent = (props: ProfileHeaderProps) => {
 		: false;
 
 	// this indicates which set of actions the friend button should allow
-	let friendButtonAction = 'none';
-	if (friendship) {
+	let friendButtonAction = null;
+	if (friendship && !friendRequest) {
 		friendButtonAction = 'friends';
 	} else if (hasInboundRequest) {
 		friendButtonAction = 'inbound';
 	} else if (hasOutboundRequest) {
 		friendButtonAction = 'outbound';
+	}
+
+	let isHeaderScrolled = false;
+	if (isMobile) {
+		isHeaderScrolled = scroll.y > HEADER_SCROLL_HEIGHT_MOBILE;
+	} else {
+		isHeaderScrolled = scroll.y > HEADER_SCROLL_HEIGHT;
 	}
 
 	// hooks for different friend button actions
@@ -197,43 +199,12 @@ export const ProfileHeaderComponent = (props: ProfileHeaderProps) => {
 		if (!user || user.user.id !== curUser.user.id) {
 			return;
 		}
-
-		const resp: { [key: string]: string } = {};
-		resp['name'] = newUser.name;
-		resp['bio'] = newUser.bio;
-		if (newUser.avatarSrc && newUser.avatarSrc !== user.user.avatarSrc) {
-			resp['avatarSrc'] = newUser.avatarSrc;
-		}
-
-		fetch(`${URL_PREFIX}/users/info/change`, {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-				Authorization: `Bearer ${curUser.token}`,
-			},
-			body: JSON.stringify(resp),
-		})
-			.then(res => res.json())
-			.then(data => {
-				const result = data as User;
-				setAvatar(result.avatarSrc);
-				updateUserProfileInfo({
-					...user,
-					user: {
-						id: data.id,
-						name: result.name,
-						bio: result.bio,
-						avatarSrc: result.avatarSrc,
-						username: result.username,
-					},
-				});
-			})
-			.catch(err => {
-				showAndLogErrorNotification(
-					`Could not update user info at this time`,
-					err
-				);
-			});
+		setAvatar(newUser.avatarSrc);
+		updateUserProfileInfo({
+			...user,
+			user: newUser,
+		});
+		throwConfetti();
 	};
 
 	// hoooks to check when friend button is triggered, when they're loading, and
@@ -370,27 +341,21 @@ export const ProfileHeaderComponent = (props: ProfileHeaderProps) => {
 					onClickSave={onClickSaveSettings}
 				/>
 			)}
-			<ProfileHeaderContent expanded={pinned}>
+			<ProfileHeaderContent scrolled={isHeaderScrolled}>
 				<UserInfoSection>
-					{isLoading ? (
-						<Skeleton height={50} circle mb='xl' />
-					) : (
-						<Avatar
-							src={avatarSrc || DEFAULT_AVATAR}
-							alt={`${user?.user.username}'s avatar.`}
-						/>
-					)}
+					<HeaderAvatar
+						isLoading={isLoading}
+						avatarSrc={avatarSrc}
+						username={user ? user.user.username : ''}
+					/>
 					<ProfileHeaderText>
-						{isLoading || !user ? (
-							<HeaderTextLoading />
-						) : (
-							<HeaderText
-								bioExpanded={bioExpanded}
-								name={user.user.name}
-								username={user.user.username}
-								bio={user.user.bio}
-							/>
-						)}
+						<HeaderText
+							bioExpanded={bioExpanded}
+							name={user?.user.name}
+							username={user?.user.username || ''}
+							bio={user?.user.bio || ''}
+							isLoading={isLoading}
+						/>
 					</ProfileHeaderText>
 				</UserInfoSection>
 				<>
@@ -406,7 +371,7 @@ export const ProfileHeaderComponent = (props: ProfileHeaderProps) => {
 						) : (
 							<FriendActionsMenuContainer id='friend-menu-container'>
 								<Group>
-									<InformationButton toggleInformation={toggle} />
+									{/* <InformationButton toggleInformation={toggle} /> */}
 									<Menu position='bottom-end' withArrow offset={0}>
 										<Menu.Target>
 											<Indicator
@@ -476,7 +441,7 @@ export const ProfileHeaderComponent = (props: ProfileHeaderProps) => {
 												>
 													Unfriend
 												</Menu.Item>
-											) : friendButtonAction === 'none' ? (
+											) : (
 												<Menu.Item
 													icon={<IconUserPlus size={14} />}
 													onClick={() => {
@@ -486,7 +451,7 @@ export const ProfileHeaderComponent = (props: ProfileHeaderProps) => {
 												>
 													Add friend
 												</Menu.Item>
-											) : null}
+											)}
 										</Menu.Dropdown>
 									</Menu>
 
