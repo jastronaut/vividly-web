@@ -1,5 +1,4 @@
-import { useState, useEffect } from 'react';
-import styled from 'styled-components';
+import { useState, useEffect, useCallback } from 'react';
 import { rem } from 'polished';
 import {
 	Textarea,
@@ -11,31 +10,27 @@ import {
 	Center,
 } from '@mantine/core';
 import { IconPhotoPlus } from '@tabler/icons-react';
+import { useMediaQuery } from '@mantine/hooks';
 
 import { DEFAULT_AVATAR, IMGBB_API_KEY } from '@/constants';
+import { URL_PREFIX } from '@/constants';
 
 import { Avatar } from '@/components/Avatar';
 import { useCurUserContext } from '@/components/utils/CurUserContext';
 import { showAndLogErrorNotification } from '@/showerror';
-import { MiniLoader } from '../utils/Loading';
-import { DismissWarningModal } from '../DismissWarningModal';
+import { DismissWarningModal } from '../../DismissWarningModal';
 import { User } from '@/types/user';
 
-const ImageEditContainer = styled.div`
-	position: absolute;
-	top: 0;
-	height: 150px;
-	width: 150px;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	background-color: rgba(0, 0, 0, 0.5);
-	border-radius: 75px;
-	backdrop-filter: blur(6px);
-	-webkit-backdrop-filter: blur(6px);
-	-o-backdrop-filter: blur(6px);
-	-moz-backdrop-filter: blur(6px);
-`;
+function getErrorText(errorCode: string | null) {
+	switch (errorCode) {
+		case 'USERNAME_TAKEN':
+			return 'Username is taken';
+		case 'USERNAME_INVALID':
+			return 'Username is invalid';
+		default:
+			return null;
+	}
+}
 
 function createImageUploadRequest(file: File) {
 	const formData = new FormData();
@@ -58,6 +53,62 @@ export const SettingsModal = (props: Props) => {
 	const [newAvatarSrc, setNewAvatarSrc] = useState('');
 	const [uploadingAvatar, setUploadingAvatar] = useState(false);
 	const [isWarningModalOpen, setIsWarningModalOpen] = useState(false);
+	const [error, setError] = useState(null);
+
+	const isMobile = useMediaQuery('(max-width: 800px)');
+
+	const onClickSaveSettings = useCallback(async () => {
+		if (!curUser || !curUser.token) {
+			return;
+		}
+
+		const resp: { [key: string]: string } = {};
+		resp['name'] = name;
+		resp['bio'] = bio;
+		if (newAvatarSrc && newAvatarSrc !== curUser.user.avatarSrc) {
+			resp['avatarSrc'] = newAvatarSrc;
+		}
+
+		try {
+			// change username
+			if (username !== curUser.user.username) {
+				const usernameRes = await fetch(`${URL_PREFIX}/users/username/change`, {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+						Authorization: `Bearer ${curUser.token}`,
+					},
+					body: JSON.stringify({ username }),
+				});
+
+				const usernameData = await usernameRes.json();
+
+				if (usernameData.error) {
+					throw new Error(usernameData.errorCode);
+				}
+			}
+
+			// change bio, name, avatar
+			const req = await fetch(`${URL_PREFIX}/users/info/change`, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${curUser.token}`,
+				},
+				body: JSON.stringify(resp),
+			});
+
+			const data = await req.json();
+			if (data.error) {
+				throw new Error(data.errorCode);
+			}
+
+			props.onClickSave(data.user);
+			closeModal();
+		} catch (err: any) {
+			setError(err.message);
+		}
+	}, [curUser, username, bio, newAvatarSrc, name]);
 
 	const formIsDirty =
 		name !== curUser.user.name ||
@@ -96,11 +147,20 @@ export const SettingsModal = (props: Props) => {
 		upload();
 	};
 
+	const closeModal = () => {
+		setUsername(curUser.user.username);
+		setName(curUser.user.name);
+		setBio(curUser.user.bio);
+		setError(null);
+		setIsWarningModalOpen(false);
+		props.onClose();
+	};
+
 	const tryClose = () => {
 		if (formIsDirty) {
 			setIsWarningModalOpen(true);
 		} else {
-			props.onClose();
+			closeModal();
 		}
 	};
 
@@ -119,11 +179,23 @@ export const SettingsModal = (props: Props) => {
 	// }, []);
 
 	useEffect(() => {
+		setError(null);
+	}, [props.isOpen]);
+
+	useEffect(() => {
 		setUsername(curUser.user.username);
+
+		return () => {
+			setUsername(curUser.user.username);
+		};
 	}, [curUser.user.username]);
 
 	useEffect(() => {
 		setName(curUser.user.name);
+
+		return () => {
+			setName(curUser.user.name);
+		};
 	}, [curUser.user.name]);
 
 	useEffect(() => {
@@ -131,14 +203,16 @@ export const SettingsModal = (props: Props) => {
 	}, [curUser.user.bio]);
 
 	return (
-		<Modal opened={props.isOpen} onClose={tryClose} title='Edit profile'>
+		<Modal
+			opened={props.isOpen}
+			onClose={tryClose}
+			title='Edit profile'
+			fullScreen={isMobile}
+		>
 			<DismissWarningModal
 				isOpen={isWarningModalOpen}
 				onNo={() => setIsWarningModalOpen(false)}
-				onYes={() => {
-					setIsWarningModalOpen(false);
-					props.onClose();
-				}}
+				onYes={closeModal}
 				message='Abandon your changes? 😳'
 			/>
 			<div
@@ -174,14 +248,7 @@ export const SettingsModal = (props: Props) => {
 			<form
 				onSubmit={e => {
 					e.preventDefault();
-					props.onClickSave({
-						...curUser.user,
-						name,
-						username,
-						bio,
-						avatarSrc: newAvatarSrc,
-					});
-					props.onClose();
+					onClickSaveSettings();
 				}}
 			>
 				<TextInput
@@ -193,6 +260,10 @@ export const SettingsModal = (props: Props) => {
 					}}
 					placeholder='Enter your name'
 					maxLength={20}
+					error={
+						error === 'USER_INFO_NAME_INVALID' &&
+						'Name must be at least 3 characters'
+					}
 				/>
 				<Space h='sm' />
 				<TextInput
@@ -205,6 +276,7 @@ export const SettingsModal = (props: Props) => {
 					placeholder='Enter your username'
 					maxLength={20}
 					minLength={3}
+					error={getErrorText(error)}
 				/>
 				<Space h='sm' />
 				<Textarea
@@ -216,6 +288,8 @@ export const SettingsModal = (props: Props) => {
 					}}
 					placeholder='Tell us about yourself!'
 					maxLength={150}
+					autosize
+					maxRows={3}
 				/>
 				<Space h='md' />
 				<Button
@@ -224,9 +298,6 @@ export const SettingsModal = (props: Props) => {
 					radius='xl'
 					type='submit'
 					disabled={!formIsDirty}
-					sx={{
-						boxShadow: '0 4px 0 pink',
-					}}
 				>
 					Save
 				</Button>

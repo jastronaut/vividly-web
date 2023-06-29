@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { Button, Skeleton, Stack, Space, Center, Text } from '@mantine/core';
+import { Button, Space, Center, Text } from '@mantine/core';
 import { rem } from 'polished';
 import styled from 'styled-components';
 import { IconPlus } from '@tabler/icons-react';
@@ -12,15 +12,20 @@ import {
 } from '@/types/api';
 import { useCurUserContext } from '@/components/utils/CurUserContext';
 
-import { ProfileHeaderComponent } from './header/header';
+import { ProfileHeaderComponent } from '../header/header';
 import { PostPreview } from './PostPreview';
-import { FriendsDrawer } from './drawer/FriendsDrawer';
-import { ProfileContentContainer } from './_styles';
+import { FriendsDrawer } from '../drawer/FriendsDrawer';
+import { ProfileContentContainer } from '../_styles';
+import {
+	PostsLoading,
+	EmptyPosts,
+	PrivateProfileMessage,
+} from './ProfileMessages';
 
 const ContentWrapper = styled.div`
-	padding: ${rem(8)} ${rem(24)};
-	margin-bottom: ${rem(24)};
-	border: 1px solid ${props => props.theme.border.secondary};
+	padding: ${rem(24)};
+	border: 1px solid ${props => props.theme.background.secondary};
+	border-top: none;
 
 	@media screen and (max-width: 500px) {
 		padding: ${rem(8)} ${rem(12)};
@@ -42,51 +47,6 @@ type ProfileContentProps = {
 	refetchFeed: () => void;
 };
 
-const PostsLoading = () => {
-	return (
-		<Stack>
-			<Space h='md' />
-			<Skeleton height={20} />
-			<Skeleton height={20} />
-			<Skeleton height={20} />
-			<Skeleton height={20} mt={6} width='70%' />
-		</Stack>
-	);
-};
-
-const EmptyPosts = (props: { children?: React.ReactNode }) => {
-	return (
-		<Center
-			sx={{
-				marginTop: rem(48),
-			}}
-		>
-			<Stack>
-				<Text align='center' c='dimmed'>
-					No posts... yet!
-				</Text>
-				{props.children}
-			</Stack>
-		</Center>
-	);
-};
-
-const PrivateProfileMessage = () => {
-	return (
-		<Center
-			sx={{
-				marginTop: rem(48),
-			}}
-		>
-			<Stack>
-				<Text align='center' c='dimmed'>
-					{`🔒 You need to be friends with this user to view their posts.`}
-				</Text>
-			</Stack>
-		</Center>
-	);
-};
-
 export const ProfileContent = (props: ProfileContentProps) => {
 	const { curUser } = useCurUserContext();
 	const { isUserLoading, isPostsLoading, initLoad } = props;
@@ -99,16 +59,25 @@ export const ProfileContent = (props: ProfileContentProps) => {
 	const feed: Feed[] = props.feed || [];
 	const isLoggedInUser = !!user && curUser.user.id === user.user.id;
 
-	const showEmptyState =
-		!isUserLoading && !isPostsLoading && feed[0] && feed[0].data.length === 0;
+	const isLoading = isUserLoading || isPostsLoading;
 
-	const showLoadingState = isUserLoading || isPostsLoading;
 	const showPrivateProfileMessage =
-		!isUserLoading && !isLoggedInUser && !user?.friendship;
+		!isLoading && !isLoggedInUser && !user?.friendship;
+
+	const showEmptyState = !isLoading && feed[0] && feed[0].data.length === 0;
+
+	const hasPages =
+		feed.length > 0 || props.hasMorePosts || (feed[0] && feed[0].cursor);
+
+	const showEndMessage =
+		!isLoading &&
+		!props.hasMorePosts &&
+		!showEmptyState &&
+		!showPrivateProfileMessage &&
+		!hasPages;
 
 	useEffect(() => {
 		if (!initLoad && containerRef.current) {
-			console.log('scrolling in componnet');
 			containerRef.current.scrollIntoView({ behavior: 'smooth' });
 		}
 	}, [initLoad]);
@@ -160,9 +129,7 @@ export const ProfileContent = (props: ProfileContentProps) => {
 						</div>
 					))}
 
-					{showLoadingState && <PostsLoading />}
-
-					{showPrivateProfileMessage && <PrivateProfileMessage />}
+					{isLoading && <PostsLoading />}
 
 					{!props.isPostsLoading && props.hasMorePosts && (
 						<div>
@@ -172,35 +139,34 @@ export const ProfileContent = (props: ProfileContentProps) => {
 							<Space h='sm' />
 						</div>
 					)}
+					{showEmptyState ||
+						showPrivateProfileMessage ||
+						(showEndMessage && (
+							<Center
+								sx={{
+									margin: `${rem(24)} 0`,
+								}}
+							>
+								{showEndMessage && (
+									<Text c='dimmed'>{`You've reached the end!`}</Text>
+								)}
 
-					{props.isUserLoading ||
-						(props.isPostsLoading && (
-							<>
-								<Skeleton height={8} radius='xl' />
-								<Skeleton height={8} mt={6} radius='xl' />
-								<Skeleton height={8} mt={6} width='70%' radius='xl' />
-							</>
+								{showPrivateProfileMessage && <PrivateProfileMessage />}
+								{showEmptyState && (
+									<EmptyPosts>
+										{isLoggedInUser && (
+											<Button
+												size='sm'
+												onClick={props.openEditor}
+												leftIcon={<IconPlus />}
+											>
+												Create a post
+											</Button>
+										)}
+									</EmptyPosts>
+								)}
+							</Center>
 						))}
-
-					{!props.isPostsLoading && !props.hasMorePosts && !showEmptyState && (
-						<Center>
-							<Text c='dimmed'>{`You've reached the end!`}</Text>
-						</Center>
-					)}
-
-					{showEmptyState && (
-						<EmptyPosts>
-							{isLoggedInUser ? (
-								<Button
-									size='sm'
-									onClick={props.openEditor}
-									leftIcon={<IconPlus />}
-								>
-									Create a post
-								</Button>
-							) : null}
-						</EmptyPosts>
-					)}
 				</ContentWrapper>
 			</ProfileContentContainer>
 			<div ref={containerRef} />

@@ -8,7 +8,7 @@ import { showAndLogErrorNotification } from '@/showerror';
 import { Footer } from '@/components/post/Footer';
 import { ImageBlock } from '@/components/post/blocks/blocks';
 import { LinkBlockContent } from '@/components/post/blocks/LinkBlockContent';
-import { useCurUserContext } from '../utils/CurUserContext';
+import { useCurUserContext } from '../../utils/CurUserContext';
 import { CommentsModal } from '@/components/post/comments/CommentsModal';
 import { makeApiCall } from '@/utils';
 import {
@@ -16,7 +16,7 @@ import {
 	NewCommentResponse,
 	DefaultResponse,
 } from '@/types/api';
-import { DismissWarningModal } from '../DismissWarningModal';
+import { DismissWarningModal } from '../../DismissWarningModal';
 
 export const addNewlines = (txt: string, id: string) =>
 	txt.length < 1 ? (
