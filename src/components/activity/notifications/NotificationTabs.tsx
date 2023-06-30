@@ -12,6 +12,7 @@ import { NotificationType } from '@/types/notification';
 import { EmptyTab, LoadingTab } from '../TabStates';
 import { makeApiCall } from '@/utils';
 import { URL_PREFIX } from '@/constants';
+import { FadeIn } from '@/styles/Animations';
 
 export const NotificationTabs = () => {
 	const { curUser } = useCurUserContext();
@@ -139,37 +140,43 @@ export const NotificationTabs = () => {
 							</Tabs.Tab>
 						</Tabs.List>
 						<Tabs.Panel value='all'>
-							{data &&
-								data.notifications.map(notification => (
-									<NotificationItem
-										key={`notif-${notification.id}`}
-										notification={notification}
-									/>
-								))}
-							{isLoading && <LoadingTab />}
-							{!isLoading && !totalCount && <EmptyTab />}
+							<FadeIn>
+								{data &&
+									data.notifications.map(notification => (
+										<NotificationItem
+											key={`notif-${notification.id}`}
+											notification={notification}
+										/>
+									))}
+								{isLoading && <LoadingTab />}
+								{!isLoading && !totalCount && <EmptyTab />}
+							</FadeIn>
 						</Tabs.Panel>
 						<Tabs.Panel value='comments'>
-							{commentNotifications &&
-								commentNotifications.map(notification => (
-									<NotificationItem
-										key={`notif-${notification.id}`}
-										notification={notification}
-									/>
-								))}
-							{isLoading && <LoadingTab />}
-							{!isLoading && !commentNotificationsCount && <EmptyTab />}
+							<FadeIn>
+								{commentNotifications &&
+									commentNotifications.map(notification => (
+										<NotificationItem
+											key={`notif-${notification.id}`}
+											notification={notification}
+										/>
+									))}
+								{isLoading && <LoadingTab />}
+								{!isLoading && !commentNotificationsCount && <EmptyTab />}
+							</FadeIn>
 						</Tabs.Panel>
 						<Tabs.Panel value='likes'>
-							{likeNotifications &&
-								likeNotifications.map(notification => (
-									<NotificationItem
-										key={`notif-${notification.id}`}
-										notification={notification}
-									/>
-								))}
-							{isLoading && <LoadingTab />}
-							{!isLoading && !commentNotificationsCount && <EmptyTab />}
+							<FadeIn>
+								{likeNotifications &&
+									likeNotifications.map(notification => (
+										<NotificationItem
+											key={`notif-${notification.id}`}
+											notification={notification}
+										/>
+									))}
+								{isLoading && <LoadingTab />}
+								{!isLoading && !likeNotificationsCount && <EmptyTab />}
+							</FadeIn>
 						</Tabs.Panel>
 					</Tabs>
 				</TabsWrapper>

@@ -24,6 +24,7 @@ import {
 	useDeclineFriendRequest,
 	useCancelFriendRequest,
 } from './hooks';
+import { FadeIn } from '@/styles/Animations';
 
 export const FriendRequestTabs = () => {
 	const { curUser } = useCurUserContext();
@@ -272,33 +273,37 @@ export const FriendRequestTabs = () => {
 							</Tabs.Tab>
 						</Tabs.List>
 						<Tabs.Panel value='received' pt='xs'>
-							{data?.inbound.map(friend => {
-								return (
-									<FriendRequestItem
-										key={friend.id}
-										user={friend.user}
-										onClickDecline={() => declineFriendRequest(friend.id)}
-										onClickAccept={() => acceptFriendRequest(friend.id)}
-										onClickBlock={() => onClickBlock(friend.user.id, true)}
-									/>
-								);
-							})}
-							{isLoading && <LoadingTab />}
-							{!isLoading && !inboundCount && <EmptyTab />}
+							<FadeIn>
+								{data?.inbound.map(friend => {
+									return (
+										<FriendRequestItem
+											key={friend.id}
+											user={friend.user}
+											onClickDecline={() => declineFriendRequest(friend.id)}
+											onClickAccept={() => acceptFriendRequest(friend.id)}
+											onClickBlock={() => onClickBlock(friend.user.id, true)}
+										/>
+									);
+								})}
+								{isLoading && <LoadingTab />}
+								{!isLoading && !inboundCount && <EmptyTab />}
+							</FadeIn>
 						</Tabs.Panel>
 						<Tabs.Panel value='sent' pt='xs'>
-							{data?.outbound.map(friend => {
-								return (
-									<FriendRequestItem
-										key={friend.id}
-										user={friend.user}
-										onClickDecline={() => onClickDecline(friend.user.id)}
-										onClickBlock={() => onClickBlock(friend.user.id, false)}
-									/>
-								);
-							})}
-							{isLoading && <LoadingTab />}
-							{!isLoading && !outboundCount && <EmptyTab />}
+							<FadeIn>
+								{data?.outbound.map(friend => {
+									return (
+										<FriendRequestItem
+											key={friend.id}
+											user={friend.user}
+											onClickDecline={() => onClickDecline(friend.user.id)}
+											onClickBlock={() => onClickBlock(friend.user.id, false)}
+										/>
+									);
+								})}
+								{isLoading && <LoadingTab />}
+								{!isLoading && !outboundCount && <EmptyTab />}
+							</FadeIn>
 						</Tabs.Panel>
 					</Tabs>
 				</TabsWrapper>

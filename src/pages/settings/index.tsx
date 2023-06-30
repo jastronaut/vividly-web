@@ -1,15 +1,15 @@
 import { IconSun, IconMoonStars } from '@tabler/icons-react';
-import { Switch, Space, Title, Divider } from '@mantine/core';
+import { Switch, Space, Title, Divider, Button, Center } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
+import { rem } from 'polished';
+import styled from 'styled-components';
+import Link from 'next/link';
 
 import { makeApiCall } from '@/utils';
 import { DefaultResponse } from '@/types/api';
 import { Page } from '../_app';
 import { useVividlyTheme, ThemeName } from '@/styles/Theme';
-import {
-	CurUserProvider,
-	useCurUserContext,
-} from '@/components/utils/CurUserContext';
+import { useCurUserContext } from '@/components/utils/CurUserContext';
 import { Loading } from '@/components/utils/Loading';
 import {
 	AccountInfoProvider,
@@ -19,6 +19,18 @@ import { TextInputSetting } from '@/components/settings/TextInputSetting';
 import { showAndLogErrorNotification } from '@/showerror';
 import AppLayout from '@/components/layout/AppLayout';
 import { FadeIn } from '@/styles/Animations';
+
+const PageContainer = styled.div`
+	margin: ${rem(48)} ${rem(128)};
+
+	@media screen and (max-width: 800px) {
+		margin: ${rem(8)} ${rem(64)};
+	}
+
+	@media screen and (max-width: 500px) {
+		margin: ${rem(8)} ${rem(8)};
+	}
+`;
 
 const PageContent = (props: { token: string }) => {
 	const { accountInfo } = useAccountInfoContext();
@@ -160,15 +172,14 @@ const PageContent = (props: { token: string }) => {
 			/>
 			<Divider size='xs' />
 
-			<Space h='sm' />
-			<TextInputSetting
-				title='Username'
-				data={curUser.user?.username}
-				placeholder='New username'
-				type='text'
-				onSave={submitUsername}
-			/>
-			<Divider size='xs' />
+			<Space h='lg' />
+			<Center>
+				<Link href='/feedback'>
+					<Button variant='light' component='span'>
+						Feedback
+					</Button>
+				</Link>
+			</Center>
 		</>
 	);
 };
@@ -187,7 +198,9 @@ SettingsPage.getLayout = (page: React.ReactNode) => {
 	return (
 		<AppLayout>
 			<AccountInfoProvider>
-				<FadeIn>{page}</FadeIn>
+				<FadeIn>
+					<PageContainer>{page}</PageContainer>
+				</FadeIn>
 			</AccountInfoProvider>
 		</AppLayout>
 	);

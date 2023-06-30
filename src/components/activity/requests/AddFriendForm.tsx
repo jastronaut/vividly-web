@@ -47,7 +47,7 @@ export const AddFriendForm = (props: Props) => {
 					onClick={() => addFriend(username)}
 					loading={isAddingFriend}
 				>
-					Add Friend
+					Add
 				</Button>
 			</Group>
 			{error && (
