@@ -33,10 +33,12 @@ export const GlobalStyle = createGlobalStyle`
 	@keyframes fadein {
 		from {
 			opacity: 0;
+            transform: translateX(-5px);
 		}
 
 		to {
             opacity: 1;
+            transform: translateX(0);
 		}
 	}
 

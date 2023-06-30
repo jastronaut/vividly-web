@@ -18,6 +18,7 @@ import { Loading } from '@/components/utils/Loading';
 import { useCurUserContext } from '@/components/utils/CurUserContext';
 import { UserResponse, ProfileFeedResponse } from '@/types/api';
 import AppLayout from '@/components/layout/AppLayout';
+import { FadeIn } from '@/styles/Animations';
 
 type PageProps = {
 	id: string;
@@ -220,6 +221,8 @@ const Profile = (props: PageProps) => {
 		if (chatEndRef.current) {
 			console.log('scrolling in profile page (id effect)');
 			chatEndRef.current.scrollIntoView({ behavior: 'smooth' });
+		} else {
+			console.log('[id]chatEndRef is null');
 		}
 		return () => {
 			setIsEditorOpen(false);
@@ -228,43 +231,46 @@ const Profile = (props: PageProps) => {
 	}, [id]);
 
 	useEffect(() => {
+		console.log('[id]this ran');
 		return () => {
 			setInitLoad(true);
 		};
 	}, []);
 
 	return (
-		<>
-			<ProfileContent
-				initLoad={initLoad}
-				user={user}
-				isUserLoading={isUserLoading}
-				isPostsLoading={isPostsLoading}
-				onDeletePost={onDeletePost}
-				onClickLoadMore={loadMore}
-				hasMorePosts={hasMorePosts}
-				feed={data}
-				updateUserProfileInfo={updateUserProfile}
-				openEditor={() => setIsEditorOpen(true)}
-				refetchFeed={refetchFeed}
-			>
-				{user && user.user.id === curUser.user.id && (
-					<>
-						<EditorModal
-							isOpen={isEditorOpen}
-							onClose={() => setIsEditorOpen(false)}
-							onChange={val => console.log('printed')}
-							onSubmit={onSubmitPost}
-						/>
-						<NewPostButton
-							toggle={() => setIsEditorOpen(true)}
-							isVisible={isEditorOpen}
-						/>
-					</>
-				)}
-			</ProfileContent>
-			{initLoad && <div ref={chatEndRef} />}
-		</>
+		<FadeIn>
+			<>
+				<ProfileContent
+					initLoad={initLoad}
+					user={user}
+					isUserLoading={isUserLoading}
+					isPostsLoading={isPostsLoading}
+					onDeletePost={onDeletePost}
+					onClickLoadMore={loadMore}
+					hasMorePosts={hasMorePosts}
+					feed={data}
+					updateUserProfileInfo={updateUserProfile}
+					openEditor={() => setIsEditorOpen(true)}
+					refetchFeed={refetchFeed}
+				>
+					{user && user.user.id === curUser.user.id && (
+						<>
+							<EditorModal
+								isOpen={isEditorOpen}
+								onClose={() => setIsEditorOpen(false)}
+								onChange={val => console.log('printed')}
+								onSubmit={onSubmitPost}
+							/>
+							<NewPostButton
+								toggle={() => setIsEditorOpen(true)}
+								isVisible={isEditorOpen}
+							/>
+						</>
+					)}
+				</ProfileContent>
+				{initLoad && <div ref={chatEndRef} id='end' />}
+			</>
+		</FadeIn>
 	);
 };
 

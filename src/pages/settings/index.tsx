@@ -18,6 +18,7 @@ import {
 import { TextInputSetting } from '@/components/settings/TextInputSetting';
 import { showAndLogErrorNotification } from '@/showerror';
 import AppLayout from '@/components/layout/AppLayout';
+import { FadeIn } from '@/styles/Animations';
 
 const PageContent = (props: { token: string }) => {
 	const { accountInfo } = useAccountInfoContext();
@@ -184,11 +185,11 @@ const SettingsPage: Page = () => {
 
 SettingsPage.getLayout = (page: React.ReactNode) => {
 	return (
-		<CurUserProvider>
+		<AppLayout>
 			<AccountInfoProvider>
-				<AppLayout>{page}</AppLayout>
+				<FadeIn>{page}</FadeIn>
 			</AccountInfoProvider>
-		</CurUserProvider>
+		</AppLayout>
 	);
 };
 

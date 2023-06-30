@@ -1,22 +1,14 @@
 import { FriendRequestTabs } from '@/components/activity/requests/FriendRequestTabs';
 
 import { Page } from '../_app';
-import { useCurUserContext } from '@/components/utils/CurUserContext';
 import AppLayout from '@/components/layout/AppLayout';
+import { FadeIn } from '@/styles/Animations';
 
 const FriendsPage: Page = () => {
-	const { curUser, isLoading } = useCurUserContext();
-
 	return (
-		<>
-			{!curUser.token || isLoading ? (
-				<div>Loading</div>
-			) : (
-				<>
-					<FriendRequestTabs />
-				</>
-			)}
-		</>
+		<FadeIn>
+			<FriendRequestTabs />
+		</FadeIn>
 	);
 };
 

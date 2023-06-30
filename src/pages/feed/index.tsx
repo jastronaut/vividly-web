@@ -1,6 +1,8 @@
 import { Page } from '../_app';
 import { useCurUserContext } from '@/components/utils/CurUserContext';
 import Link from 'next/link';
+import styled from 'styled-components';
+import { rem } from 'polished';
 
 import { useEffect } from 'react';
 import useSWR from 'swr';
@@ -11,13 +13,38 @@ import { FeedResponse, sortFeedFriendships } from '@/types/feed';
 import { showAndLogErrorNotification } from '@/showerror';
 import { FeedPreview } from '@/components/feed/FeedPreview';
 import AppLayout from '@/components/layout/AppLayout';
+import { FadeIn } from '@/styles/Animations';
+import { FeedPreviewLoading } from '@/components/feed/FeedPreview';
 
-export const Feed = () => {
+const ContentWrapper = styled.div`
+	padding: ${rem(24)};
+	border: 1px solid ${props => props.theme.background.secondary};
+	border-top: none;
+
+	@media screen and (max-width: 500px) {
+		padding: ${rem(8)} ${rem(12)};
+	}
+`;
+
+const LoadingState = () => {
+	return (
+		<>
+			<FeedPreviewLoading />
+			<FeedPreviewLoading />
+			<FeedPreviewLoading />
+			<FeedPreviewLoading />
+			<FeedPreviewLoading />
+			<FeedPreviewLoading />
+		</>
+	);
+};
+
+export const FeedPage: Page = () => {
 	const { curUser } = useCurUserContext();
 	const { token } = curUser;
 
 	const { data, error, isLoading, mutate } = useSWR<FeedResponse>(
-		[`${URL_PREFIX}/feed/friends`, token],
+		[token ? `${URL_PREFIX}/feed/friends` : '', token],
 		// @ts-ignore
 		([url, token]) => fetchWithToken(url, token),
 		{ shouldRetryOnError: false }
@@ -29,34 +56,21 @@ export const Feed = () => {
 		}
 	}, [error]);
 
-	if (isLoading) {
-		return <>Loading</>;
-	}
-
-	if (!data) {
-		return <>No data</>;
-	}
-
-	const items = sortFeedFriendships(data.data);
+	const items = data ? sortFeedFriendships(data.data) : [];
 
 	return (
 		<>
-			{items.map(item => (
-				<Link
-					href={`/profile/${item.friend.id}`}
-					key={`link-${item.friend.id}`}
-				>
-					<FeedPreview item={item} />
-				</Link>
-			))}
-		</>
-	);
-};
-
-const FeedPage: Page = () => {
-	return (
-		<>
-			<Feed />
+			<FadeIn>
+				{isLoading && <LoadingState />}
+				{items.map(item => (
+					<Link
+						href={`/profile/${item.friend.id}`}
+						key={`link-${item.friend.id}`}
+					>
+						<FeedPreview item={item} />
+					</Link>
+				))}
+			</FadeIn>
 		</>
 	);
 };
