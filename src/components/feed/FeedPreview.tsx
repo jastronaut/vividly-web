@@ -1,4 +1,4 @@
-import { Flex, Text, Badge } from '@mantine/core';
+import { Flex, Text, Badge, Group, Skeleton } from '@mantine/core';
 import styled from 'styled-components';
 import { rem } from 'polished';
 import { IconPointFilled } from '@tabler/icons-react';
@@ -12,6 +12,31 @@ import { Wrapper, TextContainer } from '@/components/activity/requests/styles';
 import { FavoriteBadge } from '../utils/FavoriteBadge';
 import { Avatar } from '@mantine/core';
 
+const WrapperStyled = styled(Wrapper)<{ isUnread?: boolean }>`
+	@media (max-width: 800px) {
+		padding: ${rem(10)};
+		min-width: ${rem(295)};
+	}
+	${props => !props.isUnread && `opacity: 0.5;`}
+`;
+
+export const FeedPreviewLoading = () => {
+	return (
+		<WrapperStyled>
+			<Group>
+				<div>
+					<Skeleton height={50} circle />
+				</div>
+				<div style={{ minWidth: '50%' }}>
+					<Skeleton height={16} width='75%' />
+					<Skeleton height={12} mt={6} width='40%' />
+					<Skeleton height={12} mt={6} width='55%' />
+				</div>
+			</Group>
+		</WrapperStyled>
+	);
+};
+
 export const UnreadBadge = () => {
 	return (
 		<Badge
@@ -24,14 +49,6 @@ export const UnreadBadge = () => {
 		</Badge>
 	);
 };
-
-const WrapperStyled = styled(Wrapper)<{ isUnread?: boolean }>`
-	@media (max-width: 800px) {
-		padding: ${rem(10)};
-		min-width: ${rem(295)};
-	}
-	${props => !props.isUnread && `opacity: 0.5;`}
-`;
 
 interface Props {
 	item: FeedFriendship;

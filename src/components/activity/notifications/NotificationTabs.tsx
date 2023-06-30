@@ -17,7 +17,7 @@ export const NotificationTabs = () => {
 	const { curUser } = useCurUserContext();
 	const { token } = curUser;
 
-	const { data, isLoading, error, mutate } = useSWR<NotificationsResponse>(
+	const { data, isLoading, error } = useSWR<NotificationsResponse>(
 		[token ? `${URL_PREFIX}/notifications` : '', token],
 		// @ts-ignore
 		([url, token]) => fetchWithToken(url, token),
