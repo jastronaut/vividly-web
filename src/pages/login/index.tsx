@@ -144,7 +144,7 @@ export default function Login() {
 			} else if (res.success) {
 				console.log(res);
 				localStorage.setItem(STORAGE_CUR_USER_KEY, JSON.stringify(res));
-				window.location.href = '/profile/' + res.user.id;
+				window.location.href = `/profile/${res.user.id}#end`;
 			}
 		};
 
@@ -156,7 +156,7 @@ export default function Login() {
 		if (storedUser) {
 			const parsedCurUser = JSON.parse(storedUser);
 			if (parsedCurUser.token && parsedCurUser.user) {
-				window.location.href = '/profile/' + parsedCurUser.user.id;
+				window.location.href = `/profile/${parsedCurUser.user.id}#end`;
 			} else {
 				setIsPageLoading(false);
 			}

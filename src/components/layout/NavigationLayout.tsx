@@ -148,7 +148,7 @@ export default function NavigationLayout(props: Props) {
 		<>
 			<NavInner>
 				<NavItem>
-					<Link href={curUser.user ? `/profile/${curUser.user.id}` : ''}>
+					<Link href={curUser.user ? `/profile/${curUser.user.id}#end` : ''}>
 						<ActionIcon color='grape' variant='transparent' component='span'>
 							<IconUser size={18} />
 						</ActionIcon>
@@ -182,9 +182,7 @@ export default function NavigationLayout(props: Props) {
 	return (
 		<>
 			<Navigation>{NavContent}</Navigation>
-			<PageContentContainer>
-				<FadeIn>{props.children}</FadeIn>
-			</PageContentContainer>
+			<PageContentContainer>{props.children}</PageContentContainer>
 		</>
 	);
 }
