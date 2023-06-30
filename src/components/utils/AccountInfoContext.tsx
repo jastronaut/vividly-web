@@ -34,7 +34,7 @@ export const AccountInfoProvider = ({ children }: Props) => {
 		[token ? `${URL_PREFIX}/auth/info` : '', token],
 		// @ts-ignore
 		([url, token]) => fetchWithToken(url, token),
-		{ shouldRetryOnError: false }
+		{ shouldRetryOnError: true }
 	);
 
 	// update account info

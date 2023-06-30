@@ -189,7 +189,9 @@ const SettingsPage: Page = () => {
 
 	return (
 		<>
-			<PageContent token={curUser.token} />
+			<AccountInfoProvider>
+				<PageContent token={curUser.token} />
+			</AccountInfoProvider>
 		</>
 	);
 };
@@ -197,11 +199,9 @@ const SettingsPage: Page = () => {
 SettingsPage.getLayout = (page: React.ReactNode) => {
 	return (
 		<AppLayout>
-			<AccountInfoProvider>
-				<FadeIn>
-					<PageContainer>{page}</PageContainer>
-				</FadeIn>
-			</AccountInfoProvider>
+			<FadeIn>
+				<PageContainer>{page}</PageContainer>
+			</FadeIn>
 		</AppLayout>
 	);
 };
