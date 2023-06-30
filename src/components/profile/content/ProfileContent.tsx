@@ -134,7 +134,9 @@ export const ProfileContent = (props: ProfileContentProps) => {
 					{!props.isPostsLoading && props.hasMorePosts && (
 						<div>
 							<Center>
-								<Button onClick={props.onClickLoadMore}>Load More</Button>
+								<Button variant='outline' onClick={props.onClickLoadMore}>
+									Load More
+								</Button>
 							</Center>
 							<Space h='sm' />
 						</div>

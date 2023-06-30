@@ -126,10 +126,6 @@ const NamesContainer = styled.div<{ height: number }>`
 
 	@media screen and (max-width: 800px) {
 		flex-direction: column;
-
-		#username {
-			font-size: ${rem(14)};
-		}
 	}
 `;
 
@@ -176,6 +172,7 @@ export const HeaderText = (props: HeaderTextProps) => {
 					sx={{
 						marginRight: rem(4),
 					}}
+					fz={bioHidden ? 'lg' : 'md'}
 				>
 					{props.name ?? props.username}
 				</Text>
