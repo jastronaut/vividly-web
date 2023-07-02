@@ -1,12 +1,14 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import {
+	BaseEditor,
 	createEditor,
 	Descendant,
 	Element as ElementType,
 	Editor as SlateEditorType,
+	Transforms,
 } from 'slate';
 import { Slate, Editable, withReact, ReactEditor } from 'slate-react';
-import { withHistory } from 'slate-history';
+import { HistoryEditor, withHistory } from 'slate-history';
 import * as linkify from 'linkifyjs';
 import dayjs from 'dayjs';
 import {
@@ -32,7 +34,7 @@ import {
 } from '@tabler/icons-react';
 
 import { BlockType as EditorBlockType } from '../../types/editor';
-import { EditorContainer } from './styles';
+import { EditorContainer, InlineEditorWrapper } from './styles';
 import { DismissWarningModal } from '../DismissWarningModal';
 import {
 	getWeatherEmoji,
@@ -53,6 +55,7 @@ import { Block, BlockType } from '@/types/post';
 import { OpenWeatherResponse } from '../../types/editor';
 
 import { ImageBlock, LinkBlock, MagicBlock, OracleBlock } from './Nodes';
+import { showAndLogErrorNotification } from '@/showerror';
 
 const openWeatherKey =
 	process.env.REACT_APP_OPEN_WEATHER_API_KEY ||
@@ -97,12 +100,11 @@ const Element = (props: BaseElementProps) => {
 type EditorProps = {
 	initialValue: Descendant[];
 	onChange: (value: any) => void;
+	editor: BaseEditor & ReactEditor & HistoryEditor;
 };
 
 const Editor = (props: EditorProps) => {
-	const [editor] = useState(() =>
-		withHistory(withReact(withEmbeds(createEditor())))
-	);
+	const { editor } = props;
 	const [isOracleInputShowing, setIsOracleInputShowing] = useState(false);
 	const [oracleInput, setOracleInput] = useState('');
 
@@ -191,10 +193,6 @@ const Editor = (props: EditorProps) => {
 		setOracleInput('');
 	}, [oracleInput, editor]);
 
-	useEffect(() => {
-		ReactEditor.focus(editor);
-	}, [editor]);
-
 	return (
 		<>
 			<EditorContainer>
@@ -212,8 +210,7 @@ const Editor = (props: EditorProps) => {
 				>
 					<Editable
 						style={{
-							minHeight: '300px',
-							maxHeight: '300px',
+							minHeight: '100px',
 							overflow: 'auto',
 						}}
 						renderElement={props => <Element {...props} />}
@@ -225,7 +222,7 @@ const Editor = (props: EditorProps) => {
 					/>
 				</Slate>
 			</EditorContainer>
-			<Space h='md' />
+			<Space h='sm' />
 			<Flex gap='md'>
 				<FileButton
 					onChange={(f: File | null) => addImage(editor, f)}
@@ -309,7 +306,6 @@ const Editor = (props: EditorProps) => {
 							Ask
 						</Button>
 					</Flex>
-					<Space h='xs' />
 				</>
 			</Collapse>
 		</>
@@ -324,6 +320,9 @@ type EditorModalProps = {
 };
 
 export const EditorModal = (props: EditorModalProps) => {
+	const [editor] = useState(() =>
+		withHistory(withReact(withEmbeds(createEditor())))
+	);
 	const [isWarningModalOpen, setIsWarningModalOpen] = useState(false);
 	const [draft, setDraft] = useState<ElementType[]>([]);
 	const draftEmpty = useMemo(() => isDraftEmpty(draft), [draft]);
@@ -390,25 +389,35 @@ export const EditorModal = (props: EditorModalProps) => {
 		if (strippedBlocks.length < 1) {
 			return;
 		}
-		props.onSubmit(strippedBlocks);
+		try {
+			console.log('okay');
+			props.onSubmit(strippedBlocks);
 
-		setDraft([
-			{
-				type: EditorBlockType.TEXT,
-				children: [{ text: '' }],
-			},
-		]);
-	}, [draft]);
+			console.log('>>>>');
+			setDraft([
+				{
+					type: EditorBlockType.TEXT,
+					children: [{ text: '' }],
+				},
+			]);
+
+			// clear editor after submitting post
+			const point = { path: [0, 0], offset: 0 };
+			editor.selection = { anchor: point, focus: point };
+			editor.history = { redos: [], undos: [] };
+			editor.children = [
+				{
+					type: EditorBlockType.TEXT,
+					children: [{ text: '' }],
+				},
+			];
+		} catch (err) {
+			showAndLogErrorNotification('Failed to create post', err);
+		}
+	}, [draft, editor]);
 
 	return (
-		<Modal
-			opened={props.isOpen}
-			onClose={tryDismissModal}
-			centered
-			withCloseButton={false}
-			padding='xl'
-			trapFocus={false}
-		>
+		<InlineEditorWrapper>
 			<DismissWarningModal
 				isOpen={isWarningModalOpen}
 				onNo={() => setIsWarningModalOpen(false)}
@@ -424,7 +433,6 @@ export const EditorModal = (props: EditorModalProps) => {
 				}}
 				message='Abandon this post? 😳'
 			/>
-			<Space h='xl' />
 			<Editor
 				initialValue={[
 					{
@@ -433,8 +441,8 @@ export const EditorModal = (props: EditorModalProps) => {
 					},
 				]}
 				onChange={setDraft}
+				editor={editor}
 			/>
-			<Space h='md' />
 			<Flex justify='flex-end'>
 				<Button
 					color='grape'
@@ -445,7 +453,7 @@ export const EditorModal = (props: EditorModalProps) => {
 					Post
 				</Button>
 			</Flex>
-		</Modal>
+		</InlineEditorWrapper>
 	);
 };
 

@@ -2,7 +2,6 @@ import { useEffect, useRef } from 'react';
 import { Button, Space, Center, Text } from '@mantine/core';
 import { rem } from 'polished';
 import styled from 'styled-components';
-import { IconPlus } from '@tabler/icons-react';
 import { useDisclosure, useHeadroom } from '@mantine/hooks';
 
 import {
@@ -29,6 +28,7 @@ const ContentWrapper = styled.div`
 
 	@media screen and (max-width: 500px) {
 		padding: ${rem(8)} ${rem(12)};
+		border-bottom: none;
 	}
 `;
 
@@ -76,6 +76,11 @@ export const ProfileContent = (props: ProfileContentProps) => {
 		!showPrivateProfileMessage &&
 		!hasPages;
 
+	const showBottomStuff =
+		(!isLoading && showEmptyState) ||
+		showPrivateProfileMessage ||
+		showEndMessage;
+
 	useEffect(() => {
 		if (!initLoad && containerRef.current) {
 			containerRef.current.scrollIntoView({ behavior: 'smooth' });
@@ -99,7 +104,6 @@ export const ProfileContent = (props: ProfileContentProps) => {
 			{isLoggedInUser && (
 				<FriendsDrawer isOpen={friendsDrawerOpen} close={close} />
 			)}
-			{props.children}
 
 			<ProfileContentContainer>
 				<ContentWrapper
@@ -108,6 +112,7 @@ export const ProfileContent = (props: ProfileContentProps) => {
 						flexDirection: 'column-reverse',
 					}}
 				>
+					<div>{props.children}</div>
 					{feed.map((posts, index) => (
 						<div
 							key={`page-${index}-${posts.cursor}`}
@@ -141,34 +146,21 @@ export const ProfileContent = (props: ProfileContentProps) => {
 							<Space h='sm' />
 						</div>
 					)}
-					{showEmptyState ||
-						showPrivateProfileMessage ||
-						(showEndMessage && (
-							<Center
-								sx={{
-									margin: `${rem(24)} 0`,
-								}}
-							>
-								{showEndMessage && (
-									<Text c='dimmed'>{`You've reached the end!`}</Text>
-								)}
 
-								{showPrivateProfileMessage && <PrivateProfileMessage />}
-								{showEmptyState && (
-									<EmptyPosts>
-										{isLoggedInUser && (
-											<Button
-												size='sm'
-												onClick={props.openEditor}
-												leftIcon={<IconPlus />}
-											>
-												Create a post
-											</Button>
-										)}
-									</EmptyPosts>
-								)}
-							</Center>
-						))}
+					{showBottomStuff && (
+						<Center
+							sx={{
+								margin: `${rem(24)} 0`,
+							}}
+						>
+							{showEndMessage && (
+								<Text c='dimmed'>{`You've reached the end!`}</Text>
+							)}
+
+							{showPrivateProfileMessage && <PrivateProfileMessage />}
+							{showEmptyState && <EmptyPosts />}
+						</Center>
+					)}
 				</ContentWrapper>
 			</ProfileContentContainer>
 			<div ref={containerRef} />

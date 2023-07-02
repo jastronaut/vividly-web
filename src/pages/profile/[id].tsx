@@ -13,12 +13,12 @@ import { Block } from '@/types/post';
 
 import { ProfileContent } from '@/components/profile/content/ProfileContent';
 import { EditorModal } from '../../components/editor';
-import { NewPostButton } from '@/components/profile/NewPostButton';
 import { Loading } from '@/components/utils/Loading';
 import { useCurUserContext } from '@/components/utils/CurUserContext';
 import { UserResponse, ProfileFeedResponse } from '@/types/api';
 import AppLayout from '@/components/layout/AppLayout';
 import { FadeIn } from '@/styles/Animations';
+import { useWindowScroll } from '@mantine/hooks';
 
 type PageProps = {
 	id: string;
@@ -26,7 +26,7 @@ type PageProps = {
 
 const Profile = (props: PageProps) => {
 	const { id } = props;
-	const [isEditorOpen, setIsEditorOpen] = useState(false);
+	const [isEditorOpen, setIsEditorOpen] = useState(true);
 
 	const { curUser, updateCurUser } = useCurUserContext();
 	const { token } = curUser;
@@ -67,6 +67,10 @@ const Profile = (props: PageProps) => {
 						!previousPageData.cursor))
 			)
 				return null;
+
+			if (!user?.friendship && !(user?.user.id === curUser?.user.id)) {
+				return null;
+			}
 			// first page, we don't have `previousPageData`
 			if (pageIndex === 0 && !previousPageData)
 				return [`${uri}/feed/uid/${id}`, token];
@@ -81,15 +85,15 @@ const Profile = (props: PageProps) => {
 		},
 		// @ts-ignore
 		([url, token]) => fetchWithToken(url, token),
-		{ revalidateFirstPage: false, shouldRetryOnError: false }
+		{ revalidateFirstPage: false, shouldRetryOnError: true }
 	);
 
 	const lastPage = data.length > 0 ? data[data.length - 1] : null;
 	const hasMorePosts = lastPage ? !!lastPage.cursor : false;
 
-	const onSubmitPost = (blocks: Block[]) => {
+	const onSubmitPost = async (blocks: Block[]) => {
 		setInitLoad(false);
-		fetch(`${uri}/posts`, {
+		const res = await fetch(`${uri}/posts`, {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
@@ -98,25 +102,20 @@ const Profile = (props: PageProps) => {
 			body: JSON.stringify({
 				content: blocks,
 			}),
-		})
-			.then(res => res.json())
-			.then(resp => {
-				mutate(data => {
-					if (data && data.length) {
-						const curFirstPage = data[0];
-						const newFirstPage = {
-							...curFirstPage,
-							data: [resp.post, ...curFirstPage.data],
-						};
-						return [newFirstPage, ...data.slice(1)];
-					}
-					return [resp.post];
-				});
-				setIsEditorOpen(false);
-			})
-			.catch(err => {
-				showAndLogErrorNotification('Failed to create post', err);
-			});
+		});
+		const resp = await res.json();
+
+		mutate(data => {
+			if (data && data.length) {
+				const curFirstPage = data[0];
+				const newFirstPage = {
+					...curFirstPage,
+					data: [resp.post, ...curFirstPage.data],
+				};
+				return [newFirstPage, ...data.slice(1)];
+			}
+			return [resp.post];
+		});
 		setInitLoad(true);
 	};
 
@@ -171,6 +170,11 @@ const Profile = (props: PageProps) => {
 		mutate(undefined, true);
 	}, [mutate]);
 
+	const onClickComposeButton = () => {
+		// scroll to bottom of page
+		chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+	};
+
 	useEffect(() => {
 		if (user?.user.id === curUser.user.id) {
 			updateCurUser(user.user);
@@ -219,19 +223,14 @@ const Profile = (props: PageProps) => {
 	useEffect(() => {
 		setInitLoad(true);
 		if (chatEndRef.current) {
-			console.log('scrolling in profile page (id effect)');
 			chatEndRef.current.scrollIntoView({ behavior: 'smooth' });
-		} else {
-			console.log('[id]chatEndRef is null');
 		}
 		return () => {
-			setIsEditorOpen(false);
 			setInitLoad(true);
 		};
 	}, [id]);
 
 	useEffect(() => {
-		console.log('[id]this ran');
 		return () => {
 			setInitLoad(true);
 		};
@@ -254,21 +253,15 @@ const Profile = (props: PageProps) => {
 					refetchFeed={refetchFeed}
 				>
 					{user && user.user.id === curUser.user.id && (
-						<>
-							<EditorModal
-								isOpen={isEditorOpen}
-								onClose={() => setIsEditorOpen(false)}
-								onChange={val => console.log('printed')}
-								onSubmit={onSubmitPost}
-							/>
-							<NewPostButton
-								toggle={() => setIsEditorOpen(true)}
-								isVisible={isEditorOpen}
-							/>
-						</>
+						<EditorModal
+							isOpen={true}
+							onClose={() => setIsEditorOpen(false)}
+							onChange={val => console.log('printed')}
+							onSubmit={onSubmitPost}
+						/>
 					)}
 				</ProfileContent>
-				{initLoad && <div ref={chatEndRef} id='end' />}
+				<div ref={chatEndRef} id='end' />
 			</>
 		</FadeIn>
 	);

@@ -14,4 +14,7 @@ export const ProfileHeaderContainer = styled.div`
 
 export const ProfileContentContainer = styled.div`
 	min-height: 70vh;
+	@media screen and (max-width: 800px) {
+		padding-bottom: ${rem(45)};
+	}
 `;
