@@ -3,8 +3,6 @@ import { TextInput, Center, Button, Space, Text, Tooltip } from '@mantine/core';
 import Link from 'next/link';
 
 import {
-	Background,
-	GlobalStyle,
 	StyledContainer,
 	RegisterContainer,
 } from '../../components/register/styles';
@@ -12,6 +10,8 @@ import { STORAGE_CUR_USER_KEY } from '../../constants';
 import { CurUser } from '@/types/user';
 import { showAndLogErrorNotification } from '@/showerror';
 import { makeApiCall } from '@/utils';
+import LoginLogoutLayout from '@/components/layout/LoginLogoutLayout';
+import { Page } from '../_app';
 
 const usernameRegex = /^[a-zA-Z0-9_]+$/;
 
@@ -268,23 +268,24 @@ export const RegisterSteps = () => {
 	);
 };
 
-export default function Register() {
+const Register: Page = () => {
 	return (
-		<div>
-			<GlobalStyle />
-			<Background>
-				<form
-					style={{ height: '100vh' }}
-					onSubmit={e => e.preventDefault()}
-					method=''
-				>
-					<RegisterContainer>
-						<StyledContainer>
-							<RegisterSteps />
-						</StyledContainer>
-					</RegisterContainer>
-				</form>
-			</Background>
-		</div>
+		<form
+			style={{ height: '100vh' }}
+			onSubmit={e => e.preventDefault()}
+			method=''
+		>
+			<RegisterContainer>
+				<StyledContainer>
+					<RegisterSteps />
+				</StyledContainer>
+			</RegisterContainer>
+		</form>
 	);
-}
+};
+
+Register.getLayout = (page: React.ReactNode) => (
+	<LoginLogoutLayout>{page}</LoginLogoutLayout>
+);
+
+export default Register;

@@ -16,8 +16,8 @@ import { useRouter } from 'next/router';
 import { STORAGE_CUR_USER_KEY } from '../../constants';
 import { makeApiCall } from '@/utils';
 import { LoginResponse } from '@/types/api';
-
-import { Background, GlobalStyle } from '@/components/register/styles';
+import LoginLogoutLayout from '@/components/layout/LoginLogoutLayout';
+import { Page } from '../_app';
 
 const StyledContainer = styled.div`
 	background-color: ${props => props.theme.background.primary};
@@ -25,16 +25,18 @@ const StyledContainer = styled.div`
 	color: ${props => props.theme.text.primary};
 	padding: ${rem(16)} ${rem(32)};
 
-	@media screen and (max-width: 600px) {
-		width: 80%;
+	width: ${rem(300)};
+
+	@media screen and (max-width: 500px) {
+		width: 90%;
 	}
 `;
 
 enum LoginErrors {
-	OK = 'OK',
-	INVALID_LOGIN = 'INVALID_LOGIN',
-	MISSING_CREDENTIALS = 'MISSING_CREDENTIALS',
-	OTHER = 'OTHER',
+	OK,
+	INVALID_LOGIN,
+	MISSING_CREDENTIALS,
+	OTHER,
 }
 
 type LoginComponentProps = {
@@ -77,18 +79,17 @@ const LoginComponent = (props: LoginComponentProps) => {
 								required
 							/>
 							{props.loginError !== LoginErrors.OK && (
-								<Alert
-									color='red'
-									title='❗️ Error'
-									radius='lg'
-									variant='outline'
-								>
-									{props.loginError === LoginErrors.MISSING_CREDENTIALS
-										? 'Missing credentials'
-										: props.loginError === LoginErrors.INVALID_LOGIN
-										? 'Invalid login'
-										: 'Unknown error 😅'}
-								</Alert>
+								<>
+									<Space h='xs' />
+									<Alert color='red' radius='lg' ta='center'>
+										❗️
+										{props.loginError === LoginErrors.MISSING_CREDENTIALS
+											? 'Missing username and/or password. Please try again!'
+											: props.loginError === LoginErrors.INVALID_LOGIN
+											? 'Username and/or password is incorrect. Please try again!'
+											: 'Unknown error 😅 - contact help@vividly.love'}
+									</Alert>
+								</>
 							)}
 							<Space h='md' />
 							<Center>
@@ -105,7 +106,8 @@ const LoginComponent = (props: LoginComponentProps) => {
 									<Button
 										color='grape'
 										variant='light'
-										onClick={() => router.push('/register')}
+										component='a'
+										href='/register'
 									>
 										Register
 									</Button>
@@ -119,7 +121,7 @@ const LoginComponent = (props: LoginComponentProps) => {
 	);
 };
 
-export default function Login() {
+const Login: Page = () => {
 	const [username, setUsername] = useState('');
 	const [password, setPassword] = useState('');
 	const [loginError, setLoginError] = useState(LoginErrors.OK);
@@ -127,24 +129,28 @@ export default function Login() {
 
 	const onClickSubmit = () => {
 		const tryLogin = async () => {
-			const res = await makeApiCall<LoginResponse>({
-				uri: `/auth/login`,
-				method: 'POST',
-				body: { username, password },
-			});
+			try {
+				const res = await makeApiCall<LoginResponse>({
+					uri: `/auth/login`,
+					method: 'POST',
+					body: { username, password },
+				});
 
-			if (!res.success && res.error) {
-				if (res.error === 'Invalid credentials') {
-					setLoginError(LoginErrors.INVALID_LOGIN);
-				} else if (res.error === 'Missing credentials') {
-					setLoginError(LoginErrors.MISSING_CREDENTIALS);
-				} else {
-					setLoginError(LoginErrors.OTHER);
+				if (!res.success && res.error) {
+					if (res.error === 'Invalid credentials') {
+						setLoginError(LoginErrors.INVALID_LOGIN);
+					} else if (res.error === 'Missing credentials') {
+						setLoginError(LoginErrors.MISSING_CREDENTIALS);
+					} else {
+						setLoginError(LoginErrors.OTHER);
+					}
+				} else if (res.success) {
+					console.log(res);
+					localStorage.setItem(STORAGE_CUR_USER_KEY, JSON.stringify(res));
+					window.location.href = `/profile/${res.user.id}#end`;
 				}
-			} else if (res.success) {
-				console.log(res);
-				localStorage.setItem(STORAGE_CUR_USER_KEY, JSON.stringify(res));
-				window.location.href = `/profile/${res.user.id}#end`;
+			} catch (e) {
+				console.log(e);
 			}
 		};
 
@@ -166,22 +172,15 @@ export default function Login() {
 	}, []);
 
 	return (
-		<>
-			{isPageLoading ? (
-				<div>Loading...</div>
-			) : (
-				<>
-					<GlobalStyle />
-					<Background>
-						<LoginComponent
-							setUsername={setUsername}
-							setPassword={setPassword}
-							onClickSubmit={onClickSubmit}
-							loginError={loginError}
-						/>
-					</Background>
-				</>
-			)}
-		</>
+		<LoginComponent
+			setUsername={setUsername}
+			setPassword={setPassword}
+			onClickSubmit={onClickSubmit}
+			loginError={loginError}
+		/>
 	);
-}
+};
+
+Login.getLayout = page => <LoginLogoutLayout>{page}</LoginLogoutLayout>;
+
+export default Login;
