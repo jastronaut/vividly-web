@@ -1,8 +1,8 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { Button, Space, Center, Text } from '@mantine/core';
 import { rem } from 'polished';
 import styled from 'styled-components';
-import { useDisclosure, useHeadroom } from '@mantine/hooks';
+import { useDisclosure } from '@mantine/hooks';
 
 import {
 	UserResponse,
@@ -12,15 +12,11 @@ import {
 import { useCurUserContext } from '@/components/utils/CurUserContext';
 
 import { ProfileHeaderComponent } from '../header/header';
-import { PostPreview } from './PostPreview';
 import { FriendsDrawer } from '../drawer/FriendsDrawer';
 import { ProfileContentContainer } from '../_styles';
-import {
-	PostsLoading,
-	EmptyPosts,
-	PrivateProfileMessage,
-} from './ProfileMessages';
-import { UnreadBanner } from '../header/UnreadBanner';
+import { EmptyPosts, PrivateProfileMessage } from './ProfileMessages';
+import { UnreadBanner } from './UnreadBanner';
+import { ProfilePosts } from './ProfilePosts';
 
 const ContentWrapper = styled.div`
 	padding: ${rem(24)};
@@ -52,9 +48,6 @@ export const ProfileContent = (props: ProfileContentProps) => {
 	const { isUserLoading, isPostsLoading, initLoad } = props;
 	const [friendsDrawerOpen, { open, close }] = useDisclosure(false);
 	const containerRef = useRef<HTMLDivElement>(null);
-	const [unreadBannerShowing, setUnreadBannerShowing] = useState(true);
-
-	const pinned = useHeadroom({ fixedAt: 120 });
 
 	const user = props.user;
 	const feed: Feed[] = props.feed || [];
@@ -82,22 +75,6 @@ export const ProfileContent = (props: ProfileContentProps) => {
 		showPrivateProfileMessage ||
 		showEndMessage;
 
-	// these two variables suck
-	const hasUnreadPosts =
-		!isLoggedInUser &&
-		user &&
-		user.friendship &&
-		user.friendship.lastReadPostId &&
-		user.friendship.newestPostId &&
-		user.friendship.lastReadPostId < user.friendship.newestPostId;
-	const lastReadPostId =
-		(user &&
-			!isLoggedInUser &&
-			user.friendship &&
-			user.friendship.lastReadPostId &&
-			user.friendship.lastReadPostId) ??
-		'load-more';
-
 	useEffect(() => {
 		if (!initLoad && containerRef.current) {
 			containerRef.current.scrollIntoView({ behavior: 'smooth' });
@@ -115,15 +92,8 @@ export const ProfileContent = (props: ProfileContentProps) => {
 				friendsDrawerOpen={friendsDrawerOpen}
 				openFriendsDrawer={open}
 				closeFriendsDrawer={close}
-				pinned={pinned}
 			/>
-			<UnreadBanner
-				visible={unreadBannerShowing && hasUnreadPosts}
-				postId={lastReadPostId === 'load-more' ? 'load-more' : lastReadPostId}
-				onClick={() => {
-					setUnreadBannerShowing(false);
-				}}
-			/>
+			<UnreadBanner user={user} />
 
 			{isLoggedInUser && (
 				<FriendsDrawer isOpen={friendsDrawerOpen} close={close} />
@@ -137,29 +107,13 @@ export const ProfileContent = (props: ProfileContentProps) => {
 					}}
 				>
 					<div>{props.children}</div>
-					{feed.map((posts, index) => (
-						<div
-							key={`page-${index}-${posts.cursor}`}
-							style={{
-								display: 'flex',
-								flexDirection: 'column-reverse',
-							}}
-						>
-							{posts.data
-								? posts.data.map(post => (
-										<PostPreview
-											key={`ppp-${post.id}`}
-											post={post}
-											onDeletePost={id => props.onDeletePost(id, index)}
-											isOwnPost={isLoggedInUser}
-											isLastRead={post.id === lastReadPostId}
-										/>
-								  ))
-								: null}
-						</div>
-					))}
 
-					{isLoading && <PostsLoading />}
+					<ProfilePosts
+						isLoggedInUser={isLoggedInUser}
+						onDeletePost={props.onDeletePost}
+						feed={feed}
+						isLoading={isLoading}
+					/>
 
 					{!props.isPostsLoading && props.hasMorePosts && (
 						<div>

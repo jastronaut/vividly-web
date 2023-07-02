@@ -56,7 +56,6 @@ type ProfileHeaderProps = {
 	friendsDrawerOpen: boolean;
 	openFriendsDrawer: () => void;
 	closeFriendsDrawer: () => void;
-	pinned: boolean;
 };
 
 /**
@@ -72,7 +71,6 @@ export const ProfileHeaderComponent = (props: ProfileHeaderProps) => {
 		isLoggedInUser,
 		updateUserProfileInfo,
 		refetchFeed,
-		pinned,
 	} = props;
 	const { avatarSrc, name, username, bio } = user?.user ?? {};
 	const [avatar, setAvatar] = useState<string>(avatarSrc || DEFAULT_AVATAR);
@@ -80,8 +78,7 @@ export const ProfileHeaderComponent = (props: ProfileHeaderProps) => {
 	const { curUser, updateCurUser } = useCurUserContext();
 	const [warningModalOpen, setWarningModalOpen] = useState(false);
 	const [bioExpanded, { toggle }] = useDisclosure(false);
-	const [scroll, scrollTo] = useWindowScroll();
-	// usemediaquery
+	const [scroll] = useWindowScroll();
 	const isMobile = useMediaQuery('(max-width: 800px)');
 
 	// this will indicate which action the user just triggered by clicking

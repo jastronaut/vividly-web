@@ -68,7 +68,6 @@ type Props = {
 	post: Post;
 	onDeletePost: (id: number) => void;
 	isOwnPost: boolean;
-	isLastRead?: boolean;
 };
 
 export const PostPreview = (props: Props) => {
