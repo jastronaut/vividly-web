@@ -1,12 +1,9 @@
 import { IconSun, IconMoonStars } from '@tabler/icons-react';
 import { Switch, Space, Title, Divider, Button, Center } from '@mantine/core';
-import { notifications } from '@mantine/notifications';
 import { rem } from 'polished';
 import styled from 'styled-components';
 import Link from 'next/link';
 
-import { makeApiCall } from '@/utils';
-import { DefaultResponse } from '@/types/api';
 import { Page } from '../_app';
 import { useVividlyTheme, ThemeName } from '@/styles/Theme';
 import { useCurUserContext } from '@/components/utils/CurUserContext';
@@ -15,8 +12,10 @@ import {
 	AccountInfoProvider,
 	useAccountInfoContext,
 } from '@/components/utils/AccountInfoContext';
-import { TextInputSetting } from '@/components/settings/TextInputSetting';
-import { showAndLogErrorNotification } from '@/showerror';
+import {
+	EmailSetting,
+	PasswordSetting,
+} from '@/components/settings/TextInputSetting';
 import AppLayout from '@/components/layout/AppLayout';
 import { FadeIn } from '@/styles/Animations';
 
@@ -72,53 +71,6 @@ const PageContent = (props: { token: string }) => {
 		}
 	};
 
-	const submitEmail = async (email: string) => {
-		try {
-			const res = await makeApiCall<DefaultResponse>({
-				uri: '/users/email/change',
-				method: 'POST',
-				body: { email },
-				token: props.token,
-			});
-
-			if (res.error) {
-				throw new Error(res.error);
-			}
-
-			notifications.show({
-				message:
-					'Email updated successfully. Check your inbox for a verification email.',
-				color: 'green',
-				title: 'Success',
-			});
-		} catch (err) {
-			showAndLogErrorNotification(`Couldn't update email.`, err);
-		}
-	};
-
-	const submitUsername = async (username: string) => {
-		try {
-			const res = await makeApiCall<DefaultResponse>({
-				uri: '/users/username/change',
-				method: 'POST',
-				body: { username },
-				token: props.token,
-			});
-
-			if (res.error) {
-				throw new Error(res.error);
-			}
-
-			notifications.show({
-				message: 'Username updated successfully.',
-				color: 'green',
-				title: 'Success',
-			});
-		} catch (err) {
-			showAndLogErrorNotification(`Couldn't update username.`, err);
-		}
-	};
-
 	if (!accountInfo || !accountInfo.authUser)
 		return (
 			<>
@@ -162,14 +114,13 @@ const PageContent = (props: { token: string }) => {
 				}
 			/>
 			<Space h='sm' />
-			<TextInputSetting
-				title='Email'
-				data={accountInfo.authUser.email}
-				placeholder='New email'
-				type='email'
-				onSave={submitEmail}
+			<EmailSetting
+				email={accountInfo.authUser.email}
+				isVerified={accountInfo.authUser.emailVerified}
 			/>
 			<Divider size='xs' />
+			<Space h='sm' />
+			<PasswordSetting />
 
 			<Space h='lg' />
 			<Center>
