@@ -7,18 +7,16 @@ import { useRouter } from 'next/router';
 import { Page } from '../_app';
 import { fetchWithToken } from '../../utils';
 import { showAndLogErrorNotification } from '@/showerror';
-
 import { uri } from '@/constants';
 import { Block } from '@/types/post';
+import { UserResponse, ProfileFeedResponse } from '@/types/api';
+import { useCurUserContext } from '@/components/utils/CurUserContext';
 
 import { ProfileContent } from '@/components/profile/content/ProfileContent';
 import { EditorModal } from '../../components/editor';
 import { Loading } from '@/components/utils/Loading';
-import { useCurUserContext } from '@/components/utils/CurUserContext';
-import { UserResponse, ProfileFeedResponse } from '@/types/api';
 import AppLayout from '@/components/layout/AppLayout';
 import { FadeIn } from '@/styles/Animations';
-import { useWindowScroll } from '@mantine/hooks';
 
 type PageProps = {
 	id: string;
@@ -26,11 +24,8 @@ type PageProps = {
 
 const Profile = (props: PageProps) => {
 	const { id } = props;
-	const [isEditorOpen, setIsEditorOpen] = useState(true);
-
 	const { curUser, updateCurUser } = useCurUserContext();
 	const { token } = curUser;
-
 	const router = useRouter();
 
 	const [initLoad, setInitLoad] = useState(true);
@@ -170,11 +165,6 @@ const Profile = (props: PageProps) => {
 		mutate(undefined, true);
 	}, [mutate]);
 
-	const onClickComposeButton = () => {
-		// scroll to bottom of page
-		chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-	};
-
 	useEffect(() => {
 		if (user?.user.id === curUser.user.id) {
 			updateCurUser(user.user);
@@ -249,13 +239,11 @@ const Profile = (props: PageProps) => {
 					hasMorePosts={hasMorePosts}
 					feed={data}
 					updateUserProfileInfo={updateUserProfile}
-					openEditor={() => setIsEditorOpen(true)}
 					refetchFeed={refetchFeed}
 				>
 					{user && user.user.id === curUser.user.id && (
 						<EditorModal
 							isOpen={true}
-							onClose={() => setIsEditorOpen(false)}
 							onChange={val => console.log('printed')}
 							onSubmit={onSubmitPost}
 						/>

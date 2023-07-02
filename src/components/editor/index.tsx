@@ -1,11 +1,10 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import {
 	BaseEditor,
 	createEditor,
 	Descendant,
 	Element as ElementType,
 	Editor as SlateEditorType,
-	Transforms,
 } from 'slate';
 import { Slate, Editable, withReact, ReactEditor } from 'slate-react';
 import { HistoryEditor, withHistory } from 'slate-history';
@@ -13,7 +12,6 @@ import * as linkify from 'linkifyjs';
 import dayjs from 'dayjs';
 import {
 	Text,
-	Modal,
 	Button,
 	Flex,
 	Space,
@@ -314,7 +312,6 @@ const Editor = (props: EditorProps) => {
 
 type EditorModalProps = {
 	isOpen: boolean;
-	onClose: () => void;
 	onChange: (value: any) => void;
 	onSubmit: (value: Block[]) => void;
 };
@@ -327,12 +324,11 @@ export const EditorModal = (props: EditorModalProps) => {
 	const [draft, setDraft] = useState<ElementType[]>([]);
 	const draftEmpty = useMemo(() => isDraftEmpty(draft), [draft]);
 
+	// todo: make this work when leaving the page
 	const tryDismissModal = () => {
 		if (isWarningModalOpen || draftEmpty) {
-			props.onClose();
 			return;
 		}
-
 		setIsWarningModalOpen(true);
 	};
 
@@ -389,11 +385,9 @@ export const EditorModal = (props: EditorModalProps) => {
 		if (strippedBlocks.length < 1) {
 			return;
 		}
-		try {
-			console.log('okay');
-			props.onSubmit(strippedBlocks);
 
-			console.log('>>>>');
+		try {
+			props.onSubmit(strippedBlocks);
 			setDraft([
 				{
 					type: EditorBlockType.TEXT,
@@ -429,7 +423,6 @@ export const EditorModal = (props: EditorModalProps) => {
 						},
 					]);
 					setIsWarningModalOpen(false);
-					props.onClose();
 				}}
 				message='Abandon this post? 😳'
 			/>

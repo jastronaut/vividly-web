@@ -68,6 +68,7 @@ type Props = {
 	post: Post;
 	onDeletePost: (id: number) => void;
 	isOwnPost: boolean;
+	isLastRead?: boolean;
 };
 
 export const PostPreview = (props: Props) => {
@@ -177,7 +178,7 @@ export const PostPreview = (props: Props) => {
 	}, [post.id, commentsDisabled, token]);
 
 	return (
-		<div style={{ marginBottom: '16px' }}>
+		<div style={{ marginBottom: '16px' }} id={`${props.post.id}`}>
 			<PostContentWrapper>
 				{post.content.map((block, index) =>
 					renderPostContent(block, index.toString())

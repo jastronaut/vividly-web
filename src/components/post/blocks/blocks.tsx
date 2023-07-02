@@ -1,5 +1,17 @@
 import Image from 'next/image';
-import { ImageElement } from '../../../types/editor';
+import styled from 'styled-components';
+import { rem } from 'polished';
+
+const StyledImage = styled(Image)`
+	border-radius: ${rem(8)};
+	max-width: 70%;
+	height: auto;
+	@media screen and (max-width: 500px) {
+		border-radius: 0;
+		width: 100%;
+		height: auto;
+	}
+`;
 
 type ImageBlockProps = {
 	url: string;
@@ -10,6 +22,11 @@ type ImageBlockProps = {
 export const ImageBlock = (props: ImageBlockProps) => {
 	const { url } = props;
 	return (
-		<Image src={url} alt={url} width={props.width} height={props.height} />
+		<StyledImage
+			src={url}
+			alt={url}
+			width={props.width}
+			height={props.height}
+		/>
 	);
 };

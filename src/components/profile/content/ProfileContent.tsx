@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Button, Space, Center, Text } from '@mantine/core';
 import { rem } from 'polished';
 import styled from 'styled-components';
@@ -20,6 +20,7 @@ import {
 	EmptyPosts,
 	PrivateProfileMessage,
 } from './ProfileMessages';
+import { UnreadBanner } from '../header/UnreadBanner';
 
 const ContentWrapper = styled.div`
 	padding: ${rem(24)};
@@ -43,7 +44,6 @@ type ProfileContentProps = {
 	hasMorePosts?: boolean;
 	onClickLoadMore?: () => void;
 	updateUserProfileInfo: (user: UserResponse) => void;
-	openEditor: () => void;
 	refetchFeed: () => void;
 };
 
@@ -52,6 +52,7 @@ export const ProfileContent = (props: ProfileContentProps) => {
 	const { isUserLoading, isPostsLoading, initLoad } = props;
 	const [friendsDrawerOpen, { open, close }] = useDisclosure(false);
 	const containerRef = useRef<HTMLDivElement>(null);
+	const [unreadBannerShowing, setUnreadBannerShowing] = useState(true);
 
 	const pinned = useHeadroom({ fixedAt: 120 });
 
@@ -81,6 +82,22 @@ export const ProfileContent = (props: ProfileContentProps) => {
 		showPrivateProfileMessage ||
 		showEndMessage;
 
+	// these two variables suck
+	const hasUnreadPosts =
+		!isLoggedInUser &&
+		user &&
+		user.friendship &&
+		user.friendship.lastReadPostId &&
+		user.friendship.newestPostId &&
+		user.friendship.lastReadPostId < user.friendship.newestPostId;
+	const lastReadPostId =
+		(user &&
+			!isLoggedInUser &&
+			user.friendship &&
+			user.friendship.lastReadPostId &&
+			user.friendship.lastReadPostId) ??
+		'load-more';
+
 	useEffect(() => {
 		if (!initLoad && containerRef.current) {
 			containerRef.current.scrollIntoView({ behavior: 'smooth' });
@@ -99,6 +116,13 @@ export const ProfileContent = (props: ProfileContentProps) => {
 				openFriendsDrawer={open}
 				closeFriendsDrawer={close}
 				pinned={pinned}
+			/>
+			<UnreadBanner
+				visible={unreadBannerShowing && hasUnreadPosts}
+				postId={lastReadPostId === 'load-more' ? 'load-more' : lastReadPostId}
+				onClick={() => {
+					setUnreadBannerShowing(false);
+				}}
 			/>
 
 			{isLoggedInUser && (
@@ -128,6 +152,7 @@ export const ProfileContent = (props: ProfileContentProps) => {
 											post={post}
 											onDeletePost={id => props.onDeletePost(id, index)}
 											isOwnPost={isLoggedInUser}
+											isLastRead={post.id === lastReadPostId}
 										/>
 								  ))
 								: null}
@@ -139,7 +164,11 @@ export const ProfileContent = (props: ProfileContentProps) => {
 					{!props.isPostsLoading && props.hasMorePosts && (
 						<div>
 							<Center>
-								<Button variant='outline' onClick={props.onClickLoadMore}>
+								<Button
+									variant='outline'
+									onClick={props.onClickLoadMore}
+									id='load-more'
+								>
 									Load More
 								</Button>
 							</Center>
