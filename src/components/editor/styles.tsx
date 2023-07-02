@@ -3,11 +3,17 @@ import { rem } from 'polished';
 
 export const EditorContainer = styled.div`
 	margin: 0 auto;
-	max-width: ${rem(800)};
-	padding: ${rem(16)} 0 ${rem(16)} ${rem(8)};
+	width: 100%;
+	padding: ${rem(8)} 0 ${rem(8)} ${rem(8)};
 	background-color: ${props => props.theme.background.secondary};
 	border-radius: ${rem(8)};
-	overflow: hidden;
+	overflow: scroll;
+
+	max-height: ${rem(200)};
+
+	@media screen and (max-width: 800px) {
+		max-height: ${rem(100)};
+	}
 `;
 
 export const MagicTextWrapper = styled.div`
@@ -15,4 +21,11 @@ export const MagicTextWrapper = styled.div`
 	padding: ${rem(8)} ${rem(12)};
 	border-radius: ${rem(8)};
 	background-color: ${props => props.theme.background.hover};
+`;
+
+export const InlineEditorWrapper = styled.div`
+	margin: 0;
+	@media screen and (max-width: 800px) {
+		margin: 0 ${rem(8)};
+	}
 `;

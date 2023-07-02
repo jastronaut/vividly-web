@@ -1,4 +1,4 @@
-import { Image } from '@mantine/core';
+import Image from 'next/image';
 import { ImageElement } from '../../../types/editor';
 
 type ImageBlockProps = {
@@ -9,5 +9,7 @@ type ImageBlockProps = {
 
 export const ImageBlock = (props: ImageBlockProps) => {
 	const { url } = props;
-	return <Image sx={{ maxWidth: '90%' }} src={url} alt={url} withPlaceholder />;
+	return (
+		<Image src={url} alt={url} width={props.width} height={props.height} />
+	);
 };

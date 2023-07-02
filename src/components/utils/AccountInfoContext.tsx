@@ -70,7 +70,7 @@ export const AccountInfoProvider = ({ children }: Props) => {
 		<AccountInfoContext.Provider
 			value={{
 				isLoading,
-				accountInfo: useCallback(() => data, [data])(),
+				accountInfo: data,
 				updateAccountInfo,
 			}}
 		>

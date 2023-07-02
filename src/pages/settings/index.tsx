@@ -34,7 +34,6 @@ const PageContainer = styled.div`
 
 const PageContent = (props: { token: string }) => {
 	const { accountInfo } = useAccountInfoContext();
-	const { curUser } = useCurUserContext();
 	const {
 		setTheme,
 		theme: vividlyTheme,

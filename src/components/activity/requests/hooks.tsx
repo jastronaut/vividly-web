@@ -20,6 +20,7 @@ export const useAddNewFriend = () => {
 	const addFriend = useCallback(
 		async (username: string) => {
 			if (!username) return;
+			setError(null);
 			setIsLoading(true);
 			try {
 				const resp = await makeApiCall<SendFriendRequestResponse>({
@@ -60,6 +61,7 @@ export const useAcceptFriendRequest = () => {
 	const acceptFriendRequest = useCallback(
 		async (id: number) => {
 			setIsLoading(true);
+			setError(null);
 			try {
 				const resp = await makeApiCall<AcceptFriendRequestResponse>({
 					uri: `/friends/requests/accept/${id}`,
@@ -98,6 +100,7 @@ export const useDeclineFriendRequest = () => {
 	const declineFriendRequest = useCallback(
 		async (id: number) => {
 			setIsLoading(true);
+			setError(null);
 			try {
 				const resp = await makeApiCall<DefaultResponse>({
 					uri: `/friends/requests/reject/${id}`,
@@ -135,6 +138,7 @@ export const useUnfriend = () => {
 	const unfriend = useCallback(
 		async (id: number) => {
 			setIsLoading(true);
+			setError(null);
 			try {
 				const resp = await makeApiCall<DefaultResponse>({
 					uri: `/friends/unfriend/${id}`,
@@ -170,6 +174,7 @@ export const useCancelFriendRequest = () => {
 	const cancelFriendRequest = useCallback(
 		async (id: number) => {
 			setIsLoading(true);
+			setError(null);
 			try {
 				const resp = await makeApiCall<DefaultResponse>({
 					uri: `/friends/requests/cancel/${id}`,
@@ -205,6 +210,7 @@ export const useToggleFavorite = () => {
 	const toggleFavorite = useCallback(
 		async (id: number, isFavorite: boolean) => {
 			setIsLoading(true);
+			setError(null);
 			try {
 				const resp = await makeApiCall<DefaultResponse>({
 					uri: `/friends/${isFavorite ? 'un' : ''}favorite/${id}`,

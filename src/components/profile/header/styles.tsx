@@ -4,7 +4,7 @@ import { rem } from 'polished';
 import { IconStar, IconInfoCircle } from '@tabler/icons-react';
 import { useWindowScroll, useMediaQuery } from '@mantine/hooks';
 import { HEADER_SCROLL_HEIGHT, HEADER_SCROLL_HEIGHT_MOBILE } from './constants';
-import { getRgba } from '@/components/layout/NavigationLayout';
+import { getRgba } from '@/components/utils/getRgba';
 
 type FavoriteButtonProps = {
 	isFavorite: boolean;

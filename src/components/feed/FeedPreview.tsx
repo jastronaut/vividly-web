@@ -10,7 +10,7 @@ import { getPostTime } from '../utils/time';
 
 import { Wrapper, TextContainer } from '@/components/activity/requests/styles';
 import { FavoriteBadge } from '../utils/FavoriteBadge';
-import { Avatar } from '@mantine/core';
+import { Avatar } from '../Avatar';
 
 const WrapperStyled = styled(Wrapper)<{ isUnread?: boolean }>`
 	@media (max-width: 800px) {
@@ -76,7 +76,7 @@ export const FeedPreview = (props: Props) => {
 	return (
 		<WrapperStyled withHover isUnread={isUnread}>
 			<Flex>
-				<Avatar src={friend.avatarSrc || DEFAULT_AVATAR} />
+				<Avatar src={friend.avatarSrc || DEFAULT_AVATAR} alt={friend.name} />
 				<TextContainer style={{ width: '100%' }}>
 					<Text>
 						<Text fw={700} component='span'>
