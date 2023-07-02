@@ -108,32 +108,38 @@ export const PostPreview = (props: Props) => {
 
 	const onAddComment = useCallback(
 		async (comment: string) => {
-			try {
-				const resp = await makeApiCall<NewCommentResponse>({
-					uri: `/posts/${post.id}/comment`,
-					method: 'POST',
-					token,
-					body: {
-						content: comment,
-					},
-				});
-				const newComment = {
-					...resp.comment,
-					authorId: curUser.user.id,
-					author: {
-						id: curUser.user.id,
-						username: curUser.user.username,
-						name: curUser.user.name,
-						avatarSrc: curUser.user.avatarSrc,
-					},
-				};
-				setComments(comments => [...comments, newComment]);
-			} catch (err) {
+			if (comment.length < 1) {
+				return;
+			}
+
+			const resp = await makeApiCall<NewCommentResponse>({
+				uri: `/posts/${post.id}/comment`,
+				method: 'POST',
+				token,
+				body: {
+					content: comment,
+				},
+			});
+
+			if (!resp.success) {
 				showAndLogErrorNotification(
 					`Can't add comment to post.id=${post.id}`,
-					err
+					resp.error
 				);
+				return;
 			}
+
+			const newComment = {
+				...resp.comment,
+				authorId: curUser.user.id,
+				author: {
+					id: curUser.user.id,
+					username: curUser.user.username,
+					name: curUser.user.name,
+					avatarSrc: curUser.user.avatarSrc,
+				},
+			};
+			setComments(comments => [...comments, newComment]);
 		},
 		[post.id, curUser, token]
 	);

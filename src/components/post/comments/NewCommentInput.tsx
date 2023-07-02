@@ -12,15 +12,20 @@ type Props = {
 export const NewCommentInput = (props: Props) => {
 	const { disabled = false } = props;
 	const [draft, setDraft] = useState<string>('');
+
+	const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
+		try {
+			props.onSubmit(draft);
+			setDraft('');
+		} catch (error) {
+			console.error(error);
+		}
+	};
+
 	return (
 		<AddCommentContainer>
-			<form
-				onSubmit={e => {
-					e.preventDefault();
-					props.onSubmit(draft);
-					setDraft('');
-				}}
-			>
+			<form onSubmit={onSubmit}>
 				<CommentTextArea
 					placeholder='Say something nice'
 					autoFocus
@@ -32,7 +37,12 @@ export const NewCommentInput = (props: Props) => {
 					ref={props.inputRef}
 				/>
 				<Flex justify='flex-end'>
-					<Button radius='xl' color='grape' type='submit'>
+					<Button
+						radius='xl'
+						color='grape'
+						type='submit'
+						disabled={draft.length < 1}
+					>
 						Send
 					</Button>
 				</Flex>
