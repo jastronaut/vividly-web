@@ -26,6 +26,10 @@ const TextStyled = styled(Text)`
 const WrapperStyled = styled(Wrapper)`
 	border-bottom: none;
 	border-radius: ${rem(8)};
+
+	@media screen and (max-width: 800px) {
+		padding: 0;
+	}
 `;
 
 type FriendItemProps = {
@@ -67,7 +71,7 @@ export const FriendItem = (props: FriendItemProps) => {
 							}}
 						/>
 						<TextContainer>
-							<Flex>
+							<>
 								<Link
 									href={{
 										pathname: '/profile/[id]',
@@ -80,14 +84,25 @@ export const FriendItem = (props: FriendItemProps) => {
 								>
 									{/* @ts-ignore */}
 									<TextStyled fw={700}>{friend.name}</TextStyled>
-									{/* @ts-ignore */}
-									<TextStyled c='dimmed' style={{ marginLeft: '5px' }}>
-										{` @`}
-										{friend.username}
-									</TextStyled>
 									{isFavorite && <FavoriteBadge />}
 								</Link>
-							</Flex>
+								<Link
+									href={{
+										pathname: '/profile/[id]',
+										query: { id: friend.id },
+									}}
+									onClick={() => {
+										props.closeDrawer();
+									}}
+									style={{ display: 'flex' }}
+								>
+									{/* @ts-ignore */}
+									<TextStyled c='dimmed' fz='sm'>
+										{`@`}
+										{friend.username}
+									</TextStyled>
+								</Link>
+							</>
 							{friend.bio ? (
 								<Text>{friend.bio}</Text>
 							) : (

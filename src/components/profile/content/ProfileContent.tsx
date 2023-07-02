@@ -22,6 +22,7 @@ const ContentWrapper = styled.div`
 	padding: ${rem(24)};
 	border: 1px solid ${props => props.theme.background.secondary};
 	border-top: none;
+	border-bottom: none;
 
 	@media screen and (max-width: 500px) {
 		padding: ${rem(8)} ${rem(12)};
@@ -76,7 +77,7 @@ export const ProfileContent = (props: ProfileContentProps) => {
 		showEndMessage;
 
 	useEffect(() => {
-		if (!initLoad && containerRef.current) {
+		if (initLoad && containerRef.current) {
 			containerRef.current.scrollIntoView({ behavior: 'smooth' });
 		}
 	}, [initLoad]);

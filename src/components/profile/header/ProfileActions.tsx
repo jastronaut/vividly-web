@@ -23,7 +23,7 @@ export const ProfileActions = (props: Props) => {
 		return (
 			<>
 				<MobileMenuContainer id='mobile-menu-container'>
-					<Menu withArrow offset={0} position='bottom'>
+					<Menu withArrow offset={0} position='left-start'>
 						<Menu.Target>
 							<ActionIcon>
 								<IconDots size={14} />

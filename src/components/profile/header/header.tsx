@@ -3,10 +3,11 @@ import { Group, ActionIcon, Menu, Tooltip, Indicator } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { useDisclosure, useWindowScroll, useMediaQuery } from '@mantine/hooks';
 import {
-	IconMoodSmileBeam,
 	IconUserPlus,
 	IconUserMinus,
 	IconUserOff,
+	IconMoodCheck,
+	IconMoodSmile,
 } from '@tabler/icons-react';
 
 import { makeApiCall } from '@/utils';
@@ -17,7 +18,6 @@ import { SettingsModal } from './SettingsModal';
 import {
 	FavoriteButton,
 	ProfileHeaderContent,
-	ProfileHeaderText,
 	HeaderText,
 	UserInfoSection,
 	FriendActionsMenuContainer,
@@ -345,15 +345,13 @@ export const ProfileHeaderComponent = (props: ProfileHeaderProps) => {
 						avatarSrc={avatarSrc}
 						username={user ? user.user.username : ''}
 					/>
-					<ProfileHeaderText>
-						<HeaderText
-							bioExpanded={bioExpanded}
-							name={user?.user.name}
-							username={user?.user.username || ''}
-							bio={user?.user.bio || ''}
-							isLoading={isLoading}
-						/>
-					</ProfileHeaderText>
+					<HeaderText
+						bioExpanded={bioExpanded}
+						name={user?.user.name}
+						username={user?.user.username || ''}
+						bio={user?.user.bio || ''}
+						isLoading={isLoading}
+					/>
 				</UserInfoSection>
 				<>
 					<RightContent>
@@ -368,7 +366,6 @@ export const ProfileHeaderComponent = (props: ProfileHeaderProps) => {
 						) : (
 							<FriendActionsMenuContainer id='friend-menu-container'>
 								<Group>
-									{/* <InformationButton toggleInformation={toggle} /> */}
 									<Menu position='bottom-end' withArrow offset={0}>
 										<Menu.Target>
 											<Indicator
@@ -387,7 +384,11 @@ export const ProfileHeaderComponent = (props: ProfileHeaderProps) => {
 														label='Manage friendship'
 														position='bottom-end'
 													>
-														<IconMoodSmileBeam size={16} />
+														{user.friendRequest ? (
+															<IconMoodSmile size={16} />
+														) : (
+															<IconMoodCheck size={16} />
+														)}
 													</Tooltip>
 												</ActionIcon>
 											</Indicator>

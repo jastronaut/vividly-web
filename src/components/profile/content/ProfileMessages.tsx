@@ -7,6 +7,7 @@ export const PostsLoading = () => {
 			<Skeleton height={20} />
 			<Skeleton height={20} />
 			<Skeleton height={20} mt={6} width='70%' />
+			<Space h='sm' />
 		</Stack>
 	);
 };

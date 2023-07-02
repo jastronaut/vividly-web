@@ -9,13 +9,12 @@ export const FavoriteBadge = () => {
 				marginLeft: rem(5),
 				border: 'none',
 				padding: 0,
-				height: rem(24),
 			}}
 			color='yellow'
 			size='xs'
 			variant='outline'
 		>
-			<IconStarFilled size={16} />
+			<IconStarFilled size={10} />
 		</Badge>
 	);
 };

@@ -25,7 +25,7 @@ export const HeaderAvatar = (props: Props) => {
 			height = 50;
 		} else height = 70;
 	} else if (scroll.y > HEADER_SCROLL_HEIGHT) {
-		height = 40;
+		height = 35;
 	}
 
 	if (props.isLoading || !props.username) {

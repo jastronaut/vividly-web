@@ -207,10 +207,6 @@ const Profile = (props: PageProps) => {
 	}, [userError]);
 
 	useEffect(() => {
-		setInitLoad(false);
-	}, [data]);
-
-	useEffect(() => {
 		setInitLoad(true);
 		if (chatEndRef.current) {
 			chatEndRef.current.scrollIntoView({ behavior: 'smooth' });
@@ -249,7 +245,7 @@ const Profile = (props: PageProps) => {
 						/>
 					)}
 				</ProfileContent>
-				<div ref={chatEndRef} id='end' />
+				{initLoad && <div ref={chatEndRef} id='end' />}
 			</>
 		</FadeIn>
 	);

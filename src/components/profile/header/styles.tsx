@@ -166,28 +166,30 @@ export const HeaderText = (props: HeaderTextProps) => {
 
 	return (
 		<>
-			<NamesContainer height={namesHeight}>
-				<Text
-					fw={700}
-					sx={{
-						marginRight: rem(4),
-					}}
-					fz={bioHidden ? 'lg' : 'md'}
-				>
-					{props.name ?? props.username}
-				</Text>
-				<Text c='dimmed' id='username'>
-					{` @`}
-					{props.username}
-				</Text>
-			</NamesContainer>
-			<Collapse in={!bioHidden}>
-				{props.bio ? (
-					<Text>{props.bio}</Text>
-				) : (
-					<Text fs='italic'>No bio yet.</Text>
-				)}
-			</Collapse>
+			<ProfileHeaderText>
+				<NamesContainer height={namesHeight}>
+					<Text
+						fw={700}
+						sx={{
+							marginRight: rem(4),
+						}}
+						fz={bioHidden ? 'lg' : 'md'}
+					>
+						{props.name ?? props.username}
+					</Text>
+					<Text c='dimmed' id='username'>
+						{` @`}
+						{props.username}
+					</Text>
+				</NamesContainer>
+				<Collapse in={!bioHidden}>
+					{props.bio ? (
+						<Text>{props.bio}</Text>
+					) : (
+						<Text fs='italic'>No bio yet.</Text>
+					)}
+				</Collapse>
+			</ProfileHeaderText>
 		</>
 	);
 };
