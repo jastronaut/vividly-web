@@ -1,21 +1,31 @@
-import { Button, Center, Container } from '@mantine/core';
+import { Button, Center } from '@mantine/core';
 import { STORAGE_CUR_USER_KEY } from '@/constants';
 
-export default function Feed() {
+import LoginLogoutLayout from '@/components/layout/LoginLogoutLayout';
+import { Page } from '../_app';
+
+const Logout: Page = () => {
 	return (
-		<>
-			<Center sx={{ height: '100vh' }}>
-				<Container>
-					<Button
-						onClick={() => {
-							localStorage.removeItem(STORAGE_CUR_USER_KEY);
-							window.location.href = '/login';
-						}}
-					>
-						Logout
-					</Button>
-				</Container>
-			</Center>
-		</>
+		<Center
+			sx={{
+				height: '100vh',
+			}}
+		>
+			<Button
+				variant='white'
+				onClick={() => {
+					localStorage.removeItem(STORAGE_CUR_USER_KEY);
+					window.location.href = '/login';
+				}}
+			>
+				Logout
+			</Button>
+		</Center>
 	);
-}
+};
+
+Logout.getLayout = page => {
+	return <LoginLogoutLayout>{page}</LoginLogoutLayout>;
+};
+
+export default Logout;
