@@ -126,7 +126,7 @@ const Editor = (props: EditorProps) => {
 		const links = linkify.find(text);
 		if (links.length > 0) {
 			const link = links[0];
-			const url = link.href;
+			const url = link.value;
 			if (url) {
 				event.preventDefault();
 				addLink(editor, url);
@@ -304,6 +304,7 @@ const Editor = (props: EditorProps) => {
 							Ask
 						</Button>
 					</Flex>
+					<Space h='xs' />
 				</>
 			</Collapse>
 		</>

@@ -2,7 +2,6 @@ import { Weather } from '@/types/editor';
 import { Element, Editor as SlateEditorType } from 'slate';
 import { ReactEditor } from 'slate-react';
 import dayjs from 'dayjs';
-
 import { Transforms } from 'slate';
 
 import { BlockType as EditorBlockType } from '../../types/editor';
@@ -106,12 +105,43 @@ export const addDate = (editor: ReactEditor) => {
 	finishAddingBlock(editor);
 };
 
-export const addLink = (editor: ReactEditor, url: string) => {
+export const addLink = async (editor: ReactEditor, url: string) => {
 	removeBlankBlock(editor);
+
+	const getMetadata = async () => {
+		const sanitizedUrl = url.replace(/(^\w+:|^)\/\//, '');
+		try {
+			const response = await fetch(`/api/proxy/${sanitizedUrl}`);
+			const html = await response.text();
+			const doc = new DOMParser().parseFromString(html, 'text/html');
+			console.log('the url is ', sanitizedUrl);
+
+			const title = doc.querySelector('title')?.textContent || '';
+			const description =
+				doc
+					.querySelector('meta[name="description"]')
+					?.getAttribute('content') || '';
+			const image =
+				doc
+					.querySelector('meta[property="og:image"]')
+					?.getAttribute('content') || '';
+
+			console.log(title, description, image);
+			return { title, description, image };
+		} catch (e) {
+			console.error(e);
+			return { title: '', description: '', image: '' };
+		}
+	};
+
+	const { description, title, image } = await getMetadata();
 
 	editor.insertNode({
 		type: EditorBlockType.LINK,
 		url,
+		description: description,
+		title: title,
+		imageURL: image,
 		children: [{ text: url }],
 	});
 

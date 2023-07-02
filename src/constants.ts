@@ -15,3 +15,8 @@ export const URL_PREFIX =
 
 export const IMGBB_API_KEY =
 	process.env.NEXT_PUBLIC_IMGBB_API_KEY || process.env.IMGBB_API_KEY;
+
+export const LINKIFY_OPTIONS = {
+	defaultProtocol: 'http',
+	target: '_blank',
+};

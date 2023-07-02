@@ -1,8 +1,7 @@
 import styled from 'styled-components';
 import { rem } from 'polished';
 import { IconLink } from '@tabler/icons-react';
-
-import { LinkElement } from '../../../types/editor';
+import { Text } from '@mantine/core';
 
 export const Image = styled.img`
 	max-width: 50%;
@@ -15,12 +14,17 @@ export const Image = styled.img`
 	}
 `;
 
-export const LinkText = styled.p`
+export const LinkText = styled.span`
 	text-decoration: none;
+	a {
+		display: flex;
+		align-items: center;
+	}
+
 	a,
 	a:visited,
 	a:hover {
-		color: ${props => props.theme.link};
+		color: ${props => props.theme.accent};
 		text-decoration: none;
 	}
 
@@ -37,7 +41,7 @@ const LinkInfo = styled.span`
 	padding-left: ${rem(16)};
 	padding-bottom: ${rem(8)};
 	margin-left: ${rem(4)};
-	border-left: ${rem(4)} solid #cacaca;
+	border-left: ${rem(4)} solid ${props => props.theme.border.primary};
 
 	> img {
 		margin-top: ${rem(8)};
@@ -49,18 +53,39 @@ type LinkBlockProps = {
 	imageURL?: string;
 	title?: string;
 	url: string;
+	hideTopUrl?: boolean;
 };
 
 export const LinkBlockContent = (props: LinkBlockProps) => {
 	return (
-		<LinkText>
-			<a href={props.url}>
-				<IconLink size={18} /> {props.title ?? props.url}
-			</a>
-			<LinkInfo>
-				<i>{props.description ?? props.url}</i>
-				{props.imageURL && <Image src={props.imageURL} alt={`Thumbnail`} />}
-			</LinkInfo>
-		</LinkText>
+		<>
+			{props.hideTopUrl ? null : (
+				<Text>
+					<a href={props.url} target='_blank' rel='noopener noreferrer'>
+						{props.url}
+					</a>
+				</Text>
+			)}
+			<LinkText>
+				<Text fw={700}>
+					<a href={props.url}>
+						<IconLink size={18} /> {props.title ? props.title : props.url}
+					</a>
+				</Text>
+				<LinkInfo>
+					{props.imageURL && (
+						<Image
+							src={props.imageURL}
+							alt={`Thumbnail`}
+							height={25}
+							width={25}
+						/>
+					)}
+					<Text fs='italic'>
+						{props.description ? props.description : props.url}
+					</Text>
+				</LinkInfo>
+			</LinkText>
+		</>
 	);
 };

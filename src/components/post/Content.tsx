@@ -1,11 +1,19 @@
+import { Text } from '@mantine/core';
+import Linkify from 'linkify-react';
+
 import { ImageBlock } from '@/components/post/blocks/blocks';
 import { LinkBlockContent } from '@/components/post/blocks/LinkBlockContent';
 import { BlockType, Block } from '@/types/post';
+import { LINKIFY_OPTIONS } from '@/constants';
 
 export function renderPostContent(content: Block, key: string) {
 	switch (content.type) {
 		case BlockType.TEXT:
-			return <p key={key}>{content.text}</p>;
+			return (
+				<Text key={key}>
+					<Linkify options={LINKIFY_OPTIONS}>{content.text}</Linkify>
+				</Text>
+			);
 		case BlockType.IMAGE:
 			return (
 				<ImageBlock
