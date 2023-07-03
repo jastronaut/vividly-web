@@ -11,7 +11,6 @@ import {
 } from '@mantine/core';
 import styled from 'styled-components';
 import { rem } from 'polished';
-import { useRouter } from 'next/router';
 
 import { STORAGE_CUR_USER_KEY } from '../../constants';
 import { makeApiCall } from '@/utils';
@@ -47,7 +46,6 @@ type LoginComponentProps = {
 };
 
 const LoginComponent = (props: LoginComponentProps) => {
-	const router = useRouter();
 	return (
 		<>
 			<Center style={{ height: '100vh' }}>

@@ -12,7 +12,7 @@ export type LikesResponse = {
 	likes: number;
 };
 
-export type UserResponse = {
+export interface UserResponse extends DefaultResponse {
 	user: User;
 	friendship: Friend | null;
 	friendRequest: {
@@ -21,7 +21,7 @@ export type UserResponse = {
 		toUserId: number;
 	} | null;
 	isBlocked: boolean;
-};
+}
 
 export type ProfileFeedResponse = {
 	data: Post[];

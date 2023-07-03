@@ -14,7 +14,6 @@ const MobileMenuContainer = styled.div`
 type Props = {
 	onClickEdit: () => void;
 	onClickFriends: () => void;
-	toggleInformation: () => void;
 };
 
 export const ProfileActions = (props: Props) => {

@@ -360,7 +360,6 @@ export const ProfileHeaderComponent = (props: ProfileHeaderProps) => {
 								<ProfileActions
 									onClickFriends={props.openFriendsDrawer}
 									onClickEdit={() => setIsSettingsModalOpen(true)}
-									toggleInformation={toggle}
 								/>
 							</>
 						) : (
