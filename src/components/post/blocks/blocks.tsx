@@ -5,9 +5,10 @@ import { DEFAULT_AVATAR } from '@/constants';
 
 const StyledImage = styled(Image)`
 	border-radius: ${rem(8)};
-	max-width: 70%;
 	height: auto;
-	@media screen and (max-width: 500px) {
+	width: 60%;
+
+	@media screen and (max-width: 800px) {
 		border-radius: 0;
 		width: 100%;
 		height: auto;

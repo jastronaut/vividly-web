@@ -3,8 +3,7 @@ import { IconDots, IconTrash } from '@tabler/icons-react';
 import Link from 'next/link';
 
 import { Comment as CommentType } from '@/types/post';
-import { TextContainer } from '../../activity/requests/styles';
-import { MenuContainer, Wrapper } from './styles';
+import { MenuContainer, Wrapper, TextContainer } from './styles';
 import { Avatar } from '@/components/Avatar';
 
 type CommentProps = {
@@ -21,25 +20,25 @@ export const Comment = (props: CommentProps) => {
 					<Flex>
 						<Avatar
 							src={props.author.avatarSrc}
-							size={30}
+							size={45}
 							alt={`${props.author.username}'s avatar`}
 						/>
 						<TextContainer>
-							<Flex>
-								<Link
-									href={{
-										pathname: '/profile/[id]',
-										query: { id: props.author.id },
-									}}
-									onClick={props.onClickLink}
-								>
-									<Text fw={700}>{props.author.name}</Text>
-									<Text c='dimmed' style={{ marginLeft: '5px' }}>
-										{` @`}
-										{props.author.username}
-									</Text>
-								</Link>
-							</Flex>
+							<Link
+								href={{
+									pathname: '/profile/[id]',
+									query: { id: props.author.id },
+								}}
+								onClick={props.onClickLink}
+							>
+								<Text fw={700} fz='sm'>
+									{props.author.name}
+								</Text>
+								<Text c='dimmed' fz='sm'>
+									{` @`}
+									{props.author.username}
+								</Text>
+							</Link>
 							<Text>{props.content}</Text>
 						</TextContainer>
 					</Flex>

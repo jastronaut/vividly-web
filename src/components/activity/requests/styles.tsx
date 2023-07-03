@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { rem } from 'polished';
 
 export const TextContainer = styled.div`
-	padding-left: ${rem(12)};
+	padding-left: ${rem(8)};
 `;
 
 export const Wrapper = styled.div<{ withHover?: boolean }>`

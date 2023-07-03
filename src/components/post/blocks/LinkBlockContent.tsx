@@ -60,14 +60,23 @@ export const LinkBlockContent = (props: LinkBlockProps) => {
 	return (
 		<>
 			{props.hideTopUrl ? null : (
-				<Text>
+				<Text
+					sx={{
+						width: 'fit-content',
+					}}
+				>
 					<a href={props.url} target='_blank' rel='noopener noreferrer'>
 						{props.url}
 					</a>
 				</Text>
 			)}
 			<LinkText>
-				<Text fw={700}>
+				<Text
+					fw={700}
+					sx={{
+						width: 'fit-content',
+					}}
+				>
 					<a href={props.url}>
 						<IconLink size={18} /> {props.title ? props.title : props.url}
 					</a>

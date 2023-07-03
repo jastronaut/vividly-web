@@ -24,11 +24,14 @@ const TextStyled = styled(Text)`
 `;
 
 const WrapperStyled = styled(Wrapper)`
-	border-bottom: none;
-	border-radius: ${rem(8)};
+	border-radius: 0;
 
 	@media screen and (max-width: 800px) {
-		padding: 0;
+		padding: ${rem(8)} ${rem(16)};
+	}
+
+	@media screen and (max-width: 500px) {
+		padding: ${rem(8)} ${rem(4)};
 	}
 `;
 
@@ -60,7 +63,7 @@ export const FriendItem = (props: FriendItemProps) => {
 					<Flex>
 						<Avatar
 							src={friend.avatarSrc}
-							size={30}
+							size={35}
 							alt={`${friend.username}'s avatar`}
 							onClick={() => {
 								props.closeDrawer();
@@ -144,7 +147,6 @@ export const FriendItem = (props: FriendItemProps) => {
 					</MenuContainer>
 				</Flex>
 			</WrapperStyled>
-			<Space h='sm' />
 		</>
 	);
 };

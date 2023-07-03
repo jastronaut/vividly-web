@@ -106,7 +106,7 @@ export const FriendsDrawer = (props: Props) => {
 				<Center>
 					<Link href='/friend-requests'>
 						<Button
-							component='a'
+							component='span'
 							rightIcon={<IconArrowRight />}
 							variant='outline'
 						>

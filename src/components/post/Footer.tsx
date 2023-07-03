@@ -95,18 +95,22 @@ export const Footer = (props: FooterProps) => {
 							>
 								Delete post
 							</Menu.Item>
-							<Menu.Item
-								icon={<IconBan size={14} />}
-								onClick={props.toggleDisableComments}
+							<Tooltip
+								label='Prevent other users from commenting on your posts'
+								withArrow
+								position='bottom'
 							>
-								<Tooltip label='Disable/enable comments' position='bottom'>
+								<Menu.Item
+									icon={<IconBan size={14} />}
+									onClick={props.toggleDisableComments}
+								>
 									<span>
 										{props.commentsDisabled
 											? 'Enable comments'
 											: 'Disable comments'}
 									</span>
-								</Tooltip>
-							</Menu.Item>
+								</Menu.Item>
+							</Tooltip>
 						</Menu.Dropdown>
 					</Menu>
 				)}

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Modal, Space, Text } from '@mantine/core';
+import { useMediaQuery } from '@mantine/hooks';
 
 import { Comment as CommentType } from '@/types/post';
 import { DismissWarningModal } from '@/components/DismissWarningModal';
@@ -47,6 +48,7 @@ export const CommentsModal = (props: Props) => {
 	const [isWarningModalOpen, setIsWarningModalOpen] = useState(false);
 	const [draft, setDraft] = useState('');
 	const { curUser } = useCurUserContext();
+	const isMobile = useMediaQuery('(max-width: 800px)');
 
 	const tryDismissModal = () => {
 		if (isWarningModalOpen) {
@@ -67,8 +69,9 @@ export const CommentsModal = (props: Props) => {
 			opened={props.isOpen}
 			onClose={tryDismissModal}
 			centered
-			withCloseButton={false}
 			padding='xl'
+			fullScreen={isMobile}
+			title='Comments'
 		>
 			<DismissWarningModal
 				isOpen={isWarningModalOpen}

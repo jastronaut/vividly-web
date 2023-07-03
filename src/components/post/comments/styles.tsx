@@ -2,9 +2,18 @@ import styled from 'styled-components';
 import { rem } from 'polished';
 import { Textarea, Group } from '@mantine/core';
 
+export const TextContainer = styled.div`
+	border-radius: ${rem(8)};
+	margin-left: ${rem(8)};
+
+	a .mantine-Text-root {
+		line-height: 1.1;
+	}
+`;
+
 export const AllComments = styled.div`
 	margin-top: ${rem(8)};
-	@media screen and (min-width: 600px) {
+	@media screen and (min-width: 800px) {
 		max-height: ${rem(500)};
 		overflow: scroll;
 	}
@@ -36,7 +45,6 @@ export const MenuContainer = styled(Group)`
 
 export const Wrapper = styled.div`
 	a {
-		display: flex;
 		color: unset;
 	}
 
