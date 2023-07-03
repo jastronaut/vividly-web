@@ -9,11 +9,7 @@ export const EditorContainer = styled.div`
 	border-radius: ${rem(8)};
 	overflow: scroll;
 
-	max-height: ${rem(200)};
-
-	@media screen and (max-width: 800px) {
-		max-height: ${rem(100)};
-	}
+	min-height: ${rem(100)};
 `;
 
 export const MagicTextWrapper = styled.div`

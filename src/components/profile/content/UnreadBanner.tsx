@@ -45,7 +45,7 @@ const UnreadBannerButton = (props: UnreadBannerProps) => {
 		: scroll.y > HEADER_SCROLL_HEIGHT;
 
 	const onClick = () => {
-		// this should scroll to the undread post
+		// this should scroll to the unread post
 		// but doesn't handle if the unread post is not on the current page
 		const unread = document.getElementById(`${props.unreadPostId}`);
 		if (unread) {
@@ -66,8 +66,8 @@ const UnreadBannerButton = (props: UnreadBannerProps) => {
 
 	return (
 		<Wrapper scrolled={isScrolled}>
-			<Button variant='light' color='blue' size='md' onClick={onClick}>
-				x unread posts
+			<Button color='blue' size='md' onClick={onClick}>
+				Jump to unread posts
 			</Button>
 		</Wrapper>
 	);

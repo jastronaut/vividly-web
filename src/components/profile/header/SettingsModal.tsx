@@ -20,6 +20,7 @@ import { useCurUserContext } from '@/components/utils/CurUserContext';
 import { showAndLogErrorNotification } from '@/showerror';
 import { DismissWarningModal } from '../../DismissWarningModal';
 import { User } from '@/types/user';
+import Link from 'next/link';
 
 function getErrorText(errorCode: string | null) {
 	switch (errorCode) {
@@ -301,6 +302,14 @@ export const SettingsModal = (props: Props) => {
 				>
 					Save
 				</Button>
+				<Space h='md' />
+				<Center>
+					<Link href='/settings'>
+						<Button variant='subtle' size='sm' component='span'>
+							Go to Account Settings
+						</Button>
+					</Link>
+				</Center>
 			</form>
 		</Modal>
 	);

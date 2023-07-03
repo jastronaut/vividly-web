@@ -17,10 +17,8 @@ const proxy = async (req: NextApiRequest, res: NextApiResponse) => {
 	try {
 		const response = await fetch(`https://${url}`);
 		const text = await response.text();
-		console.log('here');
 		return res.status(200).send(text);
 	} catch (error) {
-		console.log('here2');
 		return res.status(500).json({ error: `${error}` || 'Unexpected Error' });
 	}
 };

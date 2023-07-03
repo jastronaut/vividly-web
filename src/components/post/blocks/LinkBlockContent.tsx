@@ -41,7 +41,7 @@ const LinkInfo = styled.span`
 	padding-left: ${rem(16)};
 	padding-bottom: ${rem(8)};
 	margin-left: ${rem(4)};
-	border-left: ${rem(4)} solid ${props => props.theme.border.primary};
+	border-left: ${rem(4)} solid ${props => props.theme.border.secondary};
 
 	> img {
 		margin-top: ${rem(8)};

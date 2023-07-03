@@ -59,13 +59,6 @@ export const AccountInfoProvider = ({ children }: Props) => {
 		}
 	}, [error]);
 
-	useEffect(() => {
-		console.log('checking');
-		if (data) {
-			console.log(data);
-		}
-	}, [data]);
-
 	return (
 		<AccountInfoContext.Provider
 			value={{

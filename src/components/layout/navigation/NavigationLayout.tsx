@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { useMantineTheme, ActionIcon } from '@mantine/core';
-import styled from 'styled-components';
+import React, { useState } from 'react';
+import { ActionIcon } from '@mantine/core';
 import {
 	IconUser,
 	IconBellRinging,
@@ -8,8 +7,7 @@ import {
 	IconAddressBook,
 } from '@tabler/icons-react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { useVividlyTheme, ThemeName } from '@/styles/Theme';
+
 import { useCurUserContext } from '../../utils/CurUserContext';
 import { NavInner, NavItem, Navigation, PageContentContainer } from './styles';
 
@@ -18,9 +16,7 @@ type Props = {
 	id?: number;
 };
 export default function NavigationLayout(props: Props) {
-	const theme = useMantineTheme();
-	const pathname = usePathname();
-	const { curUser, isLoading } = useCurUserContext();
+	const { curUser } = useCurUserContext();
 
 	const [isNavHidden, setIsNavHidden] = useState(false);
 
@@ -30,28 +26,28 @@ export default function NavigationLayout(props: Props) {
 				<NavItem>
 					<Link href={curUser.user ? `/profile/${curUser.user.id}` : ''}>
 						<ActionIcon color='grape' variant='transparent' component='span'>
-							<IconUser size={18} />
+							<IconUser size={20} />
 						</ActionIcon>
 					</Link>
 				</NavItem>
 				<NavItem>
 					<Link href='/feed'>
 						<ActionIcon color='grape' variant='transparent' component='span'>
-							<IconAddressBook size={18} />
+							<IconAddressBook size={20} />
 						</ActionIcon>
 					</Link>
 				</NavItem>
 				<NavItem>
 					<Link href='/activity'>
 						<ActionIcon color='grape' variant='transparent' component='span'>
-							<IconBellRinging size={18} />
+							<IconBellRinging size={20} />
 						</ActionIcon>
 					</Link>
 				</NavItem>
-				<NavItem>
+				<NavItem id='nav-settings'>
 					<Link href='/settings'>
 						<ActionIcon color='grape' variant='transparent' component='span'>
-							<IconSettings size={18} />
+							<IconSettings size={20} />
 						</ActionIcon>
 					</Link>
 				</NavItem>
