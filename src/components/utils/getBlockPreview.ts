@@ -13,7 +13,7 @@ export function getBlockPreview(block: Block | null) {
 		case BlockType.LINK:
 			return `🔗 ${block.url.slice(0, 100)}`;
 		case BlockType.MUSIC:
-			return `🎧 ${block.music.title}`;
+			return `🎧🎵`;
 		default:
 			return '';
 	}

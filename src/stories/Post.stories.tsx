@@ -30,25 +30,5 @@ Primary.args = {
 			width: 316,
 			height: 316,
 		},
-		{
-			type: BlockType.MUSIC,
-			music: {
-				spotifyData: {
-					album: {
-						name: 'Kiss',
-					},
-					artists: [
-						{
-							name: 'Carly Rae Jepsen',
-						},
-					],
-					track: {
-						id: '1PS4iHR7wHrCvGdjC3XXJj',
-						name: 'Turn Me Up',
-					},
-				},
-				title: '🎵 Carly Rae Jepsen - Turn Me Up',
-			},
-		},
 	],
 };
