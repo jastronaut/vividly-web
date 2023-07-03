@@ -33,23 +33,9 @@ export type ImageBlock = {
 
 export type MusicBlock = {
 	type: BlockType.MUSIC;
-	music: {
-		title: string;
-		spotifyData?: {
-			album: {
-				name: string;
-			};
-
-			artists: {
-				name: string;
-			}[];
-
-			track: {
-				id: string;
-				name: string;
-			};
-		};
-	};
+	spotifyEmbedUrl?: string;
+	appleMusicEmbedUrl?: string;
+	youtubeEmbedUrl?: string;
 };
 
 export type LinkBlock = {

@@ -17,6 +17,7 @@ import {
 	DefaultResponse,
 } from '@/types/api';
 import { DismissWarningModal } from '../../DismissWarningModal';
+import { MusicBlock } from '@/components/post/blocks/MusicBlock';
 
 export const addNewlines = (txt: string, id: string) =>
 	txt.length < 1 ? (
@@ -59,6 +60,8 @@ function renderPostContent(content: Block, key: string) {
 					url={content.url}
 				/>
 			);
+		case BlockType.MUSIC:
+			return <MusicBlock key={key} {...content} />;
 		default:
 			return <p key={key}>Unknown block type</p>;
 	}

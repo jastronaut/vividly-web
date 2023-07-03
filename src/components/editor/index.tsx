@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { useState, useCallback, useMemo, useEffect } from 'react';
 import {
 	BaseEditor,
 	createEditor,
@@ -17,8 +17,7 @@ import {
 	Space,
 	ActionIcon,
 	FileButton,
-	Collapse,
-	TextInput,
+	Tooltip,
 } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import {
@@ -27,11 +26,11 @@ import {
 	IconTemperature,
 	IconClockHour9,
 	IconX,
-	IconCloud,
 	IconCrystalBall,
+	IconMusic,
 } from '@tabler/icons-react';
 
-import { BlockType as EditorBlockType } from '../../types/editor';
+import { BlockType as EditorBlockType, MusicElement } from '../../types/editor';
 import { EditorContainer, InlineEditorWrapper } from './styles';
 import { DismissWarningModal } from '../DismissWarningModal';
 import {
@@ -52,8 +51,15 @@ import { Block, BlockType } from '@/types/post';
 
 import { OpenWeatherResponse } from '../../types/editor';
 
-import { ImageBlock, LinkBlock, MagicBlock, OracleBlock } from './Nodes';
+import {
+	ImageBlock,
+	LinkBlock,
+	MagicBlock,
+	OracleBlock,
+	MusicBlock,
+} from './Nodes';
 import { showAndLogErrorNotification } from '@/showerror';
+import { MusicInput, OracleInput } from './MagicActions';
 
 const openWeatherKey =
 	process.env.REACT_APP_OPEN_WEATHER_API_KEY ||
@@ -90,6 +96,8 @@ const Element = (props: BaseElementProps) => {
 			return <MagicBlock {...props} />;
 		case EditorBlockType.ORACLE:
 			return <OracleBlock {...props} />;
+		case EditorBlockType.MUSIC:
+			return <MusicBlock {...props} />;
 		default:
 			return <Text {...attributes}>{children}</Text>;
 	}
@@ -103,8 +111,8 @@ type EditorProps = {
 
 const Editor = (props: EditorProps) => {
 	const { editor } = props;
-	const [isOracleInputShowing, setIsOracleInputShowing] = useState(false);
-	const [oracleInput, setOracleInput] = useState('');
+	const [isOracleInputVisible, setIsOracleInputVisible] = useState(false);
+	const [isMusicInputVisible, setIsMusicInputVisible] = useState(false);
 
 	const onPaste = (
 		event: React.ClipboardEvent<HTMLDivElement>,
@@ -173,23 +181,38 @@ const Editor = (props: EditorProps) => {
 		});
 	};
 
-	const toggleOracleInput = useCallback(() => {
-		if (isOracleInputShowing) {
-			setIsOracleInputShowing(false);
-			setOracleInput('');
+	const toggleOracleInput = () => {
+		if (isOracleInputVisible) {
+			setIsOracleInputVisible(false);
 		} else {
-			setIsOracleInputShowing(true);
+			setIsOracleInputVisible(true);
+			setIsMusicInputVisible(false);
 		}
-	}, [isOracleInputShowing]);
+	};
 
-	const onClickAskOracle = useCallback(() => {
-		if (oracleInput.length < 1) {
-			return;
+	const toggleMusicInput = () => {
+		if (isMusicInputVisible) {
+			setIsMusicInputVisible(false);
+		} else {
+			setIsMusicInputVisible(true);
+			setIsOracleInputVisible(false);
 		}
-		addOracleResponsePreview(editor, oracleInput);
-		setIsOracleInputShowing(false);
-		setOracleInput('');
-	}, [oracleInput, editor]);
+	};
+
+	const onClickAskOracle = useCallback(
+		(question: string) => {
+			addOracleResponsePreview(editor, question);
+			toggleOracleInput();
+		},
+		[editor]
+	);
+
+	const onClickAddMusic = (music: MusicElement) => {
+		removeBlankBlock(editor);
+		editor.insertNode(music);
+		finishAddingBlock(editor);
+		toggleMusicInput;
+	};
 
 	return (
 		<>
@@ -227,86 +250,87 @@ const Editor = (props: EditorProps) => {
 					accept='image/png,image/jpeg'
 				>
 					{props => (
-						<ActionIcon
-							variant='light'
-							radius='xl'
-							color='grape'
-							size='lg'
-							title='Upload image'
-							{...props}
-						>
-							<IconPhoto />
-						</ActionIcon>
+						<Tooltip label='Add an image' position='bottom' withArrow>
+							<ActionIcon
+								variant='light'
+								radius='xl'
+								color='grape'
+								size='lg'
+								aria-label='Upload image'
+								{...props}
+							>
+								<IconPhoto />
+							</ActionIcon>
+						</Tooltip>
 					)}
 				</FileButton>
-				<ActionIcon
-					variant='light'
-					radius='xl'
-					color='grape'
-					size='lg'
-					onClick={() => addTime(editor)}
-					title='Add current time'
-				>
-					<IconClockHour9 />
-				</ActionIcon>
-				<ActionIcon
-					variant='light'
-					radius='xl'
-					color='grape'
-					size='lg'
-					onClick={() => addDate(editor)}
-					title='Add current date'
-				>
-					<IconCalendar />
-				</ActionIcon>
-				<ActionIcon
-					variant='light'
-					radius='xl'
-					color='grape'
-					size='lg'
-					onClick={() => addWeather(editor)}
-					title='Add current weather'
-				>
-					<IconTemperature />
-				</ActionIcon>
-				<ActionIcon
-					variant={isOracleInputShowing ? 'filled' : 'light'}
-					radius='xl'
-					color='grape'
-					size='lg'
-					onClick={toggleOracleInput}
-					title='Ask the oracle'
-				>
-					<IconCrystalBall />
-				</ActionIcon>
+				<Tooltip label='Add current time' position='bottom' withArrow>
+					<ActionIcon
+						variant='light'
+						radius='xl'
+						color='grape'
+						size='lg'
+						onClick={() => addTime(editor)}
+						aria-label='Add current time'
+					>
+						<IconClockHour9 />
+					</ActionIcon>
+				</Tooltip>
+				<Tooltip label='Add current date' position='bottom' withArrow>
+					<ActionIcon
+						variant='light'
+						radius='xl'
+						color='grape'
+						size='lg'
+						onClick={() => addDate(editor)}
+						aria-label='Add current date'
+					>
+						<IconCalendar />
+					</ActionIcon>
+				</Tooltip>
+				<Tooltip label='Add current weather' position='bottom' withArrow>
+					<ActionIcon
+						variant='light'
+						radius='xl'
+						color='grape'
+						size='lg'
+						onClick={() => addWeather(editor)}
+						aria-label='Add current weather'
+					>
+						<IconTemperature />
+					</ActionIcon>
+				</Tooltip>
+				<Tooltip label='Ask the oracle a question' position='bottom' withArrow>
+					<ActionIcon
+						variant={isOracleInputVisible ? 'filled' : 'light'}
+						radius='xl'
+						color='grape'
+						size='lg'
+						onClick={toggleOracleInput}
+						aria-label='Ask the oracle'
+					>
+						<IconCrystalBall />
+					</ActionIcon>
+				</Tooltip>
+
+				<Tooltip label='Add a song' position='bottom' withArrow>
+					<ActionIcon
+						variant={isMusicInputVisible ? 'filled' : 'light'}
+						radius='xl'
+						color='grape'
+						size='lg'
+						onClick={toggleMusicInput}
+						title='Add a song'
+					>
+						<IconMusic />
+					</ActionIcon>
+				</Tooltip>
 			</Flex>
-			<Collapse in={isOracleInputShowing}>
-				<>
-					<Space h='md' />
-					<Flex sx={{ justifyContent: 'space-between', width: '100%' }}>
-						<TextInput
-							sx={{ flex: 1, paddingRight: '1rem' }}
-							value={oracleInput}
-							radius='md'
-							onChange={e => setOracleInput(e.currentTarget.value)}
-							placeholder='Ask a yes or no question...'
-							maxLength={200}
-							icon={<IconCloud />}
-						/>
-						<Button
-							variant='light'
-							color='grape'
-							radius='lg'
-							size='sm'
-							onClick={onClickAskOracle}
-							disabled={oracleInput.length < 1}
-						>
-							Ask
-						</Button>
-					</Flex>
-					<Space h='xs' />
-				</>
-			</Collapse>
+			<OracleInput
+				isVisible={isOracleInputVisible}
+				onClickAskOracle={onClickAskOracle}
+			/>
+			<MusicInput isVisible={isMusicInputVisible} onSubmit={onClickAddMusic} />
 		</>
 	);
 };
@@ -377,6 +401,15 @@ export const EditorModal = (props: EditorModalProps) => {
 						type: BlockType.TEXT,
 						text: `☁️ ${node.question}\n🔮 ${generateOracleResponse()}`,
 					});
+					break;
+				case EditorBlockType.MUSIC:
+					blocks.push({
+						type: BlockType.MUSIC,
+						appleMusicEmbedUrl: node.appleMusicEmbedUrl,
+						spotifyEmbedUrl: node.spotifyEmbedUrl,
+						youtubeEmbedUrl: node.youtubeEmbedUrl,
+					});
+					break;
 				default:
 					break;
 			}
@@ -410,6 +443,12 @@ export const EditorModal = (props: EditorModalProps) => {
 			showAndLogErrorNotification('Failed to create post', err);
 		}
 	}, [draft, editor]);
+
+	useEffect(() => {
+		if (ReactEditor.isFocused(editor)) {
+			console.log('focused');
+		}
+	}, [editor]);
 
 	return (
 		<InlineEditorWrapper>

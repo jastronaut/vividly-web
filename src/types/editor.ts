@@ -28,6 +28,7 @@ export type VideoElementType = {
 	url: string;
 	children: CustomText[];
 };
+
 export type LinkElement = {
 	type: BlockType.LINK;
 	description?: string;
@@ -49,13 +50,22 @@ export type OracleElement = {
 	children: CustomText[];
 };
 
+export type MusicElement = {
+	type: BlockType.MUSIC;
+	spotifyEmbedUrl?: string;
+	appleMusicEmbedUrl?: string;
+	youtubeEmbedUrl?: string;
+	children: CustomText[];
+};
+
 export type ElementType =
 	| CustomElement
 	| ImageElement
 	| VideoElementType
 	| LinkElement
 	| MagicElement
-	| OracleElement;
+	| OracleElement
+	| MusicElement;
 
 export type Weather = {
 	id: number;

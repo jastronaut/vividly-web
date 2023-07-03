@@ -114,9 +114,12 @@ export const addLink = async (editor: ReactEditor, url: string) => {
 			const response = await fetch(`/api/proxy/${sanitizedUrl}`);
 			const html = await response.text();
 			const doc = new DOMParser().parseFromString(html, 'text/html');
-			console.log('the url is ', sanitizedUrl);
 
-			const title = doc.querySelector('title')?.textContent || '';
+			const title =
+				// @ts-ignore
+				doc.querySelector('meta[name="title"]')?.content ||
+				doc.querySelector('title')?.textContent ||
+				'';
 			const description =
 				doc
 					.querySelector('meta[name="description"]')

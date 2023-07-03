@@ -6,6 +6,7 @@ import { BlockType as EditorBlockType } from '../../types/editor';
 import { MagicTextWrapper } from './styles';
 import { ImageBlock as ImageBlockContent } from '../post/blocks/blocks';
 import { LinkBlockContent } from '../post/blocks/LinkBlockContent';
+import { MusicBlock as MusicPostBlock } from '../post/blocks/MusicBlock';
 
 interface BaseElementProps {
 	children: React.ReactNode;
@@ -69,19 +70,6 @@ export const ImageBlock = (props: BaseElementProps) => {
 					width={element.width}
 					height={element.height}
 				/>
-				{/* <Button
-          active
-          onClick={() => Transforms.removeNodes(editor, { at: path })}
-          className={css`
-            display: ${selected && focused ? 'inline' : 'none'};
-            position: absolute;
-            top: 0.5em;
-            left: 0.5em;
-            background-color: white;
-          `}
-        >
-          <Icon>delete</Icon>
-        </Button> */}
 			</div>
 		</div>
 	);
@@ -103,6 +91,22 @@ export const OracleBlock = (props: BaseElementProps) => {
 			</div>
 
 			{children}
+		</div>
+	);
+};
+
+export const MusicBlock = (props: BaseElementProps) => {
+	const { attributes, children, element } = props;
+	if (element.type !== EditorBlockType.MUSIC) {
+		return null;
+	}
+
+	return (
+		<div {...attributes}>
+			{children}
+			<div contentEditable={false}>
+				<MusicPostBlock inEditor {...element} />
+			</div>
 		</div>
 	);
 };

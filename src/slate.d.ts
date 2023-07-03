@@ -6,6 +6,7 @@ import {
 	CustomElement,
 	ImageElement,
 	VideoElementType,
+	MusicElement,
 	BlockType,
 	ElementType,
 } from './types/editor';
