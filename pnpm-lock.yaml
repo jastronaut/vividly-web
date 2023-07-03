@@ -34,6 +34,7 @@ specifiers:
   eslint: 8.34.0
   eslint-config-next: 13.1.6
   eslint-plugin-storybook: ^0.6.10
+  linkify-plugin-mention: ^4.1.1
   linkify-react: ^4.1.1
   linkifyjs: ^4.1.1
   next: 13.1.6
@@ -71,6 +72,7 @@ dependencies:
   dayjs: 1.11.7
   eslint: 8.34.0
   eslint-config-next: 13.1.6_7kw3g6rralp5ps6mg3uyzz6azm
+  linkify-plugin-mention: 4.1.1_linkifyjs@4.1.1
   linkify-react: 4.1.1_mspgloey5lkkx3kppb4gmihtci
   linkifyjs: 4.1.1
   next: 13.1.6_z72xxk7vwlamvgqemvc4ptm4du
@@ -9168,6 +9170,14 @@ packages:
 
   /lines-and-columns/1.2.4:
     resolution: {integrity: sha512-7ylylesZQ/PV29jhEDl3Ufjo6ZX7gCqJr5F7PKrqc93v7fzSymt1BpwEU8nAUXs8qzzvqhbjhK5QZg6Mt/HkBg==}
+
+  /linkify-plugin-mention/4.1.1_linkifyjs@4.1.1:
+    resolution: {integrity: sha512-7qIOT3FhU4+WlbdRC5sZYZJckOSgBI4Hg6pDXtIOtyaJOYKK3vos4L86yb1veVbyAO2hf4CKoEAGrEvIqKviIA==}
+    peerDependencies:
+      linkifyjs: ^4.0.0
+    dependencies:
+      linkifyjs: 4.1.1
+    dev: false
 
   /linkify-react/4.1.1_mspgloey5lkkx3kppb4gmihtci:
     resolution: {integrity: sha512-2K9Y1cUdvq40dFWqCJ//X+WP19nlzIVITFGI93RjLnA0M7KbnxQ/ffC3AZIZaEIrLangF9Hjt3i0GQ9/anEG5A==}

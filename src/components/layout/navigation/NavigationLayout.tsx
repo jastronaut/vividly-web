@@ -28,7 +28,7 @@ export default function NavigationLayout(props: Props) {
 		<>
 			<NavInner>
 				<NavItem>
-					<Link href={curUser.user ? `/profile/${curUser.user.id}#end` : ''}>
+					<Link href={curUser.user ? `/profile/${curUser.user.id}` : ''}>
 						<ActionIcon color='grape' variant='transparent' component='span'>
 							<IconUser size={18} />
 						</ActionIcon>

@@ -129,7 +129,7 @@ export const PasswordSetting = () => {
 
 		try {
 			const res = await makeApiCall<DefaultResponse>({
-				uri: '/users/password/change',
+				uri: '/auth/password/change',
 				method: 'POST',
 				body: { password: newPassword1 },
 				token: token,
@@ -215,7 +215,7 @@ export const SettingSection = (props: SettingSectionProps) => {
 			</Flex>
 			<Space h='xs' />
 			<Collapse in={opened}>
-				<Flex justify='space-between' align='center'>
+				<Flex justify='space-between' align='start'>
 					{props.children}
 				</Flex>
 				<Space h='xs' />

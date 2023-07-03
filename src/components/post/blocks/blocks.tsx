@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import styled from 'styled-components';
 import { rem } from 'polished';
+import { DEFAULT_AVATAR } from '@/constants';
 
 const StyledImage = styled(Image)`
 	border-radius: ${rem(8)};
@@ -27,6 +28,8 @@ export const ImageBlock = (props: ImageBlockProps) => {
 			alt={url}
 			width={props.width}
 			height={props.height}
+			blurDataURL={DEFAULT_AVATAR}
+			placeholder='blur'
 		/>
 	);
 };

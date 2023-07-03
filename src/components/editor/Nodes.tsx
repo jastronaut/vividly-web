@@ -1,8 +1,8 @@
-import React, { ElementType } from 'react';
+import React from 'react';
 import { Element } from 'slate';
 import { Text } from '@mantine/core';
 
-import { BlockType as EditorBlockType, MagicElement } from '../../types/editor';
+import { BlockType as EditorBlockType } from '../../types/editor';
 import { MagicTextWrapper } from './styles';
 import { ImageBlock as ImageBlockContent } from '../post/blocks/blocks';
 import { LinkBlockContent } from '../post/blocks/LinkBlockContent';
