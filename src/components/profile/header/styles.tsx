@@ -219,6 +219,10 @@ export const UserInfoSection = styled.div`
 `;
 
 export const FriendActionsMenuContainer = styled.div`
+	position: absolute;
+	top: ${rem(8)};
+	right: ${rem(8)};
+
 	@media screen and (max-width: 500px) {
 		> div {
 			gap: ${rem(8)};

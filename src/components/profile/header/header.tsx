@@ -364,7 +364,7 @@ export const ProfileHeaderComponent = (props: ProfileHeaderProps) => {
 							</>
 						) : (
 							<FriendActionsMenuContainer id='friend-menu-container'>
-								<Group>
+								<Group spacing='sm'>
 									<Menu position='bottom-end' withArrow offset={0}>
 										<Menu.Target>
 											<Indicator
