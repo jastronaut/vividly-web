@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { rem } from 'polished';
 
-export const TabsWrapper = styled.div`
+export const PageWrapper = styled.div`
 	color: ${props => props.theme.text.primary};
 	padding: ${rem(16)} ${rem(24)};
 	margin: ${rem(16)};
@@ -13,8 +13,9 @@ export const TabsWrapper = styled.div`
 	}
 
 	@media screen and (max-width: 800px) {
-		margin: ${rem(8)} 0;
+		margin: ${rem(8)} 0 ${rem(50)};
 		width: 100%;
+		padding: ${rem(8)} ${rem(16)};
 	}
 
 	@media screen and (min-width: 1200px) {

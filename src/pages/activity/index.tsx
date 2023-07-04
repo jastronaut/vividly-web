@@ -15,17 +15,6 @@ const FriendsPage: Page = () => {
 		<>
 			<FadeIn>
 				<NotificationTabs />
-				<Center>
-					<Link href='/friend-requests'>
-						<Button
-							component='span'
-							rightIcon={<IconArrowRight />}
-							variant='outline'
-						>
-							{'Friend requests'}
-						</Button>
-					</Link>
-				</Center>
 			</FadeIn>
 		</>
 	);

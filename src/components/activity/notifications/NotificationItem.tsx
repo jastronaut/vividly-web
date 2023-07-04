@@ -11,6 +11,7 @@ import {
 
 import { Wrapper, TextContainer } from '../requests/styles';
 import { DEFAULT_AVATAR } from '@/constants';
+import { getPostTime } from '@/components/utils/time';
 
 import { getBlockPreview } from '@/components/utils/getBlockPreview';
 import { Avatar } from '@/components/Avatar';
@@ -21,10 +22,8 @@ function getNotificationActionMessage(notification: NotificationBody) {
 			return 'announced something';
 		case NotificationType.POST_LIKE:
 			return 'liked your post';
-		case NotificationType.COMMENT:
-			return 'commented on your post';
 		default:
-			return 'did something';
+			return '';
 	}
 }
 
@@ -50,21 +49,18 @@ interface Props {
 }
 
 export const NotificationItem = (props: Props) => {
-	const { notification } = props;
+	const { createdTime, body, sender } = props.notification;
 
-	const notificationActionMessage = getNotificationActionMessage(
-		notification.body
-	);
-	const notificationContentPreview = getNotificationContentPreview(
-		notification.body
-	);
+	const timestamp = getPostTime(createdTime);
+	const notificationActionMessage = getNotificationActionMessage(body);
+	const notificationContentPreview = getNotificationContentPreview(body);
 
 	const link =
-		notification.body.type === NotificationType.ANNOUNCEMENT
+		body.type === NotificationType.ANNOUNCEMENT
 			? '/announcements'
-			: `/post/${notification.body.post.id}`;
+			: `/post/${body.post.id}`;
 
-	if (notification.body.type === NotificationType.ANNOUNCEMENT) {
+	if (body.type === NotificationType.ANNOUNCEMENT) {
 		return <div>lol</div>;
 	}
 
@@ -73,23 +69,28 @@ export const NotificationItem = (props: Props) => {
 			<WrapperStyled withHover>
 				<Flex>
 					<Avatar
-						src={notification.sender.avatarSrc || DEFAULT_AVATAR}
-						alt={`${notification.sender.name}'s avatar`}
+						src={sender.avatarSrc || DEFAULT_AVATAR}
+						alt={`${sender.name}'s avatar`}
 						size={30}
 					/>
 					<TextContainer>
-						<Text>
-							<Text fw={700} component='span'>
-								{notification.sender.name}
-							</Text>
-							{` `}
-							{notificationActionMessage}
+						<Text fw={700} component='span'>
+							{sender.name}
 						</Text>
-						{notification.body.type === NotificationType.COMMENT && (
-							<Text>{notification.body.message}</Text>
+						{` `}
+						{notificationActionMessage}
+						{body.type === NotificationType.COMMENT && (
+							<Text
+								sx={{
+									lineHeight: rem(20),
+								}}
+							>
+								{body.message}
+							</Text>
 						)}
 						<Text c='dimmed'>{notificationContentPreview}</Text>
 					</TextContainer>
+					<Text c='dimmed'>{timestamp}</Text>
 				</Flex>
 			</WrapperStyled>
 		</Link>

@@ -1,9 +1,11 @@
 import { useEffect } from 'react';
 import useSWR from 'swr';
-import { Tabs, Center, Title, Space, Badge } from '@mantine/core';
+import { Tabs, Center, Title, Space, Badge, Button } from '@mantine/core';
+import { IconArrowRight } from '@tabler/icons-react';
+import Link from 'next/link';
 
 import { NotificationItem } from './NotificationItem';
-import { TabsWrapper } from '../requests/_style';
+import { PageWrapper } from '../requests/_style';
 import { showAndLogErrorNotification } from '@/showerror';
 import { NotificationsResponse, DefaultResponse } from '@/types/api';
 import { fetchWithToken } from '@/utils';
@@ -72,115 +74,125 @@ export const NotificationTabs = () => {
 
 	return (
 		<>
-			<Center>
-				<TabsWrapper>
-					<Title order={3}>Notifications</Title>
-					<Space h='xl' />
-					<Tabs color='grape' defaultValue='all'>
-						<Tabs.List>
-							<Tabs.Tab
-								value='all'
-								rightSection={
-									totalUnreadCount ? (
-										<Badge
-											w={16}
-											h={16}
-											sx={{ pointerEvents: 'none' }}
-											variant='filled'
-											size='sm'
-											p={0}
-											color='grape'
-										>
-											{totalUnreadCount}
-										</Badge>
-									) : null
-								}
-							>
-								⭐️ All
-							</Tabs.Tab>
-							<Tabs.Tab
-								value='comments'
-								rightSection={
-									unreadCommentNotificationsCount ? (
-										<Badge
-											w={16}
-											h={16}
-											sx={{ pointerEvents: 'none' }}
-											variant='filled'
-											size='sm'
-											p={0}
-											color='grape'
-										>
-											{unreadCommentNotificationsCount}
-										</Badge>
-									) : null
-								}
-							>
-								💬 Comments
-							</Tabs.Tab>
-							<Tabs.Tab
-								value='likes'
-								rightSection={
-									unreadLikeNotificationsCount ? (
-										<Badge
-											w={16}
-											h={16}
-											sx={{ pointerEvents: 'none' }}
-											variant='filled'
-											size='sm'
-											p={0}
-											color='grape'
-										>
-											{unreadLikeNotificationsCount}
-										</Badge>
-									) : null
-								}
-							>
-								💜 Likes
-							</Tabs.Tab>
-						</Tabs.List>
-						<Tabs.Panel value='all'>
-							<FadeIn>
-								{data &&
-									data.notifications.map(notification => (
-										<NotificationItem
-											key={`notif-${notification.id}`}
-											notification={notification}
-										/>
-									))}
-								{isLoading && <LoadingTab />}
-								{!isLoading && !totalCount && <EmptyTab />}
-							</FadeIn>
-						</Tabs.Panel>
-						<Tabs.Panel value='comments'>
-							<FadeIn>
-								{commentNotifications &&
-									commentNotifications.map(notification => (
-										<NotificationItem
-											key={`notif-${notification.id}`}
-											notification={notification}
-										/>
-									))}
-								{isLoading && <LoadingTab />}
-								{!isLoading && !commentNotificationsCount && <EmptyTab />}
-							</FadeIn>
-						</Tabs.Panel>
-						<Tabs.Panel value='likes'>
-							<FadeIn>
-								{likeNotifications &&
-									likeNotifications.map(notification => (
-										<NotificationItem
-											key={`notif-${notification.id}`}
-											notification={notification}
-										/>
-									))}
-								{isLoading && <LoadingTab />}
-								{!isLoading && !likeNotificationsCount && <EmptyTab />}
-							</FadeIn>
-						</Tabs.Panel>
-					</Tabs>
-				</TabsWrapper>
-			</Center>
+			<PageWrapper>
+				<Title order={3}>Notifications</Title>
+				<Space h='xl' />
+				<Tabs color='grape' defaultValue='all'>
+					<Tabs.List>
+						<Tabs.Tab
+							value='all'
+							rightSection={
+								totalUnreadCount ? (
+									<Badge
+										w={16}
+										h={16}
+										sx={{ pointerEvents: 'none' }}
+										variant='filled'
+										size='sm'
+										p={0}
+										color='grape'
+									>
+										{totalUnreadCount}
+									</Badge>
+								) : null
+							}
+						>
+							⭐️ All
+						</Tabs.Tab>
+						<Tabs.Tab
+							value='comments'
+							rightSection={
+								unreadCommentNotificationsCount ? (
+									<Badge
+										w={16}
+										h={16}
+										sx={{ pointerEvents: 'none' }}
+										variant='filled'
+										size='sm'
+										p={0}
+										color='grape'
+									>
+										{unreadCommentNotificationsCount}
+									</Badge>
+								) : null
+							}
+						>
+							💬 Comments
+						</Tabs.Tab>
+						<Tabs.Tab
+							value='likes'
+							rightSection={
+								unreadLikeNotificationsCount ? (
+									<Badge
+										w={16}
+										h={16}
+										sx={{ pointerEvents: 'none' }}
+										variant='filled'
+										size='sm'
+										p={0}
+										color='grape'
+									>
+										{unreadLikeNotificationsCount}
+									</Badge>
+								) : null
+							}
+						>
+							💜 Likes
+						</Tabs.Tab>
+					</Tabs.List>
+					<Tabs.Panel value='all'>
+						<FadeIn>
+							{data &&
+								data.notifications.map(notification => (
+									<NotificationItem
+										key={`notif-${notification.id}`}
+										notification={notification}
+									/>
+								))}
+							{isLoading && <LoadingTab />}
+							{!isLoading && !totalCount && <EmptyTab />}
+						</FadeIn>
+					</Tabs.Panel>
+					<Tabs.Panel value='comments'>
+						<FadeIn>
+							{commentNotifications &&
+								commentNotifications.map(notification => (
+									<NotificationItem
+										key={`notif-${notification.id}`}
+										notification={notification}
+									/>
+								))}
+							{isLoading && <LoadingTab />}
+							{!isLoading && !commentNotificationsCount && <EmptyTab />}
+						</FadeIn>
+					</Tabs.Panel>
+					<Tabs.Panel value='likes'>
+						<FadeIn>
+							{likeNotifications &&
+								likeNotifications.map(notification => (
+									<NotificationItem
+										key={`notif-${notification.id}`}
+										notification={notification}
+									/>
+								))}
+							{isLoading && <LoadingTab />}
+							{!isLoading && !likeNotificationsCount && <EmptyTab />}
+						</FadeIn>
+					</Tabs.Panel>
+				</Tabs>
+				<Space h='md' />
+				<Center>
+					<Link href='/friend-requests'>
+						<Button
+							component='span'
+							rightIcon={<IconArrowRight />}
+							variant='outline'
+						>
+							{'Friend requests'}
+						</Button>
+					</Link>
+				</Center>
+			</PageWrapper>
 		</>
 	);
 };

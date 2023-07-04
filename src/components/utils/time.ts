@@ -23,10 +23,11 @@ dayjs.updateLocale('en', {
 	},
 });
 
-export const getPostTime = (timestamp: number) => {
+export const getPostTime = (timestamp: number | string) => {
+	const timestampNum = timestamp as number;
 	const timestampStr = timestamp.toString();
 	return dayjs().to(
-		timestampStr.length > 10 ? timestamp : dayjs.unix(timestamp),
+		timestampStr.length > 10 ? timestamp : dayjs.unix(timestampNum),
 		true
 	);
 };
