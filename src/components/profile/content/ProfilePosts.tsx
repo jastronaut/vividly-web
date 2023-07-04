@@ -1,7 +1,7 @@
 import { ProfileFeedResponse as Feed } from '@/types/api';
 
 import { PostPreview } from './PostPreview';
-import { PostsLoading } from './ProfileMessages';
+import { PostsLoading } from './ProfileStates';
 
 type Props = {
 	feed: Feed[];

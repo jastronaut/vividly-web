@@ -109,7 +109,7 @@ type EditorProps = {
 	editor: BaseEditor & ReactEditor & HistoryEditor;
 };
 
-const Editor = (props: EditorProps) => {
+export const EditorWithActions = (props: EditorProps) => {
 	const { editor } = props;
 	const [isOracleInputVisible, setIsOracleInputVisible] = useState(false);
 	const [isMusicInputVisible, setIsMusicInputVisible] = useState(false);
@@ -341,7 +341,7 @@ type EditorModalProps = {
 	onSubmit: (value: Block[]) => void;
 };
 
-export const EditorModal = (props: EditorModalProps) => {
+export const Editor = (props: EditorModalProps) => {
 	const [editor] = useState(() =>
 		withHistory(withReact(withEmbeds(createEditor())))
 	);
@@ -466,7 +466,7 @@ export const EditorModal = (props: EditorModalProps) => {
 				}}
 				message='Abandon this post? 😳'
 			/>
-			<Editor
+			<EditorWithActions
 				initialValue={[
 					{
 						type: EditorBlockType.TEXT,
@@ -489,5 +489,3 @@ export const EditorModal = (props: EditorModalProps) => {
 		</InlineEditorWrapper>
 	);
 };
-
-export default Editor;

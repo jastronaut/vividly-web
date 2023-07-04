@@ -1,18 +1,18 @@
 import React from 'react';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 
-import Editor from '../components/editor';
+import { EditorWithActions } from '../components/editor/Editor';
 import { VividlyThemeProvider } from '../styles/Theme';
 import { BlockType } from '@/types/editor';
 
 export default {
 	title: 'Editor',
-	component: Editor,
-} as ComponentMeta<typeof Editor>;
+	component: EditorWithActions,
+} as ComponentMeta<typeof EditorWithActions>;
 
-const Template: ComponentStory<typeof Editor> = args => (
+const Template: ComponentStory<typeof EditorWithActions> = args => (
 	<VividlyThemeProvider>
-		<Editor {...args} />
+		<EditorWithActions {...args} />
 	</VividlyThemeProvider>
 );
 

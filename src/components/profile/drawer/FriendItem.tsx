@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Flex, Space, Menu, ActionIcon, Text } from '@mantine/core';
+import { Flex, Indicator, Menu, ActionIcon, Text } from '@mantine/core';
 import {
 	IconDots,
 	IconUserMinus,
@@ -27,11 +27,12 @@ const WrapperStyled = styled(Wrapper)`
 	border-radius: 0;
 
 	@media screen and (max-width: 800px) {
+		margin: ${rem(4)} ${rem(8)};
 		padding: ${rem(8)} ${rem(16)};
 	}
 
 	@media screen and (max-width: 500px) {
-		padding: ${rem(8)} ${rem(4)};
+		margin: ${rem(8)} ${rem(4)};
 	}
 `;
 
@@ -61,34 +62,59 @@ export const FriendItem = (props: FriendItemProps) => {
 			<WrapperStyled withHover>
 				<Flex sx={{ justifyContent: 'space-between', flexGrow: 1 }}>
 					<Flex>
-						<Avatar
-							src={friend.avatarSrc}
-							size={35}
-							alt={`${friend.username}'s avatar`}
+						<Link
+							href={{
+								pathname: '/profile/[id]',
+								query: { id: friend.id },
+							}}
 							onClick={() => {
 								props.closeDrawer();
-								router.push({
-									pathname: '/profile/[id]',
-									query: { id: friend.id },
-								});
 							}}
-						/>
-						<TextContainer>
-							<>
-								<Link
-									href={{
-										pathname: '/profile/[id]',
-										query: { id: friend.id },
-									}}
+						>
+							<Indicator
+								inline
+								label='⭐'
+								size={16}
+								disabled={!isFavorite}
+								color='transparent'
+								sx={{
+									'.mantine-Indicator-indicator': { fontSize: rem(20) },
+								}}
+							>
+								<Avatar
+									src={friend.avatarSrc}
+									size={35}
+									alt={`${friend.username}'s avatar`}
 									onClick={() => {
 										props.closeDrawer();
+										router.push({
+											pathname: '/profile/[id]',
+											query: { id: friend.id },
+										});
 									}}
-									style={{ display: 'flex' }}
+								/>
+							</Indicator>
+						</Link>
+						<TextContainer>
+							<>
+								<Text
+									sx={{
+										lineHeight: '1',
+									}}
+									fw={700}
 								>
-									{/* @ts-ignore */}
-									<TextStyled fw={700}>{friend.name}</TextStyled>
-									{isFavorite && <FavoriteBadge />}
-								</Link>
+									<Link
+										href={{
+											pathname: '/profile/[id]',
+											query: { id: friend.id },
+										}}
+										onClick={() => {
+											props.closeDrawer();
+										}}
+									>
+										{friend.name}
+									</Link>
+								</Text>
 								<Link
 									href={{
 										pathname: '/profile/[id]',
@@ -107,9 +133,15 @@ export const FriendItem = (props: FriendItemProps) => {
 								</Link>
 							</>
 							{friend.bio ? (
-								<Text>{friend.bio}</Text>
+								<TextStyled>{friend.bio}</TextStyled>
 							) : (
-								<Text fs='italic' c='dimmed'>
+								<Text
+									fs='italic'
+									c='dimmed'
+									sx={{
+										lineHeight: '1.1',
+									}}
+								>
 									No bio yet
 								</Text>
 							)}

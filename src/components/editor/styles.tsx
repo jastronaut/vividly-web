@@ -21,7 +21,8 @@ export const MagicTextWrapper = styled.div`
 
 export const InlineEditorWrapper = styled.div`
 	margin: 0;
+
 	@media screen and (max-width: 800px) {
-		margin: 0 ${rem(8)};
+		margin: 0 ${rem(8)} ${rem(25)};
 	}
 `;

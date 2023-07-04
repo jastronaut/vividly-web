@@ -12,9 +12,25 @@ export const ProfileHeaderContainer = styled.div`
 `;
 
 export const ProfileContentContainer = styled.div`
-	min-height: 70vh;
-	border: 1px solid ${props => props.theme.background.secondary};
+	padding: ${rem(24)};
+	display: flex;
+	flex-direction: column-reverse;
+	border-top: none;
+
 	@media screen and (max-width: 800px) {
 		padding-bottom: ${rem(45)};
+	}
+
+	@media screen and (max-width: 500px) {
+		padding: ${rem(8)} ${rem(12)};
+		border-bottom: none;
+	}
+`;
+
+export const ContentWrapper = styled.div`
+	min-height: 90vh;
+
+	@media screen and (min-width: 801px) {
+		border: 1px solid ${props => props.theme.background.secondary};
 	}
 `;

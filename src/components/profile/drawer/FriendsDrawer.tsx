@@ -17,6 +17,7 @@ import {
 } from '@/components/activity/requests/hooks';
 import { URL_PREFIX } from '@/constants';
 import { sortFriends } from '../utils';
+import { DrawerStyles } from './styles';
 
 type Props = {
 	isOpen: boolean;
@@ -97,6 +98,7 @@ export const FriendsDrawer = (props: Props) => {
 
 	return (
 		<>
+			<DrawerStyles />
 			<Drawer
 				opened={props.isOpen}
 				onClose={props.close}

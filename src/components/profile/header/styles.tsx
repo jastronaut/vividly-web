@@ -16,7 +16,7 @@ export const FavoriteButton = (props: FavoriteButtonProps) => {
 		<ActionIcon
 			onClick={props.toggleFavorite}
 			color='yellow'
-			variant={props.isFavorite ? 'filled' : 'outline'}
+			variant={props.isFavorite ? 'light' : 'subtle'}
 			aria-label={label}
 		>
 			<Tooltip withArrow label={label} position='bottom-end'>
@@ -47,7 +47,7 @@ export const ProfileHeaderContent = styled.div<{ scrolled: boolean }>`
 	background-color: ${props => props.theme.background.primary};
 	display: flex;
 	padding: ${rem(10)} ${rem(36)};
-	border: ${rem(1)} solid ${props => props.theme.background.secondary};
+	border-bottom: ${rem(1)} solid ${props => props.theme.background.secondary};
 	border-top: none;
 
 	transition: all 0.2s ease-in;
@@ -71,6 +71,8 @@ export const ProfileHeaderContent = styled.div<{ scrolled: boolean }>`
 		padding: ${rem(10)} ${rem(18)} ${rem(6)};
 		justify-content: center;
 		align-items: center;
+		border-left: none;
+		border-right: none;
 	}
 
 	@media screen and (min-width: 801px) {
@@ -79,7 +81,7 @@ export const ProfileHeaderContent = styled.div<{ scrolled: boolean }>`
 `;
 
 export const ProfileHeaderText = styled.div`
-	flex: 9;
+	flex: 1;
 	margin: 0 ${rem(16)};
 
 	a,
@@ -102,7 +104,7 @@ export const ProfileHeaderText = styled.div`
 	}
 
 	@media screen and (max-width: 500px) {
-		margin: 0 0 ${rem(8)} ${rem(8)};
+		margin: 0 0 0 ${rem(8)};
 	}
 `;
 
@@ -119,13 +121,12 @@ export const HeaderTextLoading = () => {
 const NamesContainer = styled.div<{ height: number }>`
 	display: flex;
 	transition: height 0.3s ease-in;
-
-	.mantine-Text-root {
-		line-height: 1;
-	}
+	align-items: center;
 
 	@media screen and (max-width: 800px) {
 		flex-direction: column;
+		margin-bottom: ${rem(4)};
+		align-items: flex-start;
 	}
 `;
 
@@ -173,18 +174,32 @@ export const HeaderText = (props: HeaderTextProps) => {
 						sx={{
 							marginRight: rem(4),
 						}}
-						fz={bioHidden ? 'lg' : 'md'}
+						fz={bioHidden && !isMobile ? 'lg' : 'md'}
 					>
 						{props.name ?? props.username}
 					</Text>
-					<Text c='dimmed' id='username'>
+					<Text
+						c='dimmed'
+						id='username'
+						fz={isMobile ? 'sm' : 'md'}
+						sx={{
+							lineHeight: 0.9,
+						}}
+					>
 						{` @`}
 						{props.username}
 					</Text>
 				</NamesContainer>
 				<Collapse in={!bioHidden}>
 					{props.bio ? (
-						<Text>{props.bio}</Text>
+						<Text
+							sx={{
+								lineHeight: 1,
+							}}
+							fz={isMobile ? 'sm' : 'md'}
+						>
+							{props.bio}
+						</Text>
 					) : (
 						<Text fs='italic'>No bio yet.</Text>
 					)}

@@ -375,7 +375,7 @@ export const ProfileHeaderComponent = (props: ProfileHeaderProps) => {
 												<ActionIcon
 													onClick={() => null}
 													color='grape'
-													variant={!!friendship ? 'filled' : 'outline'}
+													variant={!!friendship ? 'light' : 'subtle'}
 													aria-label='Manage friendship'
 												>
 													<Tooltip

@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { Button, Space, Center, Text } from '@mantine/core';
+import { Button, Space, Center, Text, Flex } from '@mantine/core';
 import { rem } from 'polished';
 import styled from 'styled-components';
 import { useDisclosure } from '@mantine/hooks';
@@ -13,22 +13,10 @@ import { useCurUserContext } from '@/components/utils/CurUserContext';
 
 import { ProfileHeaderComponent } from '../header/header';
 import { FriendsDrawer } from '../drawer/FriendsDrawer';
-import { ProfileContentContainer } from '../_styles';
-import { EmptyPosts, PrivateProfileMessage } from './ProfileMessages';
+import { ProfileContentContainer, ContentWrapper } from '../_styles';
+import { EmptyPosts, PrivateProfileMessage } from './ProfileStates';
 import { UnreadBanner } from './UnreadBanner';
 import { ProfilePosts } from './ProfilePosts';
-
-const ContentWrapper = styled.div`
-	padding: ${rem(24)};
-	border: 1px solid ${props => props.theme.background.secondary};
-	border-top: none;
-	border-bottom: none;
-
-	@media screen and (max-width: 500px) {
-		padding: ${rem(8)} ${rem(12)};
-		border-bottom: none;
-	}
-`;
 
 type ProfileContentProps = {
 	user?: UserResponse;
@@ -83,7 +71,7 @@ export const ProfileContent = (props: ProfileContentProps) => {
 	}, [initLoad]);
 
 	return (
-		<div>
+		<ContentWrapper>
 			<ProfileHeaderComponent
 				isLoading={props.isUserLoading}
 				isLoggedInUser={isLoggedInUser}
@@ -101,53 +89,42 @@ export const ProfileContent = (props: ProfileContentProps) => {
 			)}
 
 			<ProfileContentContainer>
-				<ContentWrapper
-					style={{
-						display: 'flex',
-						flexDirection: 'column-reverse',
-					}}
-				>
-					<div>{props.children}</div>
+				<div>{props.children}</div>
 
-					<ProfilePosts
-						isLoggedInUser={isLoggedInUser}
-						onDeletePost={props.onDeletePost}
-						feed={feed}
-						isLoading={isLoading}
-					/>
+				<ProfilePosts
+					isLoggedInUser={isLoggedInUser}
+					onDeletePost={props.onDeletePost}
+					feed={feed}
+					isLoading={isLoading}
+				/>
 
-					{!props.isPostsLoading && props.hasMorePosts && (
-						<div>
-							<Center>
-								<Button
-									variant='outline'
-									onClick={props.onClickLoadMore}
-									id='load-more'
-								>
-									Load More
-								</Button>
-							</Center>
-							<Space h='sm' />
-						</div>
-					)}
-
-					{showBottomStuff && (
-						<Center
-							sx={{
-								margin: `${rem(24)} 0`,
-							}}
-						>
-							{showEndMessage && (
-								<Text c='dimmed'>{`You've reached the end!`}</Text>
-							)}
-
-							{showPrivateProfileMessage && <PrivateProfileMessage />}
-							{showEmptyState && <EmptyPosts />}
+				{!props.isPostsLoading && props.hasMorePosts && (
+					<div>
+						<Center>
+							<Button
+								variant='outline'
+								onClick={props.onClickLoadMore}
+								id='load-more'
+							>
+								Load More
+							</Button>
 						</Center>
-					)}
-				</ContentWrapper>
+						<Space h='sm' />
+					</div>
+				)}
+
+				{showBottomStuff && (
+					<div style={{ flex: 1 }}>
+						{showEndMessage && (
+							<Text c='dimmed'>{`You've reached the end!`}</Text>
+						)}
+
+						{showPrivateProfileMessage && <PrivateProfileMessage />}
+						{showEmptyState && <EmptyPosts />}
+					</div>
+				)}
 			</ProfileContentContainer>
 			<div ref={containerRef} />
-		</div>
+		</ContentWrapper>
 	);
 };

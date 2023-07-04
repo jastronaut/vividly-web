@@ -13,7 +13,7 @@ import { UserResponse, ProfileFeedResponse } from '@/types/api';
 import { useCurUserContext } from '@/components/utils/CurUserContext';
 
 import { ProfileContent } from '@/components/profile/content/ProfileContent';
-import { EditorModal } from '../../components/editor';
+import { Editor } from '../../components/editor/Editor';
 import { Loading } from '@/components/utils/Loading';
 import AppLayout from '@/components/layout/AppLayout';
 import { FadeIn } from '@/styles/Animations';
@@ -238,9 +238,9 @@ const Profile = (props: PageProps) => {
 					refetchFeed={refetchFeed}
 				>
 					{user && user.user.id === curUser.user.id && (
-						<EditorModal
+						<Editor
 							isOpen={true}
-							onChange={val => console.log('printed')}
+							onChange={_val => console.log('printed')}
 							onSubmit={onSubmitPost}
 						/>
 					)}

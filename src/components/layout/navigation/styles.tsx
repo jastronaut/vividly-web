@@ -7,6 +7,8 @@ export const NavInner = styled.nav`
 	display: flex;
 	justify-content: right;
 	transition: all 0.2s ease-in;
+	height: 100%;
+	align-items: center;
 
 	@media screen and (max-width: 800px) {
 		justify-content: space-between;
@@ -16,6 +18,7 @@ export const NavInner = styled.nav`
 		}
 	}
 `;
+
 export const Navigation = styled.header<{ isHidden: boolean }>`
 	top: 0;
 	left: 0;
