@@ -3,6 +3,8 @@ import { useCurUserContext } from '@/components/utils/CurUserContext';
 import Link from 'next/link';
 import styled from 'styled-components';
 import { rem } from 'polished';
+import { IconMoodPlus, IconPencil } from '@tabler/icons-react';
+import { Text, Button } from '@mantine/core';
 
 import { useEffect } from 'react';
 import useSWR from 'swr';
@@ -25,6 +27,30 @@ const ContentWrapper = styled.div`
 		padding: ${rem(8)} ${rem(12)};
 	}
 `;
+
+const EmptyStateWrapper = styled.div`
+	margin: ${rem(300)} ${rem(100)} ${rem(100)};
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+`;
+
+const EmptyState = (props: { id: number }) => {
+	return (
+		<EmptyStateWrapper>
+			<Link href='/friend-requests'>
+				<Button leftIcon={<IconMoodPlus />} component='span'>
+					Add some friends
+				</Button>
+			</Link>
+			<Text ta='center'>or</Text>
+			<Link href={`/profile/${props.id}`}>
+				<Button leftIcon={<IconPencil />}>Create a post</Button>
+			</Link>
+		</EmptyStateWrapper>
+	);
+};
 
 const LoadingState = () => {
 	return (
@@ -58,10 +84,12 @@ export const FeedPage: Page = () => {
 
 	const items = data ? sortFeedFriendships(data.data) : [];
 
+	const showLoadingState = isLoading || !curUser;
+
 	return (
 		<>
 			<FadeIn>
-				{isLoading && <LoadingState />}
+				{showLoadingState && <LoadingState />}
 				{items.map(item => (
 					<Link
 						href={`/profile/${item.friend.id}`}
@@ -70,6 +98,9 @@ export const FeedPage: Page = () => {
 						<FeedPreview item={item} />
 					</Link>
 				))}
+				{items.length < 1 && !showLoadingState ? (
+					<EmptyState id={curUser.user.id} />
+				) : null}
 			</FadeIn>
 		</>
 	);

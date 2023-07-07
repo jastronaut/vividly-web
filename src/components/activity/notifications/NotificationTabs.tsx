@@ -1,6 +1,14 @@
 import { useEffect } from 'react';
-import useSWR from 'swr';
-import { Tabs, Center, Title, Space, Badge, Button } from '@mantine/core';
+import useSWRInfinite from 'swr/infinite';
+import {
+	Tabs,
+	Center,
+	Title,
+	Space,
+	Badge,
+	Button,
+	Stack,
+} from '@mantine/core';
 import { IconArrowRight } from '@tabler/icons-react';
 import Link from 'next/link';
 
@@ -20,30 +28,78 @@ export const NotificationTabs = () => {
 	const { curUser } = useCurUserContext();
 	const { token } = curUser;
 
-	const { data, isLoading, error } = useSWR<NotificationsResponse>(
-		[token ? `${URL_PREFIX}/notifications` : '', token],
+	const {
+		data = [],
+		isLoading,
+		error,
+		size,
+		setSize,
+	} = useSWRInfinite<NotificationsResponse>(
+		(pageIndex: number, previousPageData: NotificationsResponse | null) => {
+			// reached the end
+			if (
+				!token ||
+				(previousPageData &&
+					(!previousPageData.data ||
+						!previousPageData.data.notifications.length ||
+						!previousPageData.cursor))
+			)
+				return null;
+
+			// first page, we don't have `previousPageData`
+			if (pageIndex === 0 && !previousPageData)
+				return [`${URL_PREFIX}/notifications`, token];
+
+			// add the cursor to the API endpoint
+			if (previousPageData)
+				return [
+					`${URL_PREFIX}/notifications?cursor=${previousPageData.cursor}`,
+					token,
+				];
+			return null;
+		},
 		// @ts-ignore
 		([url, token]) => fetchWithToken(url, token),
 		{ shouldRetryOnError: false }
 	);
 
-	const totalUnreadCount = data?.unreadCount;
-	const totalCount = data?.totalCount;
+	const totalUnreadCount = 1;
+	const totalCount = 1;
 
-	const commentNotifications = data?.notifications.filter(
-		notif => notif.body.type === NotificationType.COMMENT
-	);
-	const commentNotificationsCount = commentNotifications?.length;
-	const unreadCommentNotificationsCount = commentNotifications?.filter(
-		notif => notif.isUnread
+	const lastPage = data.length > 0 ? data[data.length - 1] : null;
+	const hasMorePosts = lastPage ? !!lastPage.cursor : false;
+
+	const likeNotifications = data
+		? data
+				.map(page => page.data.notifications)
+				.flat()
+				.filter(
+					notification => notification.body.type === NotificationType.POST_LIKE
+				)
+		: [];
+
+	const commentNotifications = data
+		? data
+				.map(page => page.data.notifications)
+				.flat()
+				.filter(
+					notification => notification.body.type === NotificationType.COMMENT
+				)
+		: [];
+
+	const unreadNotificationsCount = data
+		? data
+				.map(page => page.data.notifications)
+				.flat()
+				.filter(notification => notification.isUnread).length
+		: 0;
+
+	const unreadLikeNotificationsCount = likeNotifications.filter(
+		notification => notification.isUnread
 	).length;
 
-	const likeNotifications = data?.notifications.filter(
-		notif => notif.body.type === NotificationType.POST_LIKE
-	);
-	const likeNotificationsCount = likeNotifications?.length;
-	const unreadLikeNotificationsCount = likeNotifications?.filter(
-		notif => notif.isUnread
+	const unreadCommentNotificationsCount = commentNotifications.filter(
+		notification => notification.isUnread
 	).length;
 
 	useEffect(() => {
@@ -82,7 +138,7 @@ export const NotificationTabs = () => {
 						<Tabs.Tab
 							value='all'
 							rightSection={
-								totalUnreadCount ? (
+								unreadNotificationsCount ? (
 									<Badge
 										w={16}
 										h={16}
@@ -92,7 +148,7 @@ export const NotificationTabs = () => {
 										p={0}
 										color='grape'
 									>
-										{totalUnreadCount}
+										{unreadNotificationsCount}
 									</Badge>
 								) : null
 							}
@@ -142,55 +198,66 @@ export const NotificationTabs = () => {
 					</Tabs.List>
 					<Tabs.Panel value='all'>
 						<FadeIn>
-							{data &&
-								data.notifications.map(notification => (
-									<NotificationItem
-										key={`notif-${notification.id}`}
-										notification={notification}
-									/>
-								))}
+							{data
+								? data.map(page =>
+										page.data.notifications.map(notification => (
+											<NotificationItem
+												key={`notif-${notification.id}`}
+												notification={notification}
+											/>
+										))
+								  )
+								: null}
 							{isLoading && <LoadingTab />}
 							{!isLoading && !totalCount && <EmptyTab />}
 						</FadeIn>
 					</Tabs.Panel>
 					<Tabs.Panel value='comments'>
 						<FadeIn>
-							{commentNotifications &&
-								commentNotifications.map(notification => (
-									<NotificationItem
-										key={`notif-${notification.id}`}
-										notification={notification}
-									/>
-								))}
+							{commentNotifications.map(notification => (
+								<NotificationItem
+									key={`notif-${notification.id}`}
+									notification={notification}
+								/>
+							))}
 							{isLoading && <LoadingTab />}
-							{!isLoading && !commentNotificationsCount && <EmptyTab />}
+							{!isLoading && commentNotifications.length < 1 ? (
+								<EmptyTab />
+							) : null}
 						</FadeIn>
 					</Tabs.Panel>
 					<Tabs.Panel value='likes'>
 						<FadeIn>
-							{likeNotifications &&
-								likeNotifications.map(notification => (
-									<NotificationItem
-										key={`notif-${notification.id}`}
-										notification={notification}
-									/>
-								))}
+							{likeNotifications.map(notification => (
+								<NotificationItem
+									key={`notif-${notification.id}`}
+									notification={notification}
+								/>
+							))}
 							{isLoading && <LoadingTab />}
-							{!isLoading && !likeNotificationsCount && <EmptyTab />}
+							{!isLoading && likeNotifications.length < 1 ? <EmptyTab /> : null}
 						</FadeIn>
 					</Tabs.Panel>
 				</Tabs>
 				<Space h='md' />
 				<Center>
-					<Link href='/friend-requests'>
-						<Button
-							component='span'
-							rightIcon={<IconArrowRight />}
-							variant='outline'
-						>
-							{'Friend requests'}
-						</Button>
-					</Link>
+					<Stack spacing='xs'>
+						{hasMorePosts && (
+							<>
+								<Button>Load more</Button>
+								<Space h='sm' />
+							</>
+						)}
+						<Link href='/friend-requests'>
+							<Button
+								component='span'
+								rightIcon={<IconArrowRight />}
+								variant='outline'
+							>
+								{'Friend requests'}
+							</Button>
+						</Link>
+					</Stack>
 				</Center>
 			</PageWrapper>
 		</>

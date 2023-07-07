@@ -217,6 +217,7 @@ const Profile = (props: PageProps) => {
 	}, [id]);
 
 	useEffect(() => {
+		mutate(undefined, true);
 		return () => {
 			setInitLoad(true);
 		};

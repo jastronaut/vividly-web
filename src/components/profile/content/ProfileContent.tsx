@@ -64,6 +64,8 @@ export const ProfileContent = (props: ProfileContentProps) => {
 		showPrivateProfileMessage ||
 		showEndMessage;
 
+	const showMorePostsButton = !isLoading && props.hasMorePosts;
+
 	useEffect(() => {
 		if (initLoad && containerRef.current) {
 			containerRef.current.scrollIntoView({ behavior: 'smooth' });
@@ -98,7 +100,7 @@ export const ProfileContent = (props: ProfileContentProps) => {
 					isLoading={isLoading}
 				/>
 
-				{!props.isPostsLoading && props.hasMorePosts && (
+				{showMorePostsButton && (
 					<div>
 						<Center>
 							<Button

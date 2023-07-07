@@ -1,4 +1,11 @@
-import { ActionIcon, Text, Skeleton, Tooltip, Collapse } from '@mantine/core';
+import {
+	ActionIcon,
+	Text,
+	Skeleton,
+	Tooltip,
+	Collapse,
+	Flex,
+} from '@mantine/core';
 import styled from 'styled-components';
 import { rem } from 'polished';
 import { IconStar, IconInfoCircle } from '@tabler/icons-react';
@@ -108,13 +115,20 @@ export const ProfileHeaderText = styled.div`
 	}
 `;
 
+const HeaderTextLoadingContainer = styled.div`
+	min-width: ${rem(500)};
+	padding-left: ${rem(16)};
+`;
+
 export const HeaderTextLoading = () => {
 	return (
-		<>
-			<Skeleton height={16} width='60%' />
-			<Skeleton height={12} mt={6} width='40%' />
-			<Skeleton height={12} mt={6} width='35%' />
-		</>
+		<Flex>
+			<Skeleton height={60} />
+			<HeaderTextLoadingContainer>
+				<Skeleton height={12} mt={6} width='40%' />
+				<Skeleton height={12} mt={6} width='35%' />
+			</HeaderTextLoadingContainer>
+		</Flex>
 	);
 };
 
@@ -134,7 +148,6 @@ type HeaderTextProps = {
 	username: string;
 	name?: string;
 	bio: string;
-	bioExpanded: boolean;
 	isLoading: boolean;
 };
 
@@ -161,6 +174,9 @@ export const HeaderText = (props: HeaderTextProps) => {
 		namesHeight = 50;
 	}
 
+	const nameTextSize = isMobile ? 'md' : 'lg';
+	const usernameTextSize = bioHidden && !isMobile ? 'md' : 'sm';
+
 	if (props.isLoading || !props.username) {
 		return <HeaderTextLoading />;
 	}
@@ -174,14 +190,14 @@ export const HeaderText = (props: HeaderTextProps) => {
 						sx={{
 							marginRight: rem(4),
 						}}
-						fz={bioHidden && !isMobile ? 'lg' : 'md'}
+						fz={nameTextSize}
 					>
 						{props.name ?? props.username}
 					</Text>
 					<Text
 						c='dimmed'
 						id='username'
-						fz={isMobile ? 'sm' : 'md'}
+						fz={usernameTextSize}
 						sx={{
 							lineHeight: 0.9,
 						}}

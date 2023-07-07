@@ -1,8 +1,15 @@
 import { Group, ActionIcon, Tooltip, Menu } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
-import { IconUsers, IconDots, IconEdit, IconTool } from '@tabler/icons-react';
+import {
+	IconUsers,
+	IconDots,
+	IconEdit,
+	IconTool,
+	IconMessage,
+} from '@tabler/icons-react';
 import styled from 'styled-components';
 import { rem } from 'polished';
+import Link from 'next/link';
 
 const MobileMenuContainer = styled.div`
 	display: flex;
@@ -41,6 +48,11 @@ export const ProfileActions = (props: Props) => {
 							>
 								Edit profile
 							</Menu.Item>
+							<Link href='/feedback'>
+								<Menu.Item onClick={() => {}} icon={<IconMessage size={14} />}>
+									Send feedback
+								</Menu.Item>
+							</Link>
 						</Menu.Dropdown>
 					</Menu>
 				</MobileMenuContainer>

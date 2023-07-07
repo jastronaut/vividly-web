@@ -3,7 +3,7 @@ import { Container, Text, Skeleton } from '@mantine/core';
 export const EmptyTab = () => {
 	return (
 		<Container py={36} px={0}>
-			<Text align='center'>Nothing to see here!</Text>
+			<Text align='center'>{`You're all caught up.`}</Text>
 		</Container>
 	);
 };

@@ -31,7 +31,7 @@ export const EmailSetting = (props: EmailSettingProps) => {
 	const submitEmail = async (email: string) => {
 		try {
 			const res = await makeApiCall<DefaultResponse>({
-				uri: '/users/email/change',
+				uri: '/auth/email/change',
 				method: 'POST',
 				body: { email },
 				token: token,
@@ -49,6 +49,28 @@ export const EmailSetting = (props: EmailSettingProps) => {
 			});
 		} catch (err) {
 			showAndLogErrorNotification(`Couldn't update email.`, err);
+		}
+	};
+
+	const resendVerificationEmail = async () => {
+		try {
+			const res = await makeApiCall<DefaultResponse>({
+				uri: `/auth/verify-email/resend`,
+				method: 'POST',
+				token,
+			});
+
+			if (res.error) {
+				throw new Error(res.error);
+			}
+
+			notifications.show({
+				message: 'Verification email sent.',
+				color: 'green',
+				title: 'Success',
+			});
+		} catch (err) {
+			showAndLogErrorNotification(`Couldn't resend verification email.`, err);
 		}
 	};
 
@@ -90,7 +112,7 @@ export const EmailSetting = (props: EmailSettingProps) => {
 								color='teal'
 								size='xs'
 								compact
-								onClick={() => {}}
+								onClick={resendVerificationEmail}
 							>
 								Resend verification email
 							</Button>

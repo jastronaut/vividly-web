@@ -63,15 +63,18 @@ export interface SendFriendRequestResponse extends DefaultResponse {
 }
 
 export interface NotificationsResponse extends DefaultResponse {
-	notifications: {
-		id: number;
-		body: NotificationBody;
-		createdTime: string;
-		isUnread: boolean;
-		sender: User;
-	}[];
-	unreadCount: number;
-	totalCount: number;
+	data: {
+		notifications: {
+			id: number;
+			body: NotificationBody;
+			createdTime: string;
+			isUnread: boolean;
+			sender: User;
+		}[];
+		unreadCount: number;
+		totalCount: number;
+	};
+	cursor: number | null;
 }
 
 export interface LoginResponse extends DefaultResponse {

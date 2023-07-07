@@ -9,7 +9,7 @@ import { showAndLogErrorNotification } from '@/showerror';
 import { fetchWithToken, throwConfetti } from '@/utils';
 import { useCurUserContext } from '@/components/utils/CurUserContext';
 import { FriendRequestItem } from '@/components/activity/requests/FriendRequestItem';
-import { TabsWrapper } from './_style';
+import { PageWrapper } from './_style';
 import { makeApiCall } from '@/utils';
 import { URL_PREFIX } from '@/constants';
 import {
@@ -226,7 +226,7 @@ export const FriendRequestTabs = () => {
 	return (
 		<>
 			<Center>
-				<TabsWrapper>
+				<PageWrapper>
 					<Title order={3}>Friend Requests</Title>
 					<Space h='xs' />
 					<Tabs defaultValue='received' color='grape'>
@@ -306,7 +306,7 @@ export const FriendRequestTabs = () => {
 							</FadeIn>
 						</Tabs.Panel>
 					</Tabs>
-				</TabsWrapper>
+				</PageWrapper>
 			</Center>
 			<Center>
 				<div>

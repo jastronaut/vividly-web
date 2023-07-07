@@ -25,6 +25,7 @@ export const EmptyPosts = (props: { children?: React.ReactNode }) => {
 				No posts... yet!
 			</Text>
 			{props.children}
+			<Space h='md' />
 		</TextWrapper>
 	);
 };
