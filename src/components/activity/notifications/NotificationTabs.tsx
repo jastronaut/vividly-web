@@ -102,6 +102,8 @@ export const NotificationTabs = () => {
 		notification => notification.isUnread
 	).length;
 
+	const onClickLoadMore = () => setSize(size + 1);
+
 	useEffect(() => {
 		if (error) {
 			showAndLogErrorNotification(`Couldn't load friend requests`, error);
@@ -244,7 +246,7 @@ export const NotificationTabs = () => {
 					<Stack spacing='xs'>
 						{hasMorePosts && (
 							<>
-								<Button>Load more</Button>
+								<Button onClick={onClickLoadMore}>Load more</Button>
 								<Space h='sm' />
 							</>
 						)}
