@@ -1,10 +1,18 @@
-import React, { useState, useCallback, useMemo, useEffect } from 'react';
+import React, {
+	useState,
+	useCallback,
+	useMemo,
+	useEffect,
+	useRef,
+} from 'react';
 import {
 	BaseEditor,
 	createEditor,
 	Descendant,
 	Element as ElementType,
 	Editor as SlateEditorType,
+	Range,
+	Transforms,
 } from 'slate';
 import { Slate, Editable, withReact, ReactEditor } from 'slate-react';
 import { HistoryEditor, withHistory } from 'slate-history';
@@ -18,6 +26,7 @@ import {
 	ActionIcon,
 	FileButton,
 	Tooltip,
+	Portal,
 } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import {
@@ -31,7 +40,12 @@ import {
 } from '@tabler/icons-react';
 
 import { BlockType as EditorBlockType, MusicElement } from '../../types/editor';
-import { EditorContainer, InlineEditorWrapper } from './styles';
+import {
+	EditorContainer,
+	InlineEditorWrapper,
+	NamesDropdownOption,
+	NamesDropdownContainer,
+} from './styles';
 import { DismissWarningModal } from '../DismissWarningModal';
 import {
 	getWeatherEmoji,
@@ -60,6 +74,28 @@ import {
 } from './Nodes';
 import { showAndLogErrorNotification } from '@/showerror';
 import { MusicInput, OracleInput } from './MagicActions';
+import { User } from '@/types/user';
+
+type TheEditor = BaseEditor & ReactEditor & HistoryEditor;
+
+const NAMES = [
+	'Jace',
+	'Chandra',
+	'Gideon',
+	'Nissa',
+	'Nahiri',
+	'Kiora',
+	'Kiori',
+	'Kaya',
+	'Kaye',
+	'Kasmina',
+	'Narset',
+	'Ral',
+];
+
+const insertMention = (editor: TheEditor, character: string) => {
+	SlateEditorType.insertText(editor, `@${character} `);
+};
 
 const openWeatherKey =
 	process.env.REACT_APP_OPEN_WEATHER_API_KEY ||
@@ -103,16 +139,66 @@ const Element = (props: BaseElementProps) => {
 	}
 };
 
-type EditorProps = {
+type EditorWithActionsProps = {
 	initialValue: Descendant[];
 	onChange: (value: any) => void;
 	editor: BaseEditor & ReactEditor & HistoryEditor;
+	friendsNames: {
+		username: string;
+		name: string;
+	}[];
 };
 
-export const EditorWithActions = (props: EditorProps) => {
+export const EditorWithActions = (props: EditorWithActionsProps) => {
 	const { editor } = props;
 	const [isOracleInputVisible, setIsOracleInputVisible] = useState(false);
 	const [isMusicInputVisible, setIsMusicInputVisible] = useState(false);
+	const [target, setTarget] = useState<Range | null>(null);
+	const [searchName, setSearchName] = useState<string | null>(null);
+	const [namesIndex, setNamesIndex] = useState(0);
+	const ref = useRef<HTMLDivElement | null>(null);
+
+	const chars = searchName
+		? props.friendsNames.filter(
+				friend =>
+					friend.name.toLowerCase().includes(searchName.toLowerCase()) ||
+					friend.username.toLowerCase().includes(searchName.toLowerCase())
+		  )
+		: [];
+
+	const onKeyDown = useCallback(
+		(event: React.KeyboardEvent) => {
+			if (target && chars.length > 0) {
+				switch (event.key) {
+					case 'ArrowDown':
+						event.preventDefault();
+						const prevIndex = namesIndex + 1;
+						setNamesIndex(prevIndex >= chars.length ? 0 : prevIndex);
+						break;
+					case 'ArrowUp':
+						event.preventDefault();
+						const nextIndex = namesIndex - 1;
+						setNamesIndex(nextIndex < 0 ? chars.length - 1 : nextIndex);
+						break;
+					case 'Tab':
+					case 'Enter':
+						event.preventDefault();
+						Transforms.select(editor, target);
+						console.log(target);
+						insertMention(editor, chars[namesIndex].username);
+						setTarget(null);
+						setNamesIndex(0);
+						setSearchName(null);
+						break;
+					case 'Escape':
+						event.preventDefault();
+						setTarget(null);
+						break;
+				}
+			}
+		},
+		[chars, namesIndex, target]
+	);
 
 	const onPaste = (
 		event: React.ClipboardEvent<HTMLDivElement>,
@@ -214,6 +300,18 @@ export const EditorWithActions = (props: EditorProps) => {
 		toggleMusicInput;
 	};
 
+	const mentionsVisible = target && chars.length > 0;
+
+	useEffect(() => {
+		const el = ref.current;
+		if (target && chars.length > 0 && el) {
+			const domRange = ReactEditor.toDOMRange(editor, target);
+			const rect = domRange.getBoundingClientRect();
+			el.style.top = `${rect.top + window.pageYOffset + 24}px`;
+			el.style.left = `${rect.left + window.pageXOffset}px`;
+		}
+	}, [chars.length, editor, namesIndex, searchName, target]);
+
 	return (
 		<>
 			<EditorContainer>
@@ -227,6 +325,45 @@ export const EditorWithActions = (props: EditorProps) => {
 						if (isAstChange) {
 							props.onChange(value);
 						}
+						// console.log('value', value);
+						// }}
+						const { selection } = editor;
+
+						console.log('hi');
+						console.log('search', searchName);
+						console.log('selection', selection);
+						console.log('target', target);
+						if (selection && Range.isCollapsed(selection)) {
+							const [start] = Range.edges(selection);
+							const wordBefore = SlateEditorType.before(editor, start, {
+								unit: 'word',
+							});
+							const before =
+								wordBefore && SlateEditorType.before(editor, wordBefore);
+							const beforeRange =
+								before && SlateEditorType.range(editor, before, start);
+							const beforeText =
+								beforeRange && SlateEditorType.string(editor, beforeRange);
+							const beforeMatch = beforeText && beforeText.match(/^@(\w+)$/);
+							const after = SlateEditorType.after(editor, start);
+							const afterRange = SlateEditorType.range(editor, start, after);
+							const afterText = SlateEditorType.string(editor, afterRange);
+							const afterMatch = afterText.match(/^(\s|$)/);
+
+							if (beforeMatch && afterMatch) {
+								setTarget(beforeRange);
+								console.log('beforeMatch', beforeMatch);
+								console.log('beforeRange', beforeRange);
+								setSearchName(beforeMatch[1]);
+								setNamesIndex(0);
+								return;
+							}
+						}
+
+						// setNamesIndex(0);
+						// setSearchName(null);
+
+						setTarget(null);
 					}}
 				>
 					<Editable
@@ -239,9 +376,31 @@ export const EditorWithActions = (props: EditorProps) => {
 						onPaste={(event: React.ClipboardEvent<HTMLDivElement>) =>
 							onPaste(event, editor)
 						}
+						onKeyDown={onKeyDown}
 						autoFocus
 					/>
 				</Slate>
+				{mentionsVisible ? (
+					<Portal>
+						<NamesDropdownContainer ref={ref} data-cy='mentions-portal'>
+							{chars.map((char, i) => (
+								<NamesDropdownOption
+									key={char.username}
+									onClick={() => {
+										if (!target) return;
+										Transforms.select(editor, target);
+										insertMention(editor, char.username);
+										setTarget(null);
+									}}
+									isHighlighted={i === namesIndex}
+								>
+									<Text className='friend-name'>{char.name}</Text>
+									<Text className='friend-username'>{` @${char.username}`}</Text>
+								</NamesDropdownOption>
+							))}
+						</NamesDropdownContainer>
+					</Portal>
+				) : null}
 			</EditorContainer>
 			<Space h='sm' />
 			<Flex gap='md'>
@@ -335,13 +494,17 @@ export const EditorWithActions = (props: EditorProps) => {
 	);
 };
 
-type EditorModalProps = {
+type EditorProps = {
 	isOpen: boolean;
 	onChange: (value: any) => void;
 	onSubmit: (value: Block[]) => void;
+	friendsList: {
+		name: string;
+		username: string;
+	}[];
 };
 
-export const Editor = (props: EditorModalProps) => {
+export const Editor = (props: EditorProps) => {
 	const [editor] = useState(() =>
 		withHistory(withReact(withEmbeds(createEditor())))
 	);
@@ -475,6 +638,7 @@ export const Editor = (props: EditorModalProps) => {
 				]}
 				onChange={setDraft}
 				editor={editor}
+				friendsNames={props.friendsList}
 			/>
 			<Flex justify='flex-end'>
 				<Button

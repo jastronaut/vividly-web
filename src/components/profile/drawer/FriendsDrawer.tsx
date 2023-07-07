@@ -1,12 +1,11 @@
 import { useEffect } from 'react';
-import useSWR from 'swr';
+import { KeyedMutator } from 'swr';
 import { Drawer, Button, Center, Space } from '@mantine/core';
 import { IconArrowRight } from '@tabler/icons-react';
 import Link from 'next/link';
 import { rem } from 'polished';
 
 import { FriendsResponse } from '@/types/api';
-import { fetchWithToken } from '@/utils';
 import { FriendItem } from './FriendItem';
 import { showAndLogErrorNotification } from '@/showerror';
 import { useCurUserContext } from '@/components/utils/CurUserContext';
@@ -15,24 +14,19 @@ import {
 	useUnfriend,
 	useToggleFavorite,
 } from '@/components/activity/requests/hooks';
-import { URL_PREFIX } from '@/constants';
 import { sortFriends } from '../utils';
 import { DrawerStyles } from './styles';
 
 type Props = {
 	isOpen: boolean;
 	close: () => void;
+	mutateFriends: KeyedMutator<FriendsResponse>;
+	friendsData?: FriendsResponse;
+	isFriendsLoading: boolean;
 };
 
 export const FriendsDrawer = (props: Props) => {
-	const { curUser } = useCurUserContext();
-	const { token } = curUser;
-	const { data, error, isLoading, mutate } = useSWR<FriendsResponse>(
-		[token ? `${URL_PREFIX}/friends` : '', token],
-		// @ts-ignore
-		([url, token]) => fetchWithToken(url, token),
-		{ shouldRetryOnError: false }
-	);
+	const { mutateFriends, friendsData, isFriendsLoading } = props;
 
 	const {
 		unfriend,
@@ -46,13 +40,11 @@ export const FriendsDrawer = (props: Props) => {
 		error: toggleFavoriteError,
 	} = useToggleFavorite();
 
-	const showLoading = isLoading || !data;
-
-	const sortedFriends = data?.friends.sort(sortFriends);
+	const sortedFriends = friendsData?.friends.sort(sortFriends);
 
 	const unfriendAndUpdate = (id: number) => {
 		unfriend(id);
-		mutate(data => {
+		mutateFriends(data => {
 			if (data) {
 				return {
 					...data,
@@ -65,7 +57,7 @@ export const FriendsDrawer = (props: Props) => {
 
 	const toggleFavoriteAndUpdate = (id: number, isFavorite: boolean) => {
 		toggleFavorite(id, isFavorite);
-		mutate(data => {
+		mutateFriends(data => {
 			if (data) {
 				return {
 					...data,
@@ -83,12 +75,6 @@ export const FriendsDrawer = (props: Props) => {
 			return data;
 		}, false);
 	};
-
-	useEffect(() => {
-		if (error) {
-			showAndLogErrorNotification(`Couldn't get friends list.`, error);
-		}
-	}, [error]);
 
 	useEffect(() => {
 		if (unfriendError) {
@@ -117,7 +103,7 @@ export const FriendsDrawer = (props: Props) => {
 					</Link>
 				</Center>
 				<Space h={rem(14)} />
-				{showLoading && (
+				{isFriendsLoading && (
 					<Center
 						sx={{
 							marginTop: rem(48),

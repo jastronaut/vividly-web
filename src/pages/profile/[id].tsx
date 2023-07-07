@@ -9,7 +9,11 @@ import { fetchWithToken } from '../../utils';
 import { showAndLogErrorNotification } from '@/showerror';
 import { uri } from '@/constants';
 import { Block } from '@/types/post';
-import { UserResponse, ProfileFeedResponse } from '@/types/api';
+import {
+	UserResponse,
+	ProfileFeedResponse,
+	FriendsResponse,
+} from '@/types/api';
 import { useCurUserContext } from '@/components/utils/CurUserContext';
 
 import { ProfileContent } from '@/components/profile/content/ProfileContent';
@@ -31,6 +35,7 @@ const Profile = (props: PageProps) => {
 	const [initLoad, setInitLoad] = useState(true);
 	const chatEndRef = useRef<HTMLDivElement>(null);
 
+	// get user data
 	const {
 		data: user,
 		error: userError,
@@ -43,6 +48,7 @@ const Profile = (props: PageProps) => {
 		{ shouldRetryOnError: false }
 	);
 
+	// get user's posts
 	const {
 		data = [],
 		error: postsError,
@@ -82,6 +88,30 @@ const Profile = (props: PageProps) => {
 		([url, token]) => fetchWithToken(url, token),
 		{ revalidateFirstPage: false, shouldRetryOnError: true }
 	);
+
+	// get user's friends if logged in user
+	const {
+		data: friendsData,
+		error: friendsError,
+		isLoading: isFriendsLoading,
+		mutate: mutateFriends,
+	} = useSWR<FriendsResponse>(
+		[
+			token && user?.user.id === curUser?.user.id ? `${uri}/friends` : '',
+			token,
+		],
+		// @ts-ignore
+		([url, token]) => fetchWithToken(url, token),
+		{ shouldRetryOnError: true }
+	);
+
+	// map friends response to array of objects containing a friend's name and username
+	const friendsNamesList = friendsData
+		? friendsData?.friends.map(friend => ({
+				name: friend.friend.name,
+				username: friend.friend.username,
+		  }))
+		: [];
 
 	const lastPage = data.length > 0 ? data[data.length - 1] : null;
 	const hasMorePosts = lastPage ? !!lastPage.cursor : false;
@@ -223,6 +253,12 @@ const Profile = (props: PageProps) => {
 		};
 	}, []);
 
+	useEffect(() => {
+		if (friendsError) {
+			showAndLogErrorNotification(`Couldn't get friends list.`, friendsError);
+		}
+	}, [friendsError]);
+
 	return (
 		<FadeIn>
 			<>
@@ -237,12 +273,16 @@ const Profile = (props: PageProps) => {
 					feed={data}
 					updateUserProfileInfo={updateUserProfile}
 					refetchFeed={refetchFeed}
+					mutateFriends={mutateFriends}
+					isFriendsLoading={isFriendsLoading}
+					friendsData={friendsData}
 				>
 					{user && user.user.id === curUser.user.id && (
 						<Editor
 							isOpen={true}
 							onChange={_val => console.log('printed')}
 							onSubmit={onSubmitPost}
+							friendsList={friendsNamesList}
 						/>
 					)}
 				</ProfileContent>

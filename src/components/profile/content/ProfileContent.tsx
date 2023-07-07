@@ -1,13 +1,13 @@
 import { useEffect, useRef } from 'react';
 import { Button, Space, Center, Text, Flex } from '@mantine/core';
-import { rem } from 'polished';
-import styled from 'styled-components';
 import { useDisclosure } from '@mantine/hooks';
+import { KeyedMutator } from 'swr';
 
 import {
 	UserResponse,
 	ProfileFeedResponse as Feed,
 	ProfileFeedResponse,
+	FriendsResponse,
 } from '@/types/api';
 import { useCurUserContext } from '@/components/utils/CurUserContext';
 
@@ -30,6 +30,9 @@ type ProfileContentProps = {
 	onClickLoadMore?: () => void;
 	updateUserProfileInfo: (user: UserResponse) => void;
 	refetchFeed: () => void;
+	mutateFriends: KeyedMutator<FriendsResponse>;
+	friendsData?: FriendsResponse;
+	isFriendsLoading: boolean;
 };
 
 export const ProfileContent = (props: ProfileContentProps) => {
@@ -87,7 +90,13 @@ export const ProfileContent = (props: ProfileContentProps) => {
 			<UnreadBanner user={user} />
 
 			{isLoggedInUser && (
-				<FriendsDrawer isOpen={friendsDrawerOpen} close={close} />
+				<FriendsDrawer
+					isOpen={friendsDrawerOpen}
+					close={close}
+					mutateFriends={props.mutateFriends}
+					friendsData={props.friendsData}
+					isFriendsLoading={props.isFriendsLoading}
+				/>
 			)}
 
 			<ProfileContentContainer>
