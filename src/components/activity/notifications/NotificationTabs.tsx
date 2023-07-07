@@ -87,6 +87,15 @@ export const NotificationTabs = () => {
 				)
 		: [];
 
+	const mentionNotifications = data
+		? data
+				.map(page => page.data.notifications)
+				.flat()
+				.filter(
+					notification => notification.body.type === NotificationType.MENTION
+				)
+		: [];
+
 	const unreadNotificationsCount = data
 		? data
 				.map(page => page.data.notifications)
@@ -99,6 +108,10 @@ export const NotificationTabs = () => {
 	).length;
 
 	const unreadCommentNotificationsCount = commentNotifications.filter(
+		notification => notification.isUnread
+	).length;
+
+	const unreadMentionNotificationsCount = mentionNotifications.filter(
 		notification => notification.isUnread
 	).length;
 
@@ -178,6 +191,26 @@ export const NotificationTabs = () => {
 							💬 Comments
 						</Tabs.Tab>
 						<Tabs.Tab
+							value='mentions'
+							rightSection={
+								unreadMentionNotificationsCount ? (
+									<Badge
+										w={16}
+										h={16}
+										sx={{ pointerEvents: 'none' }}
+										variant='filled'
+										size='sm'
+										p={0}
+										color='grape'
+									>
+										{unreadMentionNotificationsCount}
+									</Badge>
+								) : null
+							}
+						>
+							🕸️ Mentions
+						</Tabs.Tab>
+						<Tabs.Tab
 							value='likes'
 							rightSection={
 								unreadLikeNotificationsCount ? (
@@ -224,6 +257,20 @@ export const NotificationTabs = () => {
 							))}
 							{isLoading && <LoadingTab />}
 							{!isLoading && commentNotifications.length < 1 ? (
+								<EmptyTab />
+							) : null}
+						</FadeIn>
+					</Tabs.Panel>
+					<Tabs.Panel value='mentions'>
+						<FadeIn>
+							{mentionNotifications.map(notification => (
+								<NotificationItem
+									key={`notif-${notification.id}`}
+									notification={notification}
+								/>
+							))}
+							{isLoading && <LoadingTab />}
+							{!isLoading && mentionNotifications.length < 1 ? (
 								<EmptyTab />
 							) : null}
 						</FadeIn>

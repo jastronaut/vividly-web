@@ -22,6 +22,8 @@ function getNotificationActionMessage(notification: NotificationBody) {
 			return 'announced something';
 		case NotificationType.POST_LIKE:
 			return 'liked your post';
+		case NotificationType.MENTION:
+			return 'mentioned you in a post';
 		default:
 			return '';
 	}
@@ -31,6 +33,7 @@ function getNotificationContentPreview(notification: NotificationBody) {
 	switch (notification.type) {
 		case NotificationType.POST_LIKE:
 		case NotificationType.COMMENT:
+		case NotificationType.MENTION:
 			return getBlockPreview(notification.post.block);
 		default:
 			return '';

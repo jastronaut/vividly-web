@@ -10,6 +10,7 @@ export enum NotificationType {
 	POST_LIKE = 'post_like',
 	COMMENT = 'post_comment',
 	ANNOUNCEMENT = 'announcement',
+	MENTION = 'post_mention',
 }
 
 export interface PostLikeNotificationBody {
@@ -23,6 +24,11 @@ export interface CommentNotificationBody {
 	message: string;
 }
 
+export type MentionNotificationBody = {
+	type: NotificationType.MENTION;
+	post: PostNotificationPreview;
+};
+
 export interface AnnouncementNotificationBody {
 	type: NotificationType.ANNOUNCEMENT;
 	message: string;
@@ -31,7 +37,8 @@ export interface AnnouncementNotificationBody {
 export type NotificationBody =
 	| PostLikeNotificationBody
 	| CommentNotificationBody
-	| AnnouncementNotificationBody;
+	| AnnouncementNotificationBody
+	| MentionNotificationBody;
 
 export type Notification = {
 	id: number;
