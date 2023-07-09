@@ -1,3 +1,5 @@
+import { Post } from './post';
+
 export type User = {
 	id: number;
 	bio: string;
@@ -24,6 +26,7 @@ export type Friend = {
 	lastReadPostTime: string;
 	friend: User;
 	newestPostId: number | null;
+	posts?: Post[];
 };
 
 export type FriendRequest = {

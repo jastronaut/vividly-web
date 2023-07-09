@@ -83,7 +83,8 @@ export interface LoginResponse extends DefaultResponse {
 }
 
 export interface FriendsResponse extends DefaultResponse {
-	friends: Friend[];
+	data: Friend[];
+	cursor: number | null;
 }
 
 export interface FeedResponse extends DefaultResponse {

@@ -1,14 +1,11 @@
 import { useEffect } from 'react';
-import { KeyedMutator } from 'swr';
 import { Drawer, Button, Center, Space } from '@mantine/core';
 import { IconArrowRight } from '@tabler/icons-react';
 import Link from 'next/link';
 import { rem } from 'polished';
 
-import { FriendsResponse } from '@/types/api';
 import { FriendItem } from './FriendItem';
 import { showAndLogErrorNotification } from '@/showerror';
-import { useCurUserContext } from '@/components/utils/CurUserContext';
 import { MiniLoader } from '@/components/utils/Loading';
 import {
 	useUnfriend,
@@ -16,18 +13,16 @@ import {
 } from '@/components/activity/requests/hooks';
 import { sortFriends } from '../utils';
 import { DrawerStyles } from './styles';
+import { useFriendsContext } from '@/components/utils/FriendsContext';
 
 type Props = {
 	isOpen: boolean;
 	close: () => void;
-	mutateFriends: KeyedMutator<FriendsResponse>;
-	friendsData?: FriendsResponse;
-	isFriendsLoading: boolean;
 };
 
 export const FriendsDrawer = (props: Props) => {
-	const { mutateFriends, friendsData, isFriendsLoading } = props;
-
+	const { friends, isLoading, removeFriend, favoriteFriend } =
+		useFriendsContext();
 	const {
 		unfriend,
 		isLoading: unfriendLoading,
@@ -40,40 +35,16 @@ export const FriendsDrawer = (props: Props) => {
 		error: toggleFavoriteError,
 	} = useToggleFavorite();
 
-	const sortedFriends = friendsData?.friends.sort(sortFriends);
+	const sortedFriends = friends.sort(sortFriends);
 
 	const unfriendAndUpdate = (id: number) => {
 		unfriend(id);
-		mutateFriends(data => {
-			if (data) {
-				return {
-					...data,
-					friends: data.friends.filter(friend => friend.friend.id !== id),
-				};
-			}
-			return data;
-		}, false);
+		removeFriend(id);
 	};
 
 	const toggleFavoriteAndUpdate = (id: number, isFavorite: boolean) => {
 		toggleFavorite(id, isFavorite);
-		mutateFriends(data => {
-			if (data) {
-				return {
-					...data,
-					friends: data.friends.map(friend => {
-						if (friend.friend.id === id) {
-							return {
-								...friend,
-								isFavorite: !friend.isFavorite,
-							};
-						}
-						return friend;
-					}),
-				};
-			}
-			return data;
-		}, false);
+		favoriteFriend(id);
 	};
 
 	useEffect(() => {
@@ -103,7 +74,7 @@ export const FriendsDrawer = (props: Props) => {
 					</Link>
 				</Center>
 				<Space h={rem(14)} />
-				{isFriendsLoading && (
+				{isLoading && (
 					<Center
 						sx={{
 							marginTop: rem(48),

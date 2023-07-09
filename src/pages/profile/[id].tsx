@@ -9,12 +9,12 @@ import { fetchWithToken } from '../../utils';
 import { showAndLogErrorNotification } from '@/showerror';
 import { uri } from '@/constants';
 import { Block } from '@/types/post';
-import {
-	UserResponse,
-	ProfileFeedResponse,
-	FriendsResponse,
-} from '@/types/api';
+import { UserResponse, ProfileFeedResponse } from '@/types/api';
 import { useCurUserContext } from '@/components/utils/CurUserContext';
+import {
+	FriendsProvider,
+	useFriendsContext,
+} from '@/components/utils/FriendsContext';
 
 import { ProfileContent } from '@/components/profile/content/ProfileContent';
 import { Editor } from '../../components/editor/Editor';
@@ -31,6 +31,8 @@ const Profile = (props: PageProps) => {
 	const { curUser, updateCurUser } = useCurUserContext();
 	const { token } = curUser;
 	const router = useRouter();
+
+	const { friends, refetchFriends } = useFriendsContext();
 
 	const [initLoad, setInitLoad] = useState(true);
 	const chatEndRef = useRef<HTMLDivElement>(null);
@@ -89,25 +91,9 @@ const Profile = (props: PageProps) => {
 		{ revalidateFirstPage: false, shouldRetryOnError: true }
 	);
 
-	// get user's friends if logged in user
-	const {
-		data: friendsData,
-		error: friendsError,
-		isLoading: isFriendsLoading,
-		mutate: mutateFriends,
-	} = useSWR<FriendsResponse>(
-		[
-			token && user?.user.id === curUser?.user.id ? `${uri}/friends` : '',
-			token,
-		],
-		// @ts-ignore
-		([url, token]) => fetchWithToken(url, token),
-		{ shouldRetryOnError: true }
-	);
-
 	// map friends response to array of objects containing a friend's name and username
-	const friendsNamesList = friendsData
-		? friendsData?.friends.map(friend => ({
+	const friendsNamesList = friends
+		? friends.map(friend => ({
 				name: friend.friend.name,
 				username: friend.friend.username,
 		  }))
@@ -237,8 +223,9 @@ const Profile = (props: PageProps) => {
 	}, [userError]);
 
 	useEffect(() => {
-		setInitLoad(true);
+		refetchFriends();
 		if (chatEndRef.current) {
+			setInitLoad(true);
 			chatEndRef.current.scrollIntoView({ behavior: 'smooth' });
 		}
 		return () => {
@@ -248,16 +235,12 @@ const Profile = (props: PageProps) => {
 
 	useEffect(() => {
 		mutate(undefined, true);
+		// fetchFriends(true);
+		refetchFriends();
 		return () => {
 			setInitLoad(true);
 		};
 	}, []);
-
-	useEffect(() => {
-		if (friendsError) {
-			showAndLogErrorNotification(`Couldn't get friends list.`, friendsError);
-		}
-	}, [friendsError]);
 
 	return (
 		<FadeIn>
@@ -273,9 +256,6 @@ const Profile = (props: PageProps) => {
 					feed={data}
 					updateUserProfileInfo={updateUserProfile}
 					refetchFeed={refetchFeed}
-					mutateFriends={mutateFriends}
-					isFriendsLoading={isFriendsLoading}
-					friendsData={friendsData}
 				>
 					{user && user.user.id === curUser.user.id && (
 						<Editor
@@ -296,7 +276,11 @@ const ProfilePage: Page<PageProps> = props => {
 	const { id } = props;
 	const { curUser, isLoading } = useCurUserContext();
 
-	return <>{!curUser.token || isLoading ? <Loading /> : <Profile id={id} />}</>;
+	return (
+		<FriendsProvider id={id}>
+			<>{!curUser.token || isLoading ? <Loading /> : <Profile id={id} />}</>
+		</FriendsProvider>
+	);
 };
 
 ProfilePage.getLayout = page => <AppLayout>{page}</AppLayout>;

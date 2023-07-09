@@ -30,9 +30,6 @@ type ProfileContentProps = {
 	onClickLoadMore?: () => void;
 	updateUserProfileInfo: (user: UserResponse) => void;
 	refetchFeed: () => void;
-	mutateFriends: KeyedMutator<FriendsResponse>;
-	friendsData?: FriendsResponse;
-	isFriendsLoading: boolean;
 };
 
 export const ProfileContent = (props: ProfileContentProps) => {
@@ -90,13 +87,7 @@ export const ProfileContent = (props: ProfileContentProps) => {
 			<UnreadBanner user={user} />
 
 			{isLoggedInUser && (
-				<FriendsDrawer
-					isOpen={friendsDrawerOpen}
-					close={close}
-					mutateFriends={props.mutateFriends}
-					friendsData={props.friendsData}
-					isFriendsLoading={props.isFriendsLoading}
-				/>
+				<FriendsDrawer isOpen={friendsDrawerOpen} close={close} />
 			)}
 
 			<ProfileContentContainer>
