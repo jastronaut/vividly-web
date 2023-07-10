@@ -14,6 +14,7 @@ import {
 import { sortFriends } from '../utils';
 import { DrawerStyles } from './styles';
 import { useFriendsContext } from '@/components/utils/FriendsContext';
+import { useFriendRequestsContext } from '@/components/utils/FriendRequestsContext';
 
 type Props = {
 	isOpen: boolean;
@@ -23,6 +24,7 @@ type Props = {
 export const FriendsDrawer = (props: Props) => {
 	const { friends, isLoading, removeFriend, favoriteFriend } =
 		useFriendsContext();
+	const { numRequests } = useFriendRequestsContext();
 	const {
 		unfriend,
 		isLoading: unfriendLoading,
@@ -69,7 +71,9 @@ export const FriendsDrawer = (props: Props) => {
 							rightIcon={<IconArrowRight />}
 							variant='outline'
 						>
-							Manage friend requests
+							{`Manage friend requests ${
+								numRequests > 0 ? `(${numRequests})` : ''
+							}`}
 						</Button>
 					</Link>
 				</Center>

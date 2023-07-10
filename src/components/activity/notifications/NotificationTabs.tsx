@@ -1,5 +1,4 @@
 import { useEffect } from 'react';
-import useSWRInfinite from 'swr/infinite';
 import {
 	Tabs,
 	Center,
@@ -15,93 +14,43 @@ import Link from 'next/link';
 import { NotificationItem } from './NotificationItem';
 import { PageWrapper } from '../requests/_style';
 import { showAndLogErrorNotification } from '@/showerror';
-import { NotificationsResponse, DefaultResponse } from '@/types/api';
-import { fetchWithToken } from '@/utils';
+import { DefaultResponse } from '@/types/api';
 import { useCurUserContext } from '@/components/utils/CurUserContext';
 import { NotificationType } from '@/types/notification';
 import { EmptyTab, LoadingTab } from '../TabStates';
 import { makeApiCall } from '@/utils';
-import { URL_PREFIX } from '@/constants';
 import { FadeIn } from '@/styles/Animations';
+import { useNotificationsContext } from '@/components/utils/NotificationsContext';
+import { useFriendRequestsContext } from '@/components/utils/FriendRequestsContext';
 
 export const NotificationTabs = () => {
 	const { curUser } = useCurUserContext();
 	const { token } = curUser;
 
-	const {
-		data = [],
-		isLoading,
-		error,
-		size,
-		setSize,
-	} = useSWRInfinite<NotificationsResponse>(
-		(pageIndex: number, previousPageData: NotificationsResponse | null) => {
-			// reached the end
-			if (
-				!token ||
-				(previousPageData &&
-					(!previousPageData.data ||
-						!previousPageData.data.notifications.length ||
-						!previousPageData.cursor))
-			)
-				return null;
+	const { isLoading, notifications, loadMore, error, refetch, hasMore } =
+		useNotificationsContext();
+	const { numRequests } = useFriendRequestsContext();
 
-			// first page, we don't have `previousPageData`
-			if (pageIndex === 0 && !previousPageData)
-				return [`${URL_PREFIX}/notifications`, token];
+	const unreadCount = notifications.filter(
+		notification => notification.isUnread
+	);
+	const totalNotificationsCount = notifications.length;
 
-			// add the cursor to the API endpoint
-			if (previousPageData)
-				return [
-					`${URL_PREFIX}/notifications?cursor=${previousPageData.cursor}`,
-					token,
-				];
-			return null;
-		},
-		// @ts-ignore
-		([url, token]) => fetchWithToken(url, token),
-		{ shouldRetryOnError: false }
+	const likeNotifications = notifications.filter(
+		notification => notification.body.type === NotificationType.POST_LIKE
 	);
 
-	const totalUnreadCount = 1;
-	const totalCount = 1;
+	const commentNotifications = notifications.filter(
+		notification => notification.body.type === NotificationType.COMMENT
+	);
 
-	const lastPage = data.length > 0 ? data[data.length - 1] : null;
-	const hasMorePosts = lastPage ? !!lastPage.cursor : false;
+	const mentionNotifications = notifications.filter(
+		notification => notification.body.type === NotificationType.MENTION
+	);
 
-	const likeNotifications = data
-		? data
-				.map(page => page.data.notifications)
-				.flat()
-				.filter(
-					notification => notification.body.type === NotificationType.POST_LIKE
-				)
-		: [];
-
-	const commentNotifications = data
-		? data
-				.map(page => page.data.notifications)
-				.flat()
-				.filter(
-					notification => notification.body.type === NotificationType.COMMENT
-				)
-		: [];
-
-	const mentionNotifications = data
-		? data
-				.map(page => page.data.notifications)
-				.flat()
-				.filter(
-					notification => notification.body.type === NotificationType.MENTION
-				)
-		: [];
-
-	const unreadNotificationsCount = data
-		? data
-				.map(page => page.data.notifications)
-				.flat()
-				.filter(notification => notification.isUnread).length
-		: 0;
+	const unreadNotificationsCount = notifications.filter(
+		notification => notification.isUnread
+	).length;
 
 	const unreadLikeNotificationsCount = likeNotifications.filter(
 		notification => notification.isUnread
@@ -115,8 +64,6 @@ export const NotificationTabs = () => {
 		notification => notification.isUnread
 	).length;
 
-	const onClickLoadMore = () => setSize(size + 1);
-
 	useEffect(() => {
 		if (error) {
 			showAndLogErrorNotification(`Couldn't load friend requests`, error);
@@ -124,8 +71,12 @@ export const NotificationTabs = () => {
 	}, [error]);
 
 	useEffect(() => {
+		refetch();
+	}, []);
+
+	useEffect(() => {
 		const markNotificationsAsRead = async () => {
-			if (!token || !totalUnreadCount) return;
+			if (!token || !unreadCount) return;
 			try {
 				const resp = await makeApiCall<DefaultResponse>({
 					uri: `/notifications/read`,
@@ -141,7 +92,7 @@ export const NotificationTabs = () => {
 		};
 
 		markNotificationsAsRead();
-	}, [totalUnreadCount]);
+	}, [unreadCount]);
 
 	return (
 		<>
@@ -163,7 +114,9 @@ export const NotificationTabs = () => {
 										p={0}
 										color='grape'
 									>
-										{unreadNotificationsCount}
+										{unreadNotificationsCount >= 50
+											? '50+'
+											: unreadNotificationsCount}
 									</Badge>
 								) : null
 							}
@@ -233,18 +186,14 @@ export const NotificationTabs = () => {
 					</Tabs.List>
 					<Tabs.Panel value='all'>
 						<FadeIn>
-							{data
-								? data.map(page =>
-										page.data.notifications.map(notification => (
-											<NotificationItem
-												key={`notif-${notification.id}`}
-												notification={notification}
-											/>
-										))
-								  )
-								: null}
+							{notifications.map(notif => (
+								<NotificationItem
+									key={`notif-${notif.id}`}
+									notification={notif}
+								/>
+							))}
 							{isLoading && <LoadingTab />}
-							{!isLoading && !totalCount && <EmptyTab />}
+							{!isLoading && !totalNotificationsCount && <EmptyTab />}
 						</FadeIn>
 					</Tabs.Panel>
 					<Tabs.Panel value='comments'>
@@ -291,9 +240,9 @@ export const NotificationTabs = () => {
 				<Space h='md' />
 				<Center>
 					<Stack spacing='xs'>
-						{hasMorePosts && (
+						{hasMore && (
 							<>
-								<Button onClick={onClickLoadMore}>Load more</Button>
+								<Button onClick={loadMore}>Load more</Button>
 								<Space h='sm' />
 							</>
 						)}
@@ -303,7 +252,9 @@ export const NotificationTabs = () => {
 								rightIcon={<IconArrowRight />}
 								variant='outline'
 							>
-								{'Friend requests'}
+								{`Manage friend requests ${
+									numRequests > 0 ? `(${numRequests})` : ''
+								}`}
 							</Button>
 						</Link>
 					</Stack>
