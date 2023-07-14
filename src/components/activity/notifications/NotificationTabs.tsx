@@ -98,6 +98,20 @@ export const NotificationTabs = () => {
 		<>
 			<PageWrapper>
 				<Title order={3}>Notifications</Title>
+				{numRequests > 0 ? (
+					<Center>
+						<Link href='/friend-requests'>
+							<Button
+								component='span'
+								rightIcon={<IconArrowRight />}
+								variant='outline'
+							>
+								{`Manage friend requests (${numRequests})
+							`}
+							</Button>
+						</Link>
+					</Center>
+				) : null}
 				<Space h='xl' />
 				<Tabs color='grape' defaultValue='all'>
 					<Tabs.List>
@@ -121,7 +135,7 @@ export const NotificationTabs = () => {
 								) : null
 							}
 						>
-							⭐️ All
+							All
 						</Tabs.Tab>
 						<Tabs.Tab
 							value='comments'
@@ -141,7 +155,7 @@ export const NotificationTabs = () => {
 								) : null
 							}
 						>
-							💬 Comments
+							Comments
 						</Tabs.Tab>
 						<Tabs.Tab
 							value='mentions'
@@ -161,7 +175,7 @@ export const NotificationTabs = () => {
 								) : null
 							}
 						>
-							🕸️ Mentions
+							Mentions
 						</Tabs.Tab>
 						<Tabs.Tab
 							value='likes'
@@ -181,7 +195,7 @@ export const NotificationTabs = () => {
 								) : null
 							}
 						>
-							💜 Likes
+							Likes
 						</Tabs.Tab>
 					</Tabs.List>
 					<Tabs.Panel value='all'>
@@ -246,17 +260,17 @@ export const NotificationTabs = () => {
 								<Space h='sm' />
 							</>
 						)}
-						<Link href='/friend-requests'>
-							<Button
-								component='span'
-								rightIcon={<IconArrowRight />}
-								variant='outline'
-							>
-								{`Manage friend requests ${
-									numRequests > 0 ? `(${numRequests})` : ''
-								}`}
-							</Button>
-						</Link>
+						{numRequests < 1 ? (
+							<Link href='/friend-requests'>
+								<Button
+									component='span'
+									rightIcon={<IconArrowRight />}
+									variant='outline'
+								>
+									{`Manage friend requests`}
+								</Button>
+							</Link>
+						) : null}
 					</Stack>
 				</Center>
 			</PageWrapper>
