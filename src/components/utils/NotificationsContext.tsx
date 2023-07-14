@@ -76,7 +76,7 @@ export const NotificationsProvider = (props: Props) => {
 
 	const loadMore = useCallback(() => {
 		setSize(size + 1);
-	}, [size]);
+	}, [size, setSize]);
 
 	const refetch = useCallback(() => {
 		mutate();

@@ -40,10 +40,20 @@ function getNotificationContentPreview(notification: NotificationBody) {
 	}
 }
 
-const WrapperStyled = styled(Wrapper)`
+const WrapperStyled = styled(Wrapper)<{ isUnread: boolean }>`
 	@media (max-width: 800px) {
 		padding: ${rem(10)};
 		min-width: ${rem(295)};
+	}
+
+	${props =>
+		!props.isUnread &&
+		`
+		opacity: 0.7;
+	`}
+
+	:hover {
+		opacity: 1;
 	}
 `;
 
@@ -52,7 +62,7 @@ interface Props {
 }
 
 export const NotificationItem = (props: Props) => {
-	const { createdTime, body, sender } = props.notification;
+	const { createdTime, body, sender, isUnread } = props.notification;
 
 	const timestamp = getPostTime(createdTime);
 	const notificationActionMessage = getNotificationActionMessage(body);
@@ -69,7 +79,7 @@ export const NotificationItem = (props: Props) => {
 
 	return (
 		<Link href={link} style={{ color: 'unset' }}>
-			<WrapperStyled withHover>
+			<WrapperStyled isUnread={isUnread} withHover>
 				<Flex>
 					<Avatar
 						src={sender.avatarSrc || DEFAULT_AVATAR}
