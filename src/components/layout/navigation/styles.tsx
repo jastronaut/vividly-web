@@ -76,7 +76,7 @@ export const PageContentContainer = styled.main<{ isNavHidden: boolean }>`
 		margin-left: 0;
 		margin-right: 0;
 		margin-top: 0;
-		margin-bottom: ${rem(25)};
+		padding-bottom: ${rem(55)};
 	}
 
 	@media screen and (min-width: 1000px) {

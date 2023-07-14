@@ -13,7 +13,7 @@ export const PageWrapper = styled.div`
 	}
 
 	@media screen and (max-width: 800px) {
-		margin: ${rem(8)} 0 ${rem(50)};
+		margin: ${rem(8)} 0 0;
 		width: 100%;
 		padding: ${rem(8)} ${rem(16)};
 	}
