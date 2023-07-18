@@ -22,6 +22,8 @@
     "@mantine/next": "^6.0.5",
     "@mantine/notifications": "^6.0.5",
     "@next/font": "13.1.6",
+    "@sentry/browser": "^7.58.1",
+    "@sentry/nextjs": "^7.58.1",
     "@tabler/icons": "^2.6.0",
     "@tabler/icons-react": "^2.6.0",
     "@types/node": "18.14.0",

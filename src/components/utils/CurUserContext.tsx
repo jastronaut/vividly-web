@@ -1,5 +1,6 @@
 import { useLocalStorage } from '@mantine/hooks';
 import { createContext, useContext, useState, useCallback } from 'react';
+import * as Sentry from '@sentry/nextjs';
 
 import { CurUser, User } from '@/types/user';
 import { STORAGE_CUR_USER_KEY } from '@/constants';
@@ -38,6 +39,10 @@ export const CurUserProvider = ({ children }: Props) => {
 				},
 			};
 			setCurUserData(newCurUser);
+			Sentry.setUser({
+				id: newCurUser.user.id,
+				username: newCurUser.user.username,
+			});
 			setIsLoading(false);
 		},
 		[curUserData]

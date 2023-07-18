@@ -257,6 +257,21 @@ const Profile = (props: PageProps) => {
 					updateUserProfileInfo={updateUserProfile}
 					refetchFeed={refetchFeed}
 				>
+					<button
+						onClick={() => {
+							throw Error(
+								'yo, i am testing with setting a user in curcontext',
+								{
+									cause: {
+										page: '404',
+										lmao: 'lol',
+									},
+								}
+							);
+						}}
+					>
+						hi
+					</button>
 					{user && user.user.id === curUser.user.id && (
 						<Editor
 							isOpen={true}

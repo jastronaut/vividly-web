@@ -16,6 +16,9 @@ export const URL_PREFIX =
 export const IMGBB_API_KEY =
 	process.env.NEXT_PUBLIC_IMGBB_API_KEY || process.env.IMGBB_API_KEY;
 
+export const SENTRY_DSN =
+	process.env.NEXT_PUBLIC_SENTRY_DSN || process.env.SENTRY_DSN;
+
 export const LINKIFY_OPTIONS = {
 	defaultProtocol: 'http',
 	target: '_blank',
