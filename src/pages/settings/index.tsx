@@ -3,6 +3,7 @@ import { Switch, Space, Title, Divider, Button, Center } from '@mantine/core';
 import { rem } from 'polished';
 import styled from 'styled-components';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 import { Page } from '../_app';
 import { useVividlyTheme, ThemeName } from '@/styles/Theme';
@@ -33,6 +34,10 @@ const PageContainer = styled.div`
 
 const PageContent = (props: { token: string }) => {
 	const { accountInfo } = useAccountInfoContext();
+	const { logoutCurUser } = useCurUserContext();
+
+	const router = useRouter();
+
 	const {
 		setTheme,
 		theme: vividlyTheme,
@@ -80,6 +85,7 @@ const PageContent = (props: { token: string }) => {
 
 	return (
 		<>
+			<Space h='lg' />
 			<Divider
 				size='sm'
 				labelPosition='left'
@@ -122,26 +128,39 @@ const PageContent = (props: { token: string }) => {
 			<Space h='sm' />
 			<PasswordSetting />
 
+			<Divider size='xs' />
 			<Space h='lg' />
 			<Center>
-				<Link href='/feedback'>
-					<Button variant='light' component='span'>
-						Feedback
-					</Button>
-				</Link>
+				<Button variant='light' component='span'>
+					<Link href='/feedback'>Feedback</Link>
+				</Button>
+			</Center>
+			<Space h='lg' />
+			<Center>
+				<Button
+					variant='outline'
+					color='red'
+					size='xs'
+					onClick={() => {
+						logoutCurUser();
+						router.push('/login');
+					}}
+				>
+					Logout
+				</Button>
 			</Center>
 		</>
 	);
 };
 
 const SettingsPage: Page = () => {
-	const { curUser } = useCurUserContext();
+	const { curUser, isLoading } = useCurUserContext();
 
 	return (
 		<>
 			<FadeIn>
 				<PageContainer>
-					<PageContent token={curUser.token} />
+					{isLoading ? <Loading /> : <PageContent token={curUser.token} />}
 				</PageContainer>
 			</FadeIn>
 		</>

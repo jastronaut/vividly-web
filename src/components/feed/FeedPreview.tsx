@@ -18,6 +18,10 @@ const WrapperStyled = styled(Wrapper)<{ isUnread?: boolean }>`
 		min-width: ${rem(295)};
 	}
 	${props => !props.isUnread && `opacity: 0.5;`}
+
+	.mantine-Text-root {
+		line-height: ${rem(18)};
+	}
 `;
 
 export const FeedPreviewLoading = () => {
@@ -92,10 +96,8 @@ export const FeedPreview = (props: Props) => {
 								<Text
 									c='dimmed'
 									sx={{
-										maxWidth: '300px',
 										overflow: 'hidden',
 										textOverflow: 'ellipsis',
-										whiteSpace: 'nowrap',
 									}}
 								>
 									{blockPreview}

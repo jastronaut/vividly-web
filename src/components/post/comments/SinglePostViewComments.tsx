@@ -7,7 +7,9 @@ type Props = {
 	comments: Comment[];
 	postAuthorId: number;
 	curUserId: number;
+	onClickCommentByUsername: (userId: string) => void;
 };
+
 export const SinglePostViewComments = (props: Props) => {
 	const { comments, curUserId, postAuthorId } = props;
 	const { deleteComment } = usePostContext();
@@ -25,6 +27,9 @@ export const SinglePostViewComments = (props: Props) => {
 						canDelete={
 							postAuthorId === curUserId || comment.author.id === curUserId
 						}
+						onClickComment={() => {
+							props.onClickCommentByUsername(comment.author.name);
+						}}
 					/>
 					<Divider variant='dashed' />
 				</div>

@@ -24,10 +24,17 @@ const StyledContainer = styled.div`
 	color: ${props => props.theme.text.primary};
 	padding: ${rem(16)} ${rem(32)};
 
-	width: ${rem(400)};
+	width: ${rem(350)};
 
 	.mantine-TextInput-root {
 		padding: 0 ${rem(32)};
+	}
+
+	@media screen and (max-width: 900px) {
+		width: ${rem(350)};
+		.mantine-TextInput-root {
+			padding: 0 ${rem(48)};
+		}
 	}
 
 	@media screen and (max-width: 500px) {

@@ -1,5 +1,5 @@
-import { useEffect, useRef } from 'react';
-import { Divider, Space, Title } from '@mantine/core';
+import { useEffect, useRef, useCallback } from 'react';
+import { Divider, Space, Title, HoverCard, Group } from '@mantine/core';
 import { rem } from 'polished';
 import styled from 'styled-components';
 import Link from 'next/link';
@@ -10,6 +10,8 @@ import { NewCommentInput } from './comments/NewCommentInput';
 import { SinglePostViewComments } from './comments/SinglePostViewComments';
 import { usePostContext } from './PostContext';
 import { useCurUserContext } from '../utils/CurUserContext';
+import { Avatar } from '../Avatar';
+import { DEFAULT_AVATAR } from '@/constants';
 
 const Wrapper = styled.div`
 	padding: ${rem(16)} ${rem(24)};
@@ -32,18 +34,47 @@ export const SinglePostView = () => {
 		inputRef.current?.focus();
 	};
 
+	const onClickComment = useCallback(
+		(name: string) => {
+			if (!inputRef.current) return;
+			// add @name to the comment input
+			inputRef.current.focus();
+			inputRef.current.value = inputRef.current.value + ` @${name} `;
+		},
+		[inputRef.current]
+	);
+
 	useEffect(() => {
 		console.log(post.comments, 'post');
 	}, [post.comments]);
 
 	return (
 		<>
-			<Title order={5} align='center'>
-				<Link href={`/profile/${post.author?.id}`}>{post.author?.name}</Link>
-				{`'s post`}
-			</Title>
 			<Space h='sm' />
-			<Divider />
+			<HoverCard shadow='md' withArrow>
+				<HoverCard.Target>
+					<Title order={5} align='center'>
+						<Link href={`/profile/${post.author?.id}`}>
+							{post.author?.name}
+						</Link>
+						{`'s post`}
+					</Title>
+				</HoverCard.Target>
+				<HoverCard.Dropdown>
+					<Group>
+						<Avatar
+							src={post.author?.avatarSrc || DEFAULT_AVATAR}
+							size={35}
+							alt={'Profile picture'}
+						/>
+						<Link href={`/profile/${post.author?.id}`}>
+							@{post.author?.username}
+						</Link>
+					</Group>
+				</HoverCard.Dropdown>
+			</HoverCard>
+			<Space h='sm' />
+			<Divider variant='dashed' />
 			<Wrapper>
 				<Content blocks={post.content} postId={post.id} />
 				<Footer
@@ -56,7 +87,7 @@ export const SinglePostView = () => {
 					commentsDisabled={post.commentsDisabled}
 					likeCount={post.likes}
 					commentCount={post.comments.length}
-					isOwnPost={true}
+					isOwnPost={curUser.user.id === post.authorId}
 				/>
 				<NewCommentInput
 					onSubmit={addComment}
@@ -67,6 +98,7 @@ export const SinglePostView = () => {
 					comments={post.comments}
 					postAuthorId={post.authorId}
 					curUserId={curUser.user.id}
+					onClickCommentByUsername={onClickComment}
 				/>
 			</Wrapper>
 		</>

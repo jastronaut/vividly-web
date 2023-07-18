@@ -223,11 +223,17 @@ export const SettingsModal = (props: Props) => {
 			>
 				<Center>
 					<div>
-						<Avatar
-							src={newAvatarSrc || curUser.user.avatarSrc || DEFAULT_AVATAR}
-							size={150}
-							alt={`${curUser.user.username}'s avatar`}
-						/>
+						<Center
+							sx={{
+								opacity: uploadingAvatar ? 0.5 : 1,
+							}}
+						>
+							<Avatar
+								src={newAvatarSrc || curUser.user.avatarSrc || DEFAULT_AVATAR}
+								size={150}
+								alt={`${curUser.user.username}'s avatar`}
+							/>
+						</Center>
 						<Center>
 							<FileButton
 								onChange={uploadImage}

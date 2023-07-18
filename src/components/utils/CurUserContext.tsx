@@ -9,6 +9,7 @@ type CurUserContext = {
 	isLoading: boolean;
 	curUser: CurUser;
 	updateCurUser: (user: User) => void;
+	logoutCurUser: () => void;
 };
 
 const CurUserContext = createContext<CurUserContext>({} as CurUserContext);
@@ -48,12 +49,18 @@ export const CurUserProvider = ({ children }: Props) => {
 		[curUserData]
 	);
 
+	const logoutCurUser = useCallback(() => {
+		setIsLoading(true);
+		setCurUserData({} as CurUser);
+	}, [setCurUserData]);
+
 	return (
 		<CurUserContext.Provider
 			value={{
 				isLoading,
 				curUser: curUserData,
 				updateCurUser,
+				logoutCurUser,
 			}}
 		>
 			{children}

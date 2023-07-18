@@ -6,6 +6,7 @@ import {
 	IconEdit,
 	IconTool,
 	IconMessage,
+	IconSettings,
 } from '@tabler/icons-react';
 import styled from 'styled-components';
 import { rem } from 'polished';
@@ -48,6 +49,11 @@ export const ProfileActions = (props: Props) => {
 							>
 								Edit profile
 							</Menu.Item>
+							<Link href='/settings'>
+								<Menu.Item onClick={() => {}} icon={<IconSettings size={14} />}>
+									Account settings
+								</Menu.Item>
+							</Link>
 							<Link href='/feedback'>
 								<Menu.Item onClick={() => {}} icon={<IconMessage size={14} />}>
 									Send feedback
