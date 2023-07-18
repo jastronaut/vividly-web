@@ -607,12 +607,6 @@ export const Editor = (props: EditorProps) => {
 		}
 	}, [draft, editor]);
 
-	useEffect(() => {
-		if (ReactEditor.isFocused(editor)) {
-			console.log('focused');
-		}
-	}, [editor]);
-
 	return (
 		<InlineEditorWrapper>
 			<DismissWarningModal

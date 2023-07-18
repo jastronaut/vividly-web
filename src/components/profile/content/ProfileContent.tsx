@@ -1,19 +1,21 @@
 import { useEffect, useRef } from 'react';
 import { Button, Space, Center, Text, Flex } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { KeyedMutator } from 'swr';
 
 import {
 	UserResponse,
 	ProfileFeedResponse as Feed,
 	ProfileFeedResponse,
-	FriendsResponse,
 } from '@/types/api';
 import { useCurUserContext } from '@/components/utils/CurUserContext';
 
 import { ProfileHeaderComponent } from '../header/header';
 import { FriendsDrawer } from '../drawer/FriendsDrawer';
-import { ProfileContentContainer, ContentWrapper } from '../_styles';
+import {
+	ProfileContentContainer,
+	ContentWrapper,
+	BottomStuffContainer,
+} from '../_styles';
 import { EmptyPosts, PrivateProfileMessage } from './ProfileStates';
 import { UnreadBanner } from './UnreadBanner';
 import { ProfilePosts } from './ProfilePosts';
@@ -116,14 +118,14 @@ export const ProfileContent = (props: ProfileContentProps) => {
 				)}
 
 				{showBottomStuff && (
-					<div style={{ flex: 1 }}>
+					<BottomStuffContainer>
 						{showEndMessage && (
 							<Text c='dimmed'>{`You've reached the end!`}</Text>
 						)}
 
 						{showPrivateProfileMessage && <PrivateProfileMessage />}
 						{showEmptyState && <EmptyPosts />}
-					</div>
+					</BottomStuffContainer>
 				)}
 			</ProfileContentContainer>
 			<div ref={containerRef} />

@@ -7,13 +7,21 @@ const TextWrapper = styled.div`
 
 export const PostsLoading = () => {
 	return (
-		<Stack>
+		<Stack spacing='xs'>
 			<Space h='md' />
-			<Skeleton height={20} />
-			<Skeleton height={20} />
-			<Skeleton height={20} />
-			<Skeleton height={20} mt={6} width='70%' />
-			<Space h='sm' />
+			<Skeleton h={16} />
+			<Skeleton h={16} />
+			<Skeleton h={16} />
+			<Skeleton h={16} mt={6} width='70%' />
+			<Space h='md' />
+			<Skeleton h={16} />
+			<Skeleton h={16} />
+			<Skeleton h={16} mt={6} width='70%' />
+			<Space h='md' />
+			<Skeleton h={16} />
+			<Skeleton h={16} />
+			<Skeleton h={16} mt={6} width='70%' />
+			<Space h='md' />
 		</Stack>
 	);
 };

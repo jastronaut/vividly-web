@@ -1,4 +1,4 @@
-import { Divider } from '@mantine/core';
+import { Divider, Space } from '@mantine/core';
 import { Comment as CommentComponent } from './Comment';
 import { Comment } from '@/types/post';
 import { usePostContext } from '../PostContext';
@@ -16,6 +16,7 @@ export const SinglePostViewComments = (props: Props) => {
 		<>
 			{comments.map(comment => (
 				<div key={comment.id}>
+					<Space h='sm' />
 					<CommentComponent
 						key={comment.id}
 						{...comment}

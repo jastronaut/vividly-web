@@ -4,7 +4,7 @@ import { rem } from 'polished';
 
 export const TextContainer = styled.div`
 	padding-left: ${rem(8)};
-	flex: -moz-available;
+	flex: 1;
 `;
 
 export const Wrapper = styled.div<{ withHover?: boolean }>`

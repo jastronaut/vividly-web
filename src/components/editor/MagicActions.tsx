@@ -117,6 +117,7 @@ export const MusicInput = (props: MusicInputProps) => {
 				throw new Error('Invalid URL');
 			}
 			props.onSubmit(musicData);
+			setQuery('');
 		} catch (err) {
 			console.log(err);
 			setError('Invalid URL');

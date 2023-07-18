@@ -24,25 +24,33 @@ const StyledContainer = styled.div`
 	color: ${props => props.theme.text.primary};
 	padding: ${rem(16)} ${rem(32)};
 
-	width: ${rem(300)};
+	width: ${rem(400)};
+
+	.mantine-TextInput-root {
+		padding: 0 ${rem(32)};
+	}
 
 	@media screen and (max-width: 500px) {
 		width: 90%;
+		.mantine-TextInput-root {
+			padding: 0;
+		}
 	}
 `;
 
 enum LoginErrors {
-	OK,
 	INVALID_LOGIN,
-	MISSING_CREDENTIALS,
-	OTHER,
+	MISSING_CREDENTIALS = 'LOGIN_MISSING_CREDENTIALS',
+	USER_DOES_NOT_EXIST = 'LOGIN_USER_DOES_NOT_EXIST',
+	INVALID_CREDS = 'LOGIN_INVALID_CREDENTIALS',
+	OTHER = 'LOGIN_ERROR',
 }
 
 type LoginComponentProps = {
 	setUsername: (username: string) => void;
 	setPassword: (password: string) => void;
 	onClickSubmit: () => void;
-	loginError: LoginErrors;
+	loginError: LoginErrors | null;
 };
 
 const LoginComponent = (props: LoginComponentProps) => {
@@ -67,6 +75,7 @@ const LoginComponent = (props: LoginComponentProps) => {
 								type='text'
 								placeholder='username'
 								required
+								maxLength={20}
 							/>
 							<Space h='xs' />
 							<TextInput
@@ -76,17 +85,18 @@ const LoginComponent = (props: LoginComponentProps) => {
 								placeholder='password'
 								required
 							/>
-							{props.loginError !== LoginErrors.OK && (
+							{props.loginError !== null && (
 								<>
 									<Space h='xs' />
-									<Alert color='red' radius='lg' ta='center'>
-										❗️
+									<Text color='red' ta='center'>
 										{props.loginError === LoginErrors.MISSING_CREDENTIALS
 											? 'Missing username and/or password. Please try again!'
 											: props.loginError === LoginErrors.INVALID_LOGIN
 											? 'Username and/or password is incorrect. Please try again!'
+											: props.loginError === LoginErrors.USER_DOES_NOT_EXIST
+											? `User does not exist. Please register first!`
 											: 'Unknown error 😅 - contact help@vividly.love'}
-									</Alert>
+									</Text>
 								</>
 							)}
 							<Space h='md' />
@@ -122,12 +132,13 @@ const LoginComponent = (props: LoginComponentProps) => {
 const Login: Page = () => {
 	const [username, setUsername] = useState('');
 	const [password, setPassword] = useState('');
-	const [loginError, setLoginError] = useState(LoginErrors.OK);
+	const [loginError, setLoginError] = useState<LoginErrors | null>(null);
 	const [isPageLoading, setIsPageLoading] = useState(true);
 
 	const onClickSubmit = () => {
 		const tryLogin = async () => {
 			try {
+				setLoginError(null);
 				const res = await makeApiCall<LoginResponse>({
 					uri: `/auth/login`,
 					method: 'POST',
@@ -139,6 +150,8 @@ const Login: Page = () => {
 						setLoginError(LoginErrors.INVALID_LOGIN);
 					} else if (res.error === 'Missing credentials') {
 						setLoginError(LoginErrors.MISSING_CREDENTIALS);
+					} else if (res.error === 'User does not exist') {
+						setLoginError(LoginErrors.USER_DOES_NOT_EXIST);
 					} else {
 						setLoginError(LoginErrors.OTHER);
 					}
