@@ -1,11 +1,13 @@
 import { createContext, useContext, useCallback } from 'react';
 import useSWRInfinite from 'swr/infinite';
 
-import { NotificationsResponse } from '@/types/api';
+import { NotificationsResponse, DefaultResponse } from '@/types/api';
 import { useCurUserContext } from './CurUserContext';
 import { uri } from '@/constants';
 import { fetchWithToken } from '@/utils';
 import { Notification } from '@/types/notification';
+
+import { makeApiCall } from '@/utils';
 
 type NotificationsContext = {
 	isLoading: boolean;
@@ -15,6 +17,7 @@ type NotificationsContext = {
 	refetch: () => void;
 	hasMore: boolean;
 	unreadCount: number;
+	markNotificationsAsRead: () => void;
 };
 
 const NotificationsContext = createContext<NotificationsContext>(
@@ -74,6 +77,21 @@ export const NotificationsProvider = (props: Props) => {
 		{ revalidateFirstPage: false, shouldRetryOnError: true }
 	);
 
+	const markNotificationsAsRead = useCallback(async () => {
+		console.log('marked as read');
+		// return;
+		const resp = await makeApiCall<DefaultResponse>({
+			uri: `/notifications/read`,
+			method: 'POST',
+			token,
+		});
+		if (!resp.success) {
+			throw new Error(resp.error);
+		}
+
+		mutate();
+	}, [token, mutate]);
+
 	const loadMore = useCallback(() => {
 		setSize(size + 1);
 	}, [size, setSize]);
@@ -95,6 +113,7 @@ export const NotificationsProvider = (props: Props) => {
 				refetch,
 				hasMore: !!lastPage?.cursor,
 				unreadCount: data?.[0]?.data?.unreadCount || 0,
+				markNotificationsAsRead,
 			}}
 		>
 			{props.children}

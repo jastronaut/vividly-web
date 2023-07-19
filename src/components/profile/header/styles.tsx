@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import {
 	ActionIcon,
 	Text,
@@ -144,6 +145,11 @@ const NamesContainer = styled.div<{ height: number }>`
 	}
 `;
 
+enum ScrollDirection {
+	Up = 'UP',
+	Down = 'DOWN',
+}
+
 type HeaderTextProps = {
 	username: string;
 	name?: string;
@@ -156,9 +162,14 @@ export const HeaderText = (props: HeaderTextProps) => {
 
 	const isMobile = useMediaQuery('(max-width: 800px)');
 
+	const [lastScrollTop, setLastScrollTop] = useState<number>(0);
+	const [scrollDirection, setScrollDirection] = useState<ScrollDirection>(
+		ScrollDirection.Up
+	);
+
 	let bioHidden = false;
 	if (isMobile) {
-		if (scroll.y > HEADER_SCROLL_HEIGHT_MOBILE) {
+		if (scroll.y > HEADER_SCROLL_HEIGHT_MOBILE && scrollDirection === 'DOWN') {
 			bioHidden = true;
 		}
 	} else if (scroll.y > HEADER_SCROLL_HEIGHT) {
@@ -173,6 +184,24 @@ export const HeaderText = (props: HeaderTextProps) => {
 	} else if (scroll.y > HEADER_SCROLL_HEIGHT) {
 		namesHeight = 50;
 	}
+
+	useEffect(() => {
+		const handleScroll = () => {
+			const st = window.pageYOffset || document.documentElement.scrollTop;
+			if (st > lastScrollTop) {
+				setScrollDirection(ScrollDirection.Down);
+			} else {
+				if (lastScrollTop - st >= 50) {
+					setScrollDirection(ScrollDirection.Up);
+				}
+			}
+			setLastScrollTop(st <= 0 ? 0 : st);
+		};
+		window.addEventListener('scroll', handleScroll);
+		return () => {
+			window.removeEventListener('scroll', handleScroll);
+		};
+	}, [lastScrollTop]);
 
 	const nameTextSize = isMobile ? 'md' : 'lg';
 	const usernameTextSize = bioHidden && !isMobile ? 'md' : 'sm';

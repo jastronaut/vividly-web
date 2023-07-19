@@ -11,14 +11,16 @@ export const ProfileHeaderContainer = styled.div`
 	}
 `;
 
-export const ProfileContentContainer = styled.div`
+export const ProfileContentContainer = styled.div<{ isLoading: boolean }>`
 	padding: ${rem(24)};
 	display: flex;
-	flex-direction: column-reverse;
+	flex-direction: ${props => (props.isLoading ? 'column' : 'column-reverse')};
 	border-top: none;
+	min-height: calc(100vh - 164px);
 
 	@media screen and (max-width: 800px) {
 		padding-bottom: ${rem(45)};
+		min-height: calc(100vh - 190px);
 	}
 
 	@media screen and (max-width: 500px) {
@@ -28,14 +30,11 @@ export const ProfileContentContainer = styled.div`
 `;
 
 export const ContentWrapper = styled.div`
-	/* min-height: 90vh; */
+	min-height: calc(100vh - 50px);
 
 	@media screen and (min-width: 801px) {
 		border: 1px solid ${props => props.theme.background.secondary};
 	}
 `;
 
-export const BottomStuffContainer = styled.div`
-	/* flex: 1; */
-	min-height: 60vh;
-`;
+export const BottomStuffContainer = styled.div``;

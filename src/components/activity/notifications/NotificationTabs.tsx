@@ -10,25 +10,29 @@ import {
 } from '@mantine/core';
 import { IconArrowRight } from '@tabler/icons-react';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 import { NotificationItem } from './NotificationItem';
 import { PageWrapper } from '../requests/_style';
 import { showAndLogErrorNotification } from '@/showerror';
-import { DefaultResponse } from '@/types/api';
-import { useCurUserContext } from '@/components/utils/CurUserContext';
 import { NotificationType } from '@/types/notification';
 import { EmptyTab, LoadingTab } from '../TabStates';
-import { makeApiCall } from '@/utils';
 import { FadeIn } from '@/styles/Animations';
 import { useNotificationsContext } from '@/components/utils/NotificationsContext';
 import { useFriendRequestsContext } from '@/components/utils/FriendRequestsContext';
 
 export const NotificationTabs = () => {
-	const { curUser } = useCurUserContext();
-	const { token } = curUser;
+	const router = useRouter();
 
-	const { isLoading, notifications, loadMore, error, refetch, hasMore } =
-		useNotificationsContext();
+	const {
+		isLoading,
+		notifications,
+		loadMore,
+		error,
+		refetch,
+		hasMore,
+		markNotificationsAsRead,
+	} = useNotificationsContext();
 	const { numRequests } = useFriendRequestsContext();
 
 	const unreadCount = notifications.filter(
@@ -75,24 +79,24 @@ export const NotificationTabs = () => {
 	}, []);
 
 	useEffect(() => {
-		const markNotificationsAsRead = async () => {
-			if (!token || !unreadCount) return;
-			try {
-				const resp = await makeApiCall<DefaultResponse>({
-					uri: `/notifications/read`,
-					method: 'POST',
-					token,
-				});
-				if (!resp.success) {
-					throw new Error(resp.error);
-				}
-			} catch (err) {
-				showAndLogErrorNotification(`Couldn't mark notifications as read`, err);
+		const handleWindowClose = (e: BeforeUnloadEvent) => {
+			if (unreadNotificationsCount > 0) {
+				markNotificationsAsRead();
+			}
+			e.preventDefault();
+		};
+		const handleBrowseAway = () => {
+			if (unreadNotificationsCount > 0) {
+				markNotificationsAsRead();
 			}
 		};
-
-		markNotificationsAsRead();
-	}, [unreadCount]);
+		window.addEventListener('beforeunload', handleWindowClose);
+		router.events.on('routeChangeStart', handleBrowseAway);
+		return () => {
+			window.removeEventListener('beforeunload', handleWindowClose);
+			router.events.off('routeChangeStart', handleBrowseAway);
+		};
+	}, [unreadNotificationsCount, router.events]);
 
 	return (
 		<>
