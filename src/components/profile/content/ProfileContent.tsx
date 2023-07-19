@@ -1,5 +1,4 @@
-import { useEffect, useRef } from 'react';
-import { Button, Space, Center, Text, Flex } from '@mantine/core';
+import { Button, Space, Center, Text } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 
 import {
@@ -36,9 +35,8 @@ type ProfileContentProps = {
 
 export const ProfileContent = (props: ProfileContentProps) => {
 	const { curUser } = useCurUserContext();
-	const { isUserLoading, isPostsLoading, initLoad } = props;
+	const { isUserLoading, isPostsLoading } = props;
 	const [friendsDrawerOpen, { open, close }] = useDisclosure(false);
-	const containerRef = useRef<HTMLDivElement>(null);
 
 	const user = props.user;
 	const feed: Feed[] = props.feed || [];
@@ -68,12 +66,6 @@ export const ProfileContent = (props: ProfileContentProps) => {
 
 	const showMorePostsButton = !isLoading && props.hasMorePosts;
 
-	useEffect(() => {
-		if (initLoad && containerRef.current) {
-			containerRef.current.scrollIntoView({ behavior: 'smooth' });
-		}
-	}, [initLoad]);
-
 	return (
 		<ContentWrapper>
 			<ProfileHeaderComponent
@@ -92,7 +84,7 @@ export const ProfileContent = (props: ProfileContentProps) => {
 				<FriendsDrawer isOpen={friendsDrawerOpen} close={close} />
 			)}
 
-			<ProfileContentContainer>
+			<ProfileContentContainer isLoading={isLoading || showBottomStuff}>
 				<div>{props.children}</div>
 
 				<ProfilePosts
@@ -116,19 +108,17 @@ export const ProfileContent = (props: ProfileContentProps) => {
 						<Space h='sm' />
 					</div>
 				)}
-
-				{showBottomStuff && (
+				{showBottomStuff ? (
 					<BottomStuffContainer>
-						{showEndMessage && (
-							<Text c='dimmed'>{`You've reached the end!`}</Text>
-						)}
+						{showEndMessage && !showEmptyState ? (
+							<Text c='dimmed' ta='center'>{`You've reached the end!`}</Text>
+						) : null}
 
 						{showPrivateProfileMessage && <PrivateProfileMessage />}
 						{showEmptyState && <EmptyPosts />}
 					</BottomStuffContainer>
-				)}
+				) : null}
 			</ProfileContentContainer>
-			<div ref={containerRef} />
 		</ContentWrapper>
 	);
 };
