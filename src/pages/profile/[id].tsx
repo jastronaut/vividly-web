@@ -140,8 +140,6 @@ const Profile = (props: PageProps) => {
 			!isUserLoading
 		) {
 			chatEndRef.current.scrollIntoView({ behavior: 'smooth' });
-			console.log(chatEndRef.current);
-			console.log('called');
 			setInitLoad(false);
 		}
 	}, [feed, initLoad, isPostsLoading, isUserLoading, chatEndRef.current]);

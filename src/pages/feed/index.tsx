@@ -18,16 +18,6 @@ import AppLayout from '@/components/layout/AppLayout';
 import { FadeIn } from '@/styles/Animations';
 import { FeedPreviewLoading } from '@/components/feed/FeedPreview';
 
-const ContentWrapper = styled.div`
-	padding: ${rem(24)};
-	border: 1px solid ${props => props.theme.background.secondary};
-	border-top: none;
-
-	@media screen and (max-width: 500px) {
-		padding: ${rem(8)} ${rem(12)};
-	}
-`;
-
 const EmptyStateWrapper = styled.div`
 	margin: ${rem(300)} ${rem(100)} ${rem(100)};
 	display: flex;
@@ -87,22 +77,20 @@ export const FeedPage: Page = () => {
 	const showLoadingState = isLoading || !curUser;
 
 	return (
-		<>
-			<FadeIn>
-				{showLoadingState && <LoadingState />}
-				{items.map(item => (
-					<Link
-						href={`/profile/${item.friend.id}`}
-						key={`link-${item.friend.id}`}
-					>
-						<FeedPreview item={item} />
-					</Link>
-				))}
-				{items.length < 1 && !showLoadingState ? (
-					<EmptyState id={curUser.user.id} />
-				) : null}
-			</FadeIn>
-		</>
+		<FadeIn>
+			{showLoadingState && <LoadingState />}
+			{items.map(item => (
+				<Link
+					href={`/profile/${item.friend.id}`}
+					key={`link-${item.friend.id}`}
+				>
+					<FeedPreview item={item} />
+				</Link>
+			))}
+			{items.length < 1 && !showLoadingState ? (
+				<EmptyState id={curUser.user.id} />
+			) : null}
+		</FadeIn>
 	);
 };
 
