@@ -18,6 +18,8 @@ import {
 } from '@/types/api';
 import { DismissWarningModal } from '../../DismissWarningModal';
 import { MusicBlock } from '@/components/post/blocks/MusicBlock';
+import { ReportModal, ReportType } from '@/components/ReportModal';
+import { useProfileContext } from '@/components/utils/ProfileFeedContext';
 
 export const addNewlines = (txt: string, id: string) =>
 	txt.length < 1 ? (
@@ -84,6 +86,9 @@ export const PostPreview = (props: Props) => {
 		post.commentsDisabled
 	);
 	const [deleteWarningOpen, setDeleteWarningOpen] = useState(false);
+	const [reportModalOpen, setReportModalOpen] = useState(false);
+
+	const { user } = useProfileContext();
 
 	const { curUser } = useCurUserContext();
 	const { token } = curUser;
@@ -203,6 +208,15 @@ export const PostPreview = (props: Props) => {
 				message='Delete this post?'
 			/>
 
+			<ReportModal
+				isOpen={reportModalOpen}
+				onYes={() => {}}
+				onNo={() => setReportModalOpen(false)}
+				reportType={ReportType.POST}
+				username={user?.user.username || ''}
+				userId={user?.user.id || 0}
+			/>
+
 			<CommentsModal
 				isOpen={commentsOpen}
 				onClose={() => setCommentsOpen(false)}
@@ -224,6 +238,7 @@ export const PostPreview = (props: Props) => {
 				isOwnPost={props.isOwnPost}
 				commentsDisabled={commentsDisabled}
 				toggleDisableComments={toggleDisableComments}
+				onReport={() => setReportModalOpen(true)}
 			/>
 		</div>
 	);

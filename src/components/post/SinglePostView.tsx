@@ -1,4 +1,4 @@
-import { useEffect, useRef, useCallback } from 'react';
+import { useEffect, useRef, useCallback, useState } from 'react';
 import { Divider, Space, Title, HoverCard, Group } from '@mantine/core';
 import { rem } from 'polished';
 import styled from 'styled-components';
@@ -12,6 +12,7 @@ import { usePostContext } from './PostContext';
 import { useCurUserContext } from '../utils/CurUserContext';
 import { Avatar } from '../Avatar';
 import { DEFAULT_AVATAR } from '@/constants';
+import { ReportModal, ReportType } from '../ReportModal';
 
 const Wrapper = styled.div`
 	padding: ${rem(16)} ${rem(24)};
@@ -27,6 +28,7 @@ export const SinglePostView = () => {
 	const { curUser } = useCurUserContext();
 	const { post, likePost, toggleDisableComments, addComment } =
 		usePostContext();
+	const [reportModalOpen, setReportModalOpen] = useState(false);
 
 	const inputRef = useRef<HTMLTextAreaElement>(null);
 
@@ -50,6 +52,15 @@ export const SinglePostView = () => {
 
 	return (
 		<>
+			<ReportModal
+				isOpen={reportModalOpen}
+				onNo={() => setReportModalOpen(false)}
+				onYes={() => setReportModalOpen(false)}
+				postId={post.id}
+				reportType={ReportType.POST}
+				username={post.author?.username || ''}
+				userId={post.author?.id || 0}
+			/>
 			<Space h='sm' />
 			<HoverCard shadow='md' withArrow>
 				<HoverCard.Target>
@@ -88,6 +99,7 @@ export const SinglePostView = () => {
 					likeCount={post.likes}
 					commentCount={post.comments.length}
 					isOwnPost={curUser.user.id === post.authorId}
+					onReport={() => setReportModalOpen(true)}
 				/>
 				<NewCommentInput
 					onSubmit={addComment}

@@ -20,7 +20,9 @@ export const DismissWarningModal = (props: Props) => {
 		>
 			<Center>
 				<Stack>
-					<Text style={{ marginBottom: '0' }}>{props.message}</Text>
+					<Text ta='center' style={{ marginBottom: '0' }}>
+						{props.message}
+					</Text>
 					<Center>
 						<Flex>
 							<Button radius='lg' color='red' onClick={props.onYes}>

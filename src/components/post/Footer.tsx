@@ -8,6 +8,7 @@ import {
 	IconTrash,
 	IconBan,
 	IconMessageCircleOff,
+	IconFlag,
 } from '@tabler/icons-react';
 import { Group, Button, Text, Menu, ActionIcon, Tooltip } from '@mantine/core';
 
@@ -37,6 +38,7 @@ export type FooterProps = {
 	isOwnPost: boolean;
 	commentsDisabled: boolean;
 	toggleDisableComments: () => void;
+	onReport: () => void;
 };
 
 export const Footer = (props: FooterProps) => {
@@ -80,40 +82,50 @@ export const Footer = (props: FooterProps) => {
 				</Button>
 				<Text>—</Text>
 				<Text>{getPostTime(props.timestamp)}</Text>
-				{props.isOwnPost && (
-					<Menu withArrow offset={0}>
-						<Menu.Target>
-							<ActionIcon>
-								<IconDots size={14} />
-							</ActionIcon>
-						</Menu.Target>
-						<Menu.Dropdown>
+				<Menu withArrow offset={0}>
+					<Menu.Target>
+						<ActionIcon>
+							<IconDots size={14} />
+						</ActionIcon>
+					</Menu.Target>
+					<Menu.Dropdown>
+						{props.isOwnPost ? (
+							<>
+								<Menu.Item
+									color='red'
+									icon={<IconTrash size={14} />}
+									onClick={props.onDelete}
+								>
+									Delete post
+								</Menu.Item>
+								<Tooltip
+									label='Prevent other users from commenting on your posts'
+									withArrow
+									position='bottom'
+								>
+									<Menu.Item
+										icon={<IconBan size={14} />}
+										onClick={props.toggleDisableComments}
+									>
+										<span>
+											{props.commentsDisabled
+												? 'Enable comments'
+												: 'Disable comments'}
+										</span>
+									</Menu.Item>
+								</Tooltip>
+							</>
+						) : (
 							<Menu.Item
 								color='red'
-								icon={<IconTrash size={14} />}
-								onClick={props.onDelete}
+								icon={<IconFlag size={14} />}
+								onClick={props.onReport}
 							>
-								Delete post
+								Report post
 							</Menu.Item>
-							<Tooltip
-								label='Prevent other users from commenting on your posts'
-								withArrow
-								position='bottom'
-							>
-								<Menu.Item
-									icon={<IconBan size={14} />}
-									onClick={props.toggleDisableComments}
-								>
-									<span>
-										{props.commentsDisabled
-											? 'Enable comments'
-											: 'Disable comments'}
-									</span>
-								</Menu.Item>
-							</Tooltip>
-						</Menu.Dropdown>
-					</Menu>
-				)}
+						)}
+					</Menu.Dropdown>
+				</Menu>
 			</Group>
 		</Wrapper>
 	);
