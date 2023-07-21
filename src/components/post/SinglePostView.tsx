@@ -46,10 +46,6 @@ export const SinglePostView = () => {
 		[inputRef.current]
 	);
 
-	useEffect(() => {
-		console.log(post.comments, 'post');
-	}, [post.comments]);
-
 	return (
 		<>
 			<ReportModal

@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import {
-	Alert,
 	Stack,
 	TextInput,
 	Center,
@@ -163,9 +162,8 @@ const Login: Page = () => {
 						setLoginError(LoginErrors.OTHER);
 					}
 				} else if (res.success) {
-					console.log(res);
 					localStorage.setItem(STORAGE_CUR_USER_KEY, JSON.stringify(res));
-					window.location.href = `/profile/${res.user.id}#end`;
+					window.location.href = `/profile/${res.user.id}`;
 				}
 			} catch (e) {
 				console.log(e);
@@ -180,7 +178,7 @@ const Login: Page = () => {
 		if (storedUser) {
 			const parsedCurUser = JSON.parse(storedUser);
 			if (parsedCurUser.token && parsedCurUser.user) {
-				window.location.href = `/profile/${parsedCurUser.user.id}#end`;
+				window.location.href = `/profile/${parsedCurUser.user.id}`;
 			} else {
 				setIsPageLoading(false);
 			}

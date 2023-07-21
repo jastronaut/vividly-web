@@ -13,7 +13,7 @@ export const DismissWarningModal = (props: Props) => {
 	return (
 		<Modal
 			opened={props.isOpen}
-			onClose={() => {}}
+			onClose={props.onNo}
 			centered
 			size='sm'
 			withCloseButton={false}

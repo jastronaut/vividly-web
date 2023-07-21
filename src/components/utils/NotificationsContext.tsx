@@ -78,8 +78,6 @@ export const NotificationsProvider = (props: Props) => {
 	);
 
 	const markNotificationsAsRead = useCallback(async () => {
-		console.log('marked as read');
-		// return;
 		const resp = await makeApiCall<DefaultResponse>({
 			uri: `/notifications/read`,
 			method: 'POST',

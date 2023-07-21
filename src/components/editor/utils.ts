@@ -129,7 +129,6 @@ export const addLink = async (editor: ReactEditor, url: string) => {
 					.querySelector('meta[property="og:image"]')
 					?.getAttribute('content') || '';
 
-			console.log(title, description, image);
 			return { title, description, image };
 		} catch (e) {
 			console.error(e);
