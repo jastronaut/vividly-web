@@ -147,6 +147,7 @@ type EditorWithActionsProps = {
 		username: string;
 		name: string;
 	}[];
+	onClickMagicPostActions: () => void;
 };
 
 export const EditorWithActions = (props: EditorWithActionsProps) => {
@@ -184,7 +185,6 @@ export const EditorWithActions = (props: EditorWithActionsProps) => {
 					case 'Enter':
 						event.preventDefault();
 						Transforms.select(editor, target);
-						console.log(target);
 						insertMention(editor, chars[namesIndex].username);
 						setTarget(null);
 						setNamesIndex(0);
@@ -289,6 +289,7 @@ export const EditorWithActions = (props: EditorWithActionsProps) => {
 		(question: string) => {
 			addOracleResponsePreview(editor, question);
 			toggleOracleInput();
+			props.onClickMagicPostActions();
 		},
 		[editor]
 	);
@@ -297,7 +298,8 @@ export const EditorWithActions = (props: EditorWithActionsProps) => {
 		removeBlankBlock(editor);
 		editor.insertNode(music);
 		finishAddingBlock(editor);
-		toggleMusicInput;
+		toggleMusicInput();
+		props.onClickMagicPostActions();
 	};
 
 	const mentionsVisible = target && chars.length > 0;
@@ -312,6 +314,10 @@ export const EditorWithActions = (props: EditorWithActionsProps) => {
 		}
 	}, [chars.length, editor, namesIndex, searchName, target]);
 
+	useEffect(() => {
+		props.onClickMagicPostActions();
+	}, [isOracleInputVisible, isMusicInputVisible]);
+
 	return (
 		<>
 			<EditorContainer>
@@ -325,14 +331,8 @@ export const EditorWithActions = (props: EditorWithActionsProps) => {
 						if (isAstChange) {
 							props.onChange(value);
 						}
-						// console.log('value', value);
-						// }}
 						const { selection } = editor;
 
-						console.log('hi');
-						console.log('search', searchName);
-						console.log('selection', selection);
-						console.log('target', target);
 						if (selection && Range.isCollapsed(selection)) {
 							const [start] = Range.edges(selection);
 							const wordBefore = SlateEditorType.before(editor, start, {
@@ -352,8 +352,6 @@ export const EditorWithActions = (props: EditorWithActionsProps) => {
 
 							if (beforeMatch && afterMatch) {
 								setTarget(beforeRange);
-								console.log('beforeMatch', beforeMatch);
-								console.log('beforeRange', beforeRange);
 								setSearchName(beforeMatch[1]);
 								setNamesIndex(0);
 								return;
@@ -502,6 +500,7 @@ type EditorProps = {
 		name: string;
 		username: string;
 	}[];
+	onClickMagicPostActions: () => void;
 };
 
 export const Editor = (props: EditorProps) => {
@@ -633,6 +632,7 @@ export const Editor = (props: EditorProps) => {
 				onChange={setDraft}
 				editor={editor}
 				friendsNames={props.friendsList}
+				onClickMagicPostActions={props.onClickMagicPostActions}
 			/>
 			<Flex justify='flex-end'>
 				<Button
