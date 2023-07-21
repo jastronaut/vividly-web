@@ -44,7 +44,6 @@ const Profile = (props: PageProps) => {
 		deletePost,
 		addPostFromBlocks,
 		updateUser,
-		refetchFeed,
 	} = useProfileContext();
 
 	const { friends, refetchFriends } = useFriendsContext();
@@ -60,7 +59,7 @@ const Profile = (props: PageProps) => {
 		  }))
 		: [];
 
-	const onSubmitPost = async (blocks: Block[]) => {
+	const onSubmitPost = (blocks: Block[]) => {
 		setInitLoad(false);
 		addPostFromBlocks(blocks);
 		setInitLoad(true);
@@ -71,6 +70,12 @@ const Profile = (props: PageProps) => {
 			deletePost(postId, pageIndex);
 		} catch (err) {
 			showAndLogErrorNotification('Could not delete post', err);
+		}
+	};
+
+	const scrollToBottom = () => {
+		if (chatEndRef.current) {
+			chatEndRef.current.scrollIntoView({ behavior: 'smooth' });
 		}
 	};
 
@@ -126,6 +131,7 @@ const Profile = (props: PageProps) => {
 		mutatePosts(undefined, true);
 		// fetchFriends(true);
 		refetchFriends();
+		setInitLoad(true);
 		return () => {
 			setInitLoad(true);
 		};
@@ -142,7 +148,7 @@ const Profile = (props: PageProps) => {
 			chatEndRef.current.scrollIntoView({ behavior: 'smooth' });
 			setInitLoad(false);
 		}
-	}, [feed, initLoad, isPostsLoading, isUserLoading, chatEndRef.current]);
+	}, [feed, initLoad, isPostsLoading, isUserLoading]);
 
 	const isEditorVisible =
 		user &&
@@ -163,7 +169,6 @@ const Profile = (props: PageProps) => {
 					hasMorePosts={hasMore}
 					feed={feed}
 					updateUserProfileInfo={updateUser}
-					refetchFeed={refetchFeed}
 				>
 					{isEditorVisible && (
 						<Editor
@@ -171,6 +176,7 @@ const Profile = (props: PageProps) => {
 							onChange={_val => console.log('printed')}
 							onSubmit={onSubmitPost}
 							friendsList={friendsNamesList}
+							onClickMagicPostActions={scrollToBottom}
 						/>
 					)}
 				</ProfileContent>

@@ -24,20 +24,13 @@ type ProfileHeaderProps = {
 	isLoggedInUser: boolean;
 	user?: UserResponse;
 	updateUserProfileInfo: (user: UserResponse) => void;
-	refetchFeed: () => void;
 	friendsDrawerOpen: boolean;
 	openFriendsDrawer: () => void;
 	closeFriendsDrawer: () => void;
 };
 
 export const ProfileHeaderComponent = (props: ProfileHeaderProps) => {
-	const {
-		isLoading,
-		user,
-		isLoggedInUser,
-		updateUserProfileInfo,
-		refetchFeed,
-	} = props;
+	const { isLoading, user, isLoggedInUser, updateUserProfileInfo } = props;
 	const { avatarSrc } = user?.user ?? {};
 	const [avatar, setAvatar] = useState<string>(avatarSrc || DEFAULT_AVATAR);
 	const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
@@ -100,7 +93,6 @@ export const ProfileHeaderComponent = (props: ProfileHeaderProps) => {
 							<ManageFriendshipButton
 								user={user}
 								updateUserProfileInfo={updateUserProfileInfo}
-								refetchFeed={refetchFeed}
 								isLoggedInUser={isLoggedInUser}
 							/>
 						)}

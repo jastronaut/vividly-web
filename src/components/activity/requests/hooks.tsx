@@ -235,3 +235,64 @@ export const useToggleFavorite = () => {
 		toggleFavorite,
 	};
 };
+
+export const useBlockUser = () => {
+	const { token } = useCurUserContext().curUser;
+	const [isLoading, setIsLoading] = useState(false);
+	const [error, setError] = useState<string | null>(null);
+
+	const block = useCallback(
+		async (id: number) => {
+			setIsLoading(true);
+			setError(null);
+			try {
+				const resp = await makeApiCall<DefaultResponse>({
+					uri: `/blocked_users/block/${id}`,
+					method: 'POST',
+					token,
+				});
+
+				if (!resp.success) {
+					throw new Error(resp.error);
+				}
+			} catch (err) {
+				console.error(err);
+				setError(`Couldn't block user!`);
+			}
+
+			setIsLoading(false);
+		},
+		[token]
+	);
+
+	const unblock = useCallback(
+		async (id: number) => {
+			setIsLoading(true);
+			setError(null);
+			try {
+				const resp = await makeApiCall<DefaultResponse>({
+					uri: `/blocked_users/unblock/${id}`,
+					method: 'POST',
+					token,
+				});
+
+				if (!resp.success) {
+					throw new Error(resp.error);
+				}
+			} catch (err) {
+				console.error(err);
+				setError(`Couldn't unblock user!`);
+			}
+
+			setIsLoading(false);
+		},
+		[token]
+	);
+
+	return {
+		isLoading,
+		error,
+		block,
+		unblock,
+	};
+};

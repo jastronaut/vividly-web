@@ -23,6 +23,7 @@ type ProfilePostsContext = {
 	deletePost: (id: number, pageIndex: number) => void;
 	updateUser: (user: UserResponse) => void;
 	addPostFromBlocks: (blocks: Block[]) => void;
+	refetchUser: () => void;
 };
 
 const ProfilePostsContext = createContext<ProfilePostsContext>(
@@ -52,7 +53,7 @@ export const ProfileProvider = (props: Props) => {
 		[profileId && token ? `${uri}/users/${profileId}` : '', token],
 		// @ts-ignore
 		([url, token]) => fetchWithToken(url, token),
-		{ shouldRetryOnError: false }
+		{ shouldRetryOnError: true }
 	);
 
 	// get user's posts
@@ -171,10 +172,15 @@ export const ProfileProvider = (props: Props) => {
 					return [newFirstPage, ...data.slice(1)];
 				}
 				return [resp.post];
-			});
+			}, false);
+			mutatePosts();
 		},
 		[token]
 	);
+
+	const refetchUser = useCallback(() => {
+		mutateUser(undefined, true);
+	}, [mutateUser]);
 
 	const flattenedData = data?.flatMap(d => d.data);
 	const lastPage = data?.[data.length - 1];
@@ -196,6 +202,7 @@ export const ProfileProvider = (props: Props) => {
 				deletePost,
 				updateUser: updateUserProfile,
 				addPostFromBlocks,
+				refetchUser,
 			}}
 		>
 			{props.children}

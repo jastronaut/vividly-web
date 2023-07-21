@@ -43,3 +43,13 @@ export const PrivateProfileMessage = () => {
 		</Stack>
 	);
 };
+
+export const BlockedProfileMessage = () => {
+	return (
+		<Stack>
+			<Text align='center' c='dimmed'>
+				{`🚫 You have blocked this user.`}
+			</Text>
+		</Stack>
+	);
+};

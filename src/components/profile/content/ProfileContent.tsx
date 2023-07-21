@@ -15,7 +15,11 @@ import {
 	ContentWrapper,
 	BottomStuffContainer,
 } from '../_styles';
-import { EmptyPosts, PrivateProfileMessage } from './ProfileStates';
+import {
+	BlockedProfileMessage,
+	EmptyPosts,
+	PrivateProfileMessage,
+} from './ProfileStates';
 import { UnreadBanner } from './UnreadBanner';
 import { ProfilePosts } from './ProfilePosts';
 
@@ -30,7 +34,6 @@ type ProfileContentProps = {
 	hasMorePosts?: boolean;
 	onClickLoadMore?: () => void;
 	updateUserProfileInfo: (user: UserResponse) => void;
-	refetchFeed: () => void;
 };
 
 export const ProfileContent = (props: ProfileContentProps) => {
@@ -47,7 +50,8 @@ export const ProfileContent = (props: ProfileContentProps) => {
 	const showPrivateProfileMessage =
 		!isLoading && !isLoggedInUser && !user?.friendship;
 
-	const showEmptyState = !isLoading && feed[0] && feed[0].data.length === 0;
+	const showEmptyState =
+		!isLoggedInUser && !isLoading && feed[0] && feed[0].data.length === 0;
 
 	const hasPages =
 		feed.length > 0 || props.hasMorePosts || (feed[0] && feed[0].cursor);
@@ -60,9 +64,8 @@ export const ProfileContent = (props: ProfileContentProps) => {
 		!hasPages;
 
 	const showBottomStuff =
-		(!isLoading && showEmptyState) ||
-		showPrivateProfileMessage ||
-		showEndMessage;
+		!isLoading &&
+		(showEmptyState || showPrivateProfileMessage || showEndMessage);
 
 	const showMorePostsButton = !isLoading && props.hasMorePosts;
 
@@ -73,7 +76,6 @@ export const ProfileContent = (props: ProfileContentProps) => {
 				isLoggedInUser={isLoggedInUser}
 				user={props.user}
 				updateUserProfileInfo={props.updateUserProfileInfo}
-				refetchFeed={props.refetchFeed}
 				friendsDrawerOpen={friendsDrawerOpen}
 				openFriendsDrawer={open}
 				closeFriendsDrawer={close}
@@ -114,8 +116,11 @@ export const ProfileContent = (props: ProfileContentProps) => {
 							<Text c='dimmed' ta='center'>{`You've reached the end!`}</Text>
 						) : null}
 
-						{showPrivateProfileMessage && <PrivateProfileMessage />}
+						{showPrivateProfileMessage && !user?.isBlocked ? (
+							<PrivateProfileMessage />
+						) : null}
 						{showEmptyState && <EmptyPosts />}
+						{user?.isBlocked && <BlockedProfileMessage />}
 					</BottomStuffContainer>
 				) : null}
 			</ProfileContentContainer>

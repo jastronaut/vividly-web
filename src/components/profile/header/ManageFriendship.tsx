@@ -1,22 +1,22 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Group, ActionIcon, Menu, Tooltip, Indicator } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
-import { useWindowScroll, useMediaQuery } from '@mantine/hooks';
 import {
 	IconUserPlus,
 	IconUserMinus,
 	IconUserOff,
 	IconMoodCheck,
 	IconMoodSmile,
+	IconBan,
 } from '@tabler/icons-react';
+import { useRouter } from 'next/router';
 
 import { makeApiCall } from '@/utils';
-import { DEFAULT_AVATAR } from '../../../constants';
-import { Friend, User } from '@/types/user';
 import { UserResponse, DefaultResponse } from '@/types/api';
 import { FavoriteButton, FriendActionsMenuContainer } from './styles';
 import { useCurUserContext } from '@/components/utils/CurUserContext';
 import { showAndLogErrorNotification } from '@/showerror';
+import { useProfileContext } from '@/components/utils/ProfileFeedContext';
 
 import {
 	useAcceptFriendRequest,
@@ -24,6 +24,7 @@ import {
 	useDeclineFriendRequest,
 	useUnfriend,
 	useCancelFriendRequest,
+	useBlockUser,
 } from '@/components/activity/requests/hooks';
 import { throwConfetti } from '@/utils';
 import { DismissWarningModal } from '@/components/DismissWarningModal';
@@ -38,7 +39,6 @@ function showSuccessNotification(message: string) {
 
 type ProfileHeaderProps = {
 	updateUserProfileInfo: (user: UserResponse) => void;
-	refetchFeed: () => void;
 	user: UserResponse;
 	isLoggedInUser: boolean;
 };
@@ -50,9 +50,15 @@ type ProfileHeaderProps = {
  * help!
  */
 export const ManageFriendshipButton = (props: ProfileHeaderProps) => {
-	const { updateUserProfileInfo, refetchFeed, user, isLoggedInUser } = props;
+	const { updateUserProfileInfo, user } = props;
 	const { curUser } = useCurUserContext();
 	const [warningModalOpen, setWarningModalOpen] = useState(false);
+	const [blockWarningModalOpen, setBlockWarningModalOpen] = useState(false);
+	const [unblockWarningModalOpen, setUnblockWarningModalOpen] = useState(false);
+
+	const { refetchFeed } = useProfileContext();
+
+	const router = useRouter();
 
 	const { friendship, friendRequest } = user;
 	const username = user.user.username;
@@ -152,10 +158,30 @@ export const ManageFriendshipButton = (props: ProfileHeaderProps) => {
 		isLoading: cancelFriendRequestLoading,
 	} = useCancelFriendRequest();
 
+	const {
+		block,
+		error: blockError,
+		isLoading: blockLoading,
+		unblock,
+	} = useBlockUser();
+
 	const onConfirmUnfriend = () => {
 		setChosenFriendButtonAction('unfriend');
 		unfriend(user.user.id);
 		setWarningModalOpen(false);
+	};
+
+	const onConfirmBlock = () => {
+		setChosenFriendButtonAction('block');
+		block(user.user.id);
+		setBlockWarningModalOpen(false);
+		router.push('/feed');
+	};
+
+	const onConfirmUnblock = () => {
+		setChosenFriendButtonAction('unblock');
+		unblock(user.user.id);
+		setUnblockWarningModalOpen(false);
 	};
 
 	// hoooks to check when friend button is triggered, when they're loading, and
@@ -281,6 +307,18 @@ export const ManageFriendshipButton = (props: ProfileHeaderProps) => {
 				onNo={() => setWarningModalOpen(false)}
 				onYes={onConfirmUnfriend}
 			/>
+			<DismissWarningModal
+				isOpen={blockWarningModalOpen}
+				message={'Are you sure you want to block this user?'}
+				onNo={() => setBlockWarningModalOpen(false)}
+				onYes={onConfirmBlock}
+			/>
+			<DismissWarningModal
+				isOpen={unblockWarningModalOpen}
+				message={'Are you sure you want to unblock this user?'}
+				onNo={() => setUnblockWarningModalOpen(false)}
+				onYes={onConfirmUnblock}
+			/>
 			<FriendActionsMenuContainer id='friend-menu-container'>
 				<Group spacing='sm'>
 					<Menu position='bottom-end' withArrow offset={0}>
@@ -354,7 +392,7 @@ export const ManageFriendshipButton = (props: ProfileHeaderProps) => {
 								>
 									Unfriend
 								</Menu.Item>
-							) : (
+							) : !user.isBlocked ? (
 								<Menu.Item
 									icon={<IconUserPlus size={14} />}
 									onClick={() => {
@@ -363,6 +401,22 @@ export const ManageFriendshipButton = (props: ProfileHeaderProps) => {
 									}}
 								>
 									Add friend
+								</Menu.Item>
+							) : null}
+
+							{user.isBlocked ? (
+								<Menu.Item
+									icon={<IconBan size={14} />}
+									onClick={() => setUnblockWarningModalOpen(true)}
+								>
+									Unblock user
+								</Menu.Item>
+							) : (
+								<Menu.Item
+									icon={<IconBan size={14} />}
+									onClick={() => setBlockWarningModalOpen(true)}
+								>
+									Block user
 								</Menu.Item>
 							)}
 						</Menu.Dropdown>
