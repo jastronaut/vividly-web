@@ -177,7 +177,10 @@ export const PasswordSetting = () => {
 
 	return (
 		<>
-			<SettingSection title={'Password'} data={<Text>********</Text>}>
+			<SettingSection
+				title={'Password'}
+				data={<Text>Change your password</Text>}
+			>
 				<div>
 					<TextInput
 						placeholder='New password'

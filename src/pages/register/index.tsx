@@ -109,6 +109,7 @@ export const RegisterSteps = () => {
 
 				localStorage.setItem(STORAGE_CUR_USER_KEY, JSON.stringify(user));
 				setUserId(user.user.id);
+				setStep(2);
 			} catch (err) {
 				showAndLogErrorNotification(
 					`Couldn't register your account, please check your details and try again later!`,
@@ -150,12 +151,6 @@ export const RegisterSteps = () => {
 			setPasswordError(null);
 		}
 	}, [password]);
-
-	useEffect(() => {
-		if (userId !== null) {
-			window.location.href = '/profile/' + userId;
-		}
-	}, [userId]);
 
 	return (
 		<>
@@ -219,19 +214,26 @@ export const RegisterSteps = () => {
 							</Tooltip>
 						</>
 					)}
-
 					{step === 0 && (
-						<Center>
-							<Button
-								type='submit'
-								color='grape'
-								radius='lg'
-								onClick={checkUsername}
-								variant='outline'
-							>
-								Next
-							</Button>
-						</Center>
+						<>
+							<Center>
+								<Button
+									type='submit'
+									color='grape'
+									radius='lg'
+									onClick={checkUsername}
+									variant='outline'
+								>
+									Next
+								</Button>
+							</Center>
+							<Text ta='center'>or</Text>
+							<Link href='/login'>
+								<Button color='grape' variant='subtle' component='span'>
+									Login
+								</Button>
+							</Link>
+						</>
 					)}
 					{step === 1 && (
 						<>
@@ -253,7 +255,7 @@ export const RegisterSteps = () => {
 			{step === 2 && (
 				<>
 					<Text fw={700}>Thanks for joining Vividly!</Text>
-					<Text>{`We've sent an email to ${email} to verify your account.`}</Text>
+					<Text>{`We've sent you an email to verify your account.`}</Text>
 					<Space h='sm' />
 					<Link href='/feed'>
 						<Button

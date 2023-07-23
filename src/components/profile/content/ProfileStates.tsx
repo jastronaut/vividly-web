@@ -25,6 +25,7 @@ export const PostsLoading = () => {
 export const EmptyPosts = (props: { children?: React.ReactNode }) => {
 	return (
 		<TextWrapper>
+			<Space h='xl' />
 			<Text align='center' c='dimmed'>
 				No posts... yet!
 			</Text>
@@ -47,6 +48,7 @@ export const PrivateProfileMessage = () => {
 export const BlockedProfileMessage = () => {
 	return (
 		<Stack>
+			<Space h='xl' />
 			<Text align='center' c='dimmed'>
 				{`🚫 You have blocked this user.`}
 			</Text>
