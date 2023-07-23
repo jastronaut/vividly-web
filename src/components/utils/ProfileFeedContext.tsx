@@ -21,7 +21,7 @@ type ProfilePostsContext = {
 	isPostsLoading: boolean;
 	feed: ProfileFeedResponse[];
 	deletePost: (id: number, pageIndex: number) => void;
-	updateUser: (user: UserResponse) => void;
+	updateUser: (user: Partial<UserResponse>) => void;
 	addPostFromBlocks: (blocks: Block[]) => void;
 	refetchUser: () => void;
 };
@@ -131,21 +131,30 @@ export const ProfileProvider = (props: Props) => {
 	};
 
 	const updateUserProfile = useCallback(
-		(newUser: UserResponse) => {
+		(newUser: Partial<UserResponse>) => {
 			if (!user) {
 				return;
 			}
 
-			mutateUser({
-				...user,
-				...newUser,
-			});
+			mutateUser(u => {
+				if (!u) {
+					return;
+				}
 
-			if (curUser.user.id === newUser.user.id) {
-				updateCurUser(newUser.user);
-			}
+				if (curUser.user.id === u.user.id) {
+					updateCurUser({
+						...u.user,
+						...newUser.user,
+					});
+				}
+
+				return {
+					...u,
+					...newUser,
+				};
+			});
 		},
-		[user]
+		[user, mutateUser]
 	);
 
 	const addPostFromBlocks = useCallback(
@@ -162,20 +171,19 @@ export const ProfileProvider = (props: Props) => {
 			});
 			const resp = await res.json();
 
-			mutatePosts(data => {
-				if (data && data.length) {
-					const curFirstPage = data[0];
+			mutatePosts(currentData => {
+				if (currentData && currentData.length) {
+					const curFirstPage = currentData[0];
 					const newFirstPage = {
 						...curFirstPage,
 						data: [resp.post, ...curFirstPage.data],
 					};
-					return [newFirstPage, ...data.slice(1)];
+					return [newFirstPage, ...currentData.slice(1)];
 				}
 				return [resp.post];
 			}, false);
-			mutatePosts();
 		},
-		[token]
+		[token, mutatePosts]
 	);
 
 	const refetchUser = useCallback(() => {

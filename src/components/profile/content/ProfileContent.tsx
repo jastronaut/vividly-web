@@ -33,7 +33,6 @@ type ProfileContentProps = {
 	children?: React.ReactNode;
 	hasMorePosts?: boolean;
 	onClickLoadMore?: () => void;
-	updateUserProfileInfo: (user: UserResponse) => void;
 };
 
 export const ProfileContent = (props: ProfileContentProps) => {
@@ -75,7 +74,6 @@ export const ProfileContent = (props: ProfileContentProps) => {
 				isLoading={props.isUserLoading}
 				isLoggedInUser={isLoggedInUser}
 				user={props.user}
-				updateUserProfileInfo={props.updateUserProfileInfo}
 				friendsDrawerOpen={friendsDrawerOpen}
 				openFriendsDrawer={open}
 				closeFriendsDrawer={close}

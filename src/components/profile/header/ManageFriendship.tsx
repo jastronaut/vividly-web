@@ -8,6 +8,7 @@ import {
 	IconMoodCheck,
 	IconMoodSmile,
 	IconBan,
+	IconMoodEmpty,
 } from '@tabler/icons-react';
 import { useRouter } from 'next/router';
 
@@ -28,6 +29,7 @@ import {
 } from '@/components/activity/requests/hooks';
 import { throwConfetti } from '@/utils';
 import { DismissWarningModal } from '@/components/DismissWarningModal';
+import { useVividlyTheme } from '@/styles/Theme';
 
 function showSuccessNotification(message: string) {
 	notifications.show({
@@ -38,7 +40,6 @@ function showSuccessNotification(message: string) {
 }
 
 type ProfileHeaderProps = {
-	updateUserProfileInfo: (user: UserResponse) => void;
 	user: UserResponse;
 	isLoggedInUser: boolean;
 };
@@ -50,13 +51,14 @@ type ProfileHeaderProps = {
  * help!
  */
 export const ManageFriendshipButton = (props: ProfileHeaderProps) => {
-	const { updateUserProfileInfo, user } = props;
+	const { user } = props;
 	const { curUser } = useCurUserContext();
 	const [warningModalOpen, setWarningModalOpen] = useState(false);
 	const [blockWarningModalOpen, setBlockWarningModalOpen] = useState(false);
 	const [unblockWarningModalOpen, setUnblockWarningModalOpen] = useState(false);
 
-	const { refetchFeed } = useProfileContext();
+	const { refetchFeed, updateUser } = useProfileContext();
+	const { accentColor } = useVividlyTheme();
 
 	const router = useRouter();
 
@@ -92,7 +94,7 @@ export const ManageFriendshipButton = (props: ProfileHeaderProps) => {
 				throwConfetti();
 			}
 
-			updateUserProfileInfo({
+			updateUser({
 				...user,
 				friendship: {
 					...user.friendship,
@@ -182,6 +184,9 @@ export const ManageFriendshipButton = (props: ProfileHeaderProps) => {
 		setChosenFriendButtonAction('unblock');
 		unblock(user.user.id);
 		setUnblockWarningModalOpen(false);
+		updateUser({
+			isBlocked: false,
+		});
 	};
 
 	// hoooks to check when friend button is triggered, when they're loading, and
@@ -194,7 +199,7 @@ export const ManageFriendshipButton = (props: ProfileHeaderProps) => {
 		if (acceptRequestError) {
 			showAndLogErrorNotification(`Could not accept friend request!`);
 		} else if (acceptedFriendship) {
-			updateUserProfileInfo({
+			updateUser({
 				...user,
 				friendship: acceptedFriendship,
 			});
@@ -219,7 +224,7 @@ export const ManageFriendshipButton = (props: ProfileHeaderProps) => {
 		if (addFriendError) {
 			showAndLogErrorNotification(`Could not add friend!`);
 		} else if (newFriendRequest) {
-			updateUserProfileInfo({
+			updateUser({
 				...user,
 				friendRequest: {
 					id: newFriendRequest.id,
@@ -246,7 +251,7 @@ export const ManageFriendshipButton = (props: ProfileHeaderProps) => {
 			if (declineRequestError) {
 				showAndLogErrorNotification(`Could not decline friend request!`);
 			} else {
-				updateUserProfileInfo({
+				updateUser({
 					...user,
 					friendRequest: null,
 				});
@@ -265,7 +270,7 @@ export const ManageFriendshipButton = (props: ProfileHeaderProps) => {
 		if (unfriendError) {
 			showAndLogErrorNotification(`Could not unfriend!`);
 		} else {
-			updateUserProfileInfo({
+			updateUser({
 				...user,
 				friendship: null,
 			});
@@ -289,7 +294,7 @@ export const ManageFriendshipButton = (props: ProfileHeaderProps) => {
 		if (cancelRequestError) {
 			showAndLogErrorNotification(`Could not cancel friend request!`);
 		} else {
-			updateUserProfileInfo({
+			updateUser({
 				...user,
 				friendRequest: null,
 			});
@@ -330,8 +335,8 @@ export const ManageFriendshipButton = (props: ProfileHeaderProps) => {
 							>
 								<ActionIcon
 									onClick={() => null}
-									color='grape'
-									variant={!!friendship ? 'light' : 'subtle'}
+									color={accentColor}
+									variant='light'
 									aria-label='Manage friendship'
 								>
 									<Tooltip
@@ -341,6 +346,8 @@ export const ManageFriendshipButton = (props: ProfileHeaderProps) => {
 									>
 										{user.friendship ? (
 											<IconMoodCheck size={16} />
+										) : user.isBlocked ? (
+											<IconMoodEmpty size={16} />
 										) : (
 											<IconMoodSmile size={16} />
 										)}

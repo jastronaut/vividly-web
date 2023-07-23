@@ -18,25 +18,26 @@ import { throwConfetti } from '@/utils';
 import { HeaderAvatar } from './HeaderAvatar';
 import { HEADER_SCROLL_HEIGHT, HEADER_SCROLL_HEIGHT_MOBILE } from './constants';
 import { ManageFriendshipButton } from './ManageFriendship';
+import { useProfileContext } from '@/components/utils/ProfileFeedContext';
 
 type ProfileHeaderProps = {
 	isLoading: boolean;
 	isLoggedInUser: boolean;
 	user?: UserResponse;
-	updateUserProfileInfo: (user: UserResponse) => void;
 	friendsDrawerOpen: boolean;
 	openFriendsDrawer: () => void;
 	closeFriendsDrawer: () => void;
 };
 
 export const ProfileHeaderComponent = (props: ProfileHeaderProps) => {
-	const { isLoading, user, isLoggedInUser, updateUserProfileInfo } = props;
+	const { isLoading, user, isLoggedInUser } = props;
 	const { avatarSrc } = user?.user ?? {};
 	const [avatar, setAvatar] = useState<string>(avatarSrc || DEFAULT_AVATAR);
 	const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
 	const { curUser, updateCurUser } = useCurUserContext();
 	const [scroll] = useWindowScroll();
 	const isMobile = useMediaQuery('(max-width: 800px)');
+	const { updateUser } = useProfileContext();
 
 	let isHeaderScrolled = false;
 	if (isMobile) {
@@ -50,7 +51,7 @@ export const ProfileHeaderComponent = (props: ProfileHeaderProps) => {
 			return;
 		}
 		setAvatar(newUser.avatarSrc);
-		updateUserProfileInfo({
+		updateUser({
 			...user,
 			user: newUser,
 		});
@@ -92,7 +93,6 @@ export const ProfileHeaderComponent = (props: ProfileHeaderProps) => {
 						) : (
 							<ManageFriendshipButton
 								user={user}
-								updateUserProfileInfo={updateUserProfileInfo}
 								isLoggedInUser={isLoggedInUser}
 							/>
 						)}
