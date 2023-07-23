@@ -112,3 +112,14 @@ export type ImgBBUploadResponse = {
 export interface AuthInfoResponse extends DefaultResponse {
 	authUser: AuthUser;
 }
+
+export type BlockedUser = {
+	id: number;
+	name: string;
+	username: string;
+	avatarSrc: string;
+};
+export type BlockedUsersResponse = DefaultResponse &
+	{
+		blockedUser: BlockedUser;
+	}[];
