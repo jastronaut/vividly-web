@@ -11,6 +11,7 @@ import {
 import styled from 'styled-components';
 import { rem } from 'polished';
 import Link from 'next/link';
+import { useVividlyTheme } from '@/styles/Theme';
 
 const MobileMenuContainer = styled.div`
 	display: flex;
@@ -26,6 +27,8 @@ type Props = {
 
 export const ProfileActions = (props: Props) => {
 	const matches = useMediaQuery(`(max-width:  ${rem(500)})`);
+	const { accentColor } = useVividlyTheme();
+
 	if (matches) {
 		return (
 			<>
@@ -70,7 +73,7 @@ export const ProfileActions = (props: Props) => {
 		<Group>
 			<ActionIcon
 				onClick={props.onClickFriends}
-				color='grape'
+				color={accentColor}
 				variant='outline'
 				aria-label='View friends'
 			>
@@ -80,7 +83,7 @@ export const ProfileActions = (props: Props) => {
 			</ActionIcon>
 			<ActionIcon
 				variant='outline'
-				color='grape'
+				color={accentColor}
 				onClick={props.onClickEdit}
 				aria-label='Edit profile'
 			>

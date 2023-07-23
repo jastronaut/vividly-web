@@ -16,9 +16,12 @@ import {
 import {
 	EmailSetting,
 	PasswordSetting,
-} from '@/components/settings/TextInputSetting';
+	BlockedUsersSetting,
+	ColorSetting,
+} from '@/components/settings';
 import AppLayout from '@/components/layout/AppLayout';
 import { FadeIn } from '@/styles/Animations';
+import { useEffect } from 'react';
 
 const PageContainer = styled.div`
 	margin: ${rem(48)} ${rem(128)};
@@ -44,10 +47,11 @@ const PageContent = (props: { token: string }) => {
 		useSystemTheme,
 		setUseSystemTheme,
 	} = useVividlyTheme();
+
 	const onClickChangeTheme = () => {
-		setTheme(
-			vividlyTheme === ThemeName.Light ? ThemeName.Dark : ThemeName.Light
-		);
+		const newTheme =
+			vividlyTheme === ThemeName.Light ? ThemeName.Dark : ThemeName.Light;
+		setTheme(newTheme);
 		setUseSystemTheme(false);
 	};
 
@@ -63,18 +67,27 @@ const PageContent = (props: { token: string }) => {
 
 	const onToggleSystemTheme = () => {
 		if (useSystemTheme) {
-			setUseSystemTheme(false);
 			window
 				.matchMedia('(prefers-color-scheme: dark)')
 				.removeEventListener('change', checkPrefersColorScheme);
+			setUseSystemTheme(false);
 		} else {
-			setUseSystemTheme(true);
 			checkPrefersColorScheme();
 			window
 				.matchMedia('(prefers-color-scheme: dark)')
 				.addEventListener('change', checkPrefersColorScheme);
+
+			setUseSystemTheme(true);
 		}
 	};
+
+	useEffect(() => {
+		return () => {
+			window
+				.matchMedia('(prefers-color-scheme: dark)')
+				.removeEventListener('change', checkPrefersColorScheme);
+		};
+	}, []);
 
 	if (!accountInfo || !accountInfo.authUser)
 		return (
@@ -110,6 +123,8 @@ const PageContent = (props: { token: string }) => {
 				onChange={onClickChangeTheme}
 			/>
 			<Space h='md' />
+			<ColorSetting />
+			<Space h='md' />
 			<Divider
 				size='sm'
 				labelPosition='left'
@@ -127,6 +142,9 @@ const PageContent = (props: { token: string }) => {
 			<Divider size='xs' />
 			<Space h='sm' />
 			<PasswordSetting />
+			<Divider size='xs' />
+			<Space h='sm' />
+			<BlockedUsersSetting />
 
 			<Divider size='xs' />
 			<Space h='lg' />

@@ -16,6 +16,7 @@ import { makeApiCall } from '@/utils';
 import { LoginResponse } from '@/types/api';
 import LoginLogoutLayout from '@/components/layout/LoginLogoutLayout';
 import { Page } from '../_app';
+import Link from 'next/link';
 
 const StyledContainer = styled.div`
 	background-color: ${props => props.theme.background.primary};
@@ -117,14 +118,11 @@ const LoginComponent = (props: LoginComponentProps) => {
 										Enter
 									</Button>
 									<Text>or</Text>
-									<Button
-										color='grape'
-										variant='light'
-										component='a'
-										href='/register'
-									>
-										Register
-									</Button>
+									<Link href='/register'>
+										<Button color='grape' variant='light' component='span'>
+											Register
+										</Button>
+									</Link>
 								</Flex>
 							</Center>
 						</form>

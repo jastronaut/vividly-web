@@ -79,21 +79,23 @@ export const NotificationTabs = () => {
 	}, []);
 
 	useEffect(() => {
+		/*
 		const handleWindowClose = (e: BeforeUnloadEvent) => {
 			if (unreadNotificationsCount > 0) {
 				markNotificationsAsRead();
 			}
 			e.preventDefault();
 		};
+		*/
 		const handleBrowseAway = () => {
 			if (unreadNotificationsCount > 0) {
 				markNotificationsAsRead();
 			}
 		};
-		window.addEventListener('beforeunload', handleWindowClose);
+		// window.addEventListener('beforeunload', handleWindowClose);
 		router.events.on('routeChangeStart', handleBrowseAway);
 		return () => {
-			window.removeEventListener('beforeunload', handleWindowClose);
+			// 	window.removeEventListener('beforeunload', handleWindowClose);
 			router.events.off('routeChangeStart', handleBrowseAway);
 		};
 	}, [unreadNotificationsCount, router.events]);
@@ -117,7 +119,7 @@ export const NotificationTabs = () => {
 					</Center>
 				) : null}
 				<Space h='xl' />
-				<Tabs color='grape' defaultValue='all'>
+				<Tabs defaultValue='all'>
 					<Tabs.List>
 						<Tabs.Tab
 							value='all'
@@ -130,7 +132,6 @@ export const NotificationTabs = () => {
 										variant='filled'
 										size='sm'
 										p={0}
-										color='grape'
 									>
 										{unreadNotificationsCount >= 50
 											? '50+'
@@ -152,7 +153,6 @@ export const NotificationTabs = () => {
 										variant='filled'
 										size='sm'
 										p={0}
-										color='grape'
 									>
 										{unreadCommentNotificationsCount}
 									</Badge>
@@ -172,7 +172,6 @@ export const NotificationTabs = () => {
 										variant='filled'
 										size='sm'
 										p={0}
-										color='grape'
 									>
 										{unreadMentionNotificationsCount}
 									</Badge>
@@ -192,7 +191,6 @@ export const NotificationTabs = () => {
 										variant='filled'
 										size='sm'
 										p={0}
-										color='grape'
 									>
 										{unreadLikeNotificationsCount}
 									</Badge>

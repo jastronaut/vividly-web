@@ -1,5 +1,7 @@
 export const STORAGE_CUR_USER_KEY = 'vividly.curUserData';
 export const STORAGE_THEME_KEY = 'vividly.theme';
+export const STORAGE_SYSTEM_THEME = 'useSystemTheme';
+export const STORAGE_ACCENT_COLOR = 'vividly.accentColor';
 
 export const DEFAULT_AVATAR = `https://i.ibb.co/CnxM4Hj/grid-0-2.jpg`;
 

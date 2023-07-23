@@ -74,24 +74,9 @@ import {
 } from './Nodes';
 import { showAndLogErrorNotification } from '@/showerror';
 import { MusicInput, OracleInput } from './MagicActions';
-import { User } from '@/types/user';
+import { useVividlyTheme } from '@/styles/Theme';
 
 type TheEditor = BaseEditor & ReactEditor & HistoryEditor;
-
-const NAMES = [
-	'Jace',
-	'Chandra',
-	'Gideon',
-	'Nissa',
-	'Nahiri',
-	'Kiora',
-	'Kiori',
-	'Kaya',
-	'Kaye',
-	'Kasmina',
-	'Narset',
-	'Ral',
-];
 
 const insertMention = (editor: TheEditor, character: string) => {
 	SlateEditorType.insertText(editor, `@${character} `);
@@ -158,6 +143,8 @@ export const EditorWithActions = (props: EditorWithActionsProps) => {
 	const [searchName, setSearchName] = useState<string | null>(null);
 	const [namesIndex, setNamesIndex] = useState(0);
 	const ref = useRef<HTMLDivElement | null>(null);
+
+	const { accentColor } = useVividlyTheme();
 
 	const chars = searchName
 		? props.friendsNames.filter(
@@ -271,6 +258,7 @@ export const EditorWithActions = (props: EditorWithActionsProps) => {
 		if (isOracleInputVisible) {
 			setIsOracleInputVisible(false);
 		} else {
+			props.onClickMagicPostActions();
 			setIsOracleInputVisible(true);
 			setIsMusicInputVisible(false);
 		}
@@ -280,6 +268,7 @@ export const EditorWithActions = (props: EditorWithActionsProps) => {
 		if (isMusicInputVisible) {
 			setIsMusicInputVisible(false);
 		} else {
+			props.onClickMagicPostActions();
 			setIsMusicInputVisible(true);
 			setIsOracleInputVisible(false);
 		}
@@ -289,7 +278,6 @@ export const EditorWithActions = (props: EditorWithActionsProps) => {
 		(question: string) => {
 			addOracleResponsePreview(editor, question);
 			toggleOracleInput();
-			props.onClickMagicPostActions();
 		},
 		[editor]
 	);
@@ -299,10 +287,15 @@ export const EditorWithActions = (props: EditorWithActionsProps) => {
 		editor.insertNode(music);
 		finishAddingBlock(editor);
 		toggleMusicInput();
-		props.onClickMagicPostActions();
 	};
 
 	const mentionsVisible = target && chars.length > 0;
+
+	const actionIconProps = {
+		radius: 'xl' as const,
+		size: 'lg' as const,
+		color: accentColor,
+	};
 
 	useEffect(() => {
 		const el = ref.current;
@@ -409,11 +402,8 @@ export const EditorWithActions = (props: EditorWithActionsProps) => {
 					{props => (
 						<Tooltip label='Add an image' position='bottom' withArrow>
 							<ActionIcon
-								variant='light'
-								radius='xl'
-								color='grape'
-								size='lg'
 								aria-label='Upload image'
+								{...actionIconProps}
 								{...props}
 							>
 								<IconPhoto />
@@ -423,10 +413,8 @@ export const EditorWithActions = (props: EditorWithActionsProps) => {
 				</FileButton>
 				<Tooltip label='Add current time' position='bottom' withArrow>
 					<ActionIcon
+						{...actionIconProps}
 						variant='light'
-						radius='xl'
-						color='grape'
-						size='lg'
 						onClick={() => addTime(editor)}
 						aria-label='Add current time'
 					>
@@ -435,10 +423,8 @@ export const EditorWithActions = (props: EditorWithActionsProps) => {
 				</Tooltip>
 				<Tooltip label='Add current date' position='bottom' withArrow>
 					<ActionIcon
+						{...actionIconProps}
 						variant='light'
-						radius='xl'
-						color='grape'
-						size='lg'
 						onClick={() => addDate(editor)}
 						aria-label='Add current date'
 					>
@@ -447,10 +433,8 @@ export const EditorWithActions = (props: EditorWithActionsProps) => {
 				</Tooltip>
 				<Tooltip label='Add current weather' position='bottom' withArrow>
 					<ActionIcon
+						{...actionIconProps}
 						variant='light'
-						radius='xl'
-						color='grape'
-						size='lg'
 						onClick={() => addWeather(editor)}
 						aria-label='Add current weather'
 					>
@@ -460,9 +444,7 @@ export const EditorWithActions = (props: EditorWithActionsProps) => {
 				<Tooltip label='Ask the oracle a question' position='bottom' withArrow>
 					<ActionIcon
 						variant={isOracleInputVisible ? 'filled' : 'light'}
-						radius='xl'
-						color='grape'
-						size='lg'
+						{...actionIconProps}
 						onClick={toggleOracleInput}
 						aria-label='Ask the oracle'
 					>
@@ -473,9 +455,7 @@ export const EditorWithActions = (props: EditorWithActionsProps) => {
 				<Tooltip label='Add a song' position='bottom' withArrow>
 					<ActionIcon
 						variant={isMusicInputVisible ? 'filled' : 'light'}
-						radius='xl'
-						color='grape'
-						size='lg'
+						{...actionIconProps}
 						onClick={toggleMusicInput}
 						title='Add a song'
 					>

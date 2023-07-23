@@ -12,15 +12,10 @@ import { FriendRequestItem } from '@/components/activity/requests/FriendRequestI
 import { PageWrapper } from './_style';
 import { makeApiCall } from '@/utils';
 import { URL_PREFIX } from '@/constants';
-import {
-	AcceptFriendRequestResponse,
-	DefaultResponse,
-	FriendRequestsResponse,
-} from '@/types/api';
+import { DefaultResponse, FriendRequestsResponse } from '@/types/api';
 import { EmptyTab, LoadingTab } from '../TabStates';
 import {
 	useAcceptFriendRequest,
-	useAddNewFriend,
 	useDeclineFriendRequest,
 	useCancelFriendRequest,
 } from './hooks';
@@ -229,7 +224,7 @@ export const FriendRequestTabs = () => {
 				<PageWrapper>
 					<Title order={3}>Friend Requests</Title>
 					<Space h='xs' />
-					<Tabs defaultValue='received' color='grape'>
+					<Tabs defaultValue='received'>
 						<Tabs.List>
 							<Tabs.Tab
 								value='received'
@@ -242,7 +237,6 @@ export const FriendRequestTabs = () => {
 											variant='filled'
 											size='xs'
 											p={0}
-											color='grape'
 										>
 											{inboundCount}
 										</Badge>
@@ -261,7 +255,6 @@ export const FriendRequestTabs = () => {
 											variant='filled'
 											size='sm'
 											p={0}
-											color='grape'
 										>
 											{outboundCount}
 										</Badge>

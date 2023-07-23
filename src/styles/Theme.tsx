@@ -1,11 +1,16 @@
 import React, { useEffect, createContext, useContext, useState } from 'react';
 import { ThemeProvider } from 'styled-components';
-import { MantineProvider } from '@mantine/core';
+import { MantineProvider, useMantineTheme } from '@mantine/core';
 import { useLocalStorage } from '@mantine/hooks';
 import { Notifications } from '@mantine/notifications';
+import { ModalsProvider } from '@mantine/modals';
 
 import { GlobalStyle } from './GlobalStyle';
-import { STORAGE_THEME_KEY } from '@/constants';
+import {
+	STORAGE_ACCENT_COLOR,
+	STORAGE_SYSTEM_THEME,
+	STORAGE_THEME_KEY,
+} from '@/constants';
 
 export enum ThemeName {
 	Light = 'light',
@@ -66,18 +71,37 @@ export const darkTheme = {
 	...baseTheme,
 };
 
+export const COLORS = [
+	'red',
+	'pink',
+	'grape',
+	'violet',
+	'indigo',
+	'blue',
+	'cyan',
+	'teal',
+	'green',
+	'lime',
+	'yellow',
+	'orange',
+];
+
 type VividlyThemeContextType = {
-	theme: ThemeName;
+	theme: 'light' | 'dark';
 	setTheme: (theme: ThemeName) => void;
 	useSystemTheme: boolean;
 	setUseSystemTheme: (_useSystemTheme: boolean) => void;
+	accentColor: string;
+	setAccentColor: (_accentColor: string) => void;
 };
 
 export const VividlyThemeContext = createContext<VividlyThemeContextType>({
 	theme: ThemeName.Light,
-	setTheme: (theme: ThemeName) => {},
+	setTheme: (_theme: ThemeName) => {},
 	useSystemTheme: false,
 	setUseSystemTheme: (_useSystemTheme: boolean) => {},
+	accentColor: 'grape',
+	setAccentColor: (_accentColor: string) => {},
 });
 
 export const useVividlyTheme = () => useContext(VividlyThemeContext);
@@ -85,15 +109,24 @@ export const useVividlyTheme = () => useContext(VividlyThemeContext);
 export const VividlyThemeProvider = (props: { children: React.ReactNode }) => {
 	const [theme, setTheme] = useLocalStorage({
 		key: STORAGE_THEME_KEY,
-		defaultValue: 'light' as ThemeName,
+		defaultValue: ThemeName.Light,
 	});
 
 	const [useSystemTheme, setUseSystemTheme] = useLocalStorage({
-		key: 'useSystemTheme',
+		key: STORAGE_SYSTEM_THEME,
 		defaultValue: false,
 	});
 
+	const [accentColor, setAccentColor] = useLocalStorage({
+		key: STORAGE_ACCENT_COLOR,
+		defaultValue: 'grape',
+	});
+
 	const [mounted, setMounted] = useState(false);
+	const mantineTheme = useMantineTheme();
+
+	const mantineAccentColor =
+		mantineTheme.colors[accentColor][theme === ThemeName.Dark ? 8 : 6];
 
 	const checkPrefersColorScheme = () => {
 		if (!window.matchMedia) return;
@@ -119,41 +152,26 @@ export const VividlyThemeProvider = (props: { children: React.ReactNode }) => {
 				setTheme,
 				useSystemTheme,
 				setUseSystemTheme,
+				accentColor,
+				setAccentColor,
 			}}
 		>
-			<MantineProvider
-				withGlobalStyles
-				withNormalizeCSS
-				theme={{
-					colorScheme: theme,
-					fontFamily: 'Lato, sans-serif',
-					headings: { fontFamily: 'Montserrat, sans-serif' },
-					white: LightThemeAdditions.background.primary,
-					black: darkThemeAdditions.background.primary,
-					primaryColor: 'grape',
-					components: {
-						Button: {
-							defaultProps: {
-								radius: 'lg',
-								color: 'grape',
-							},
-						},
-						TextInput: {
-							defaultProps: {
-								radius: 'md',
-							},
-						},
-					},
-				}}
-			>
-				<ThemeProvider theme={theme === 'dark' ? darkTheme : lightTheme}>
-					<>
-						<GlobalStyle />
-						<Notifications />
-						{props.children}
-					</>
+			<MantineTheme theme={theme} color={accentColor}>
+				<ThemeProvider
+					theme={
+						theme === ThemeName.Dark
+							? {
+									...darkTheme,
+									accent: mantineAccentColor,
+							  }
+							: { ...lightTheme, accent: mantineAccentColor }
+					}
+				>
+					<GlobalStyle />
+					<Notifications />
+					{props.children}
 				</ThemeProvider>
-			</MantineProvider>
+			</MantineTheme>
 		</VividlyThemeContext.Provider>
 	);
 
@@ -162,4 +180,42 @@ export const VividlyThemeProvider = (props: { children: React.ReactNode }) => {
 	}
 
 	return body;
+};
+
+type MantineThemeProps = {
+	children: React.ReactNode;
+	theme: ThemeName;
+	color: string;
+};
+
+const MantineTheme = (props: MantineThemeProps) => {
+	return (
+		<MantineProvider
+			withGlobalStyles
+			withNormalizeCSS
+			theme={{
+				colorScheme: props.theme,
+				fontFamily: 'Lato, sans-serif',
+				headings: { fontFamily: 'Montserrat, sans-serif' },
+				white: LightThemeAdditions.background.primary,
+				black: darkThemeAdditions.background.primary,
+				primaryColor: props.color,
+				components: {
+					Button: {
+						defaultProps: {
+							radius: 'lg',
+							color: props.color,
+						},
+					},
+					TextInput: {
+						defaultProps: {
+							radius: 'md',
+						},
+					},
+				},
+			}}
+		>
+			<ModalsProvider>{props.children}</ModalsProvider>
+		</MantineProvider>
+	);
 };

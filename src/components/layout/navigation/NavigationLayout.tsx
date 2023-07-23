@@ -13,6 +13,7 @@ import { useCurUserContext } from '../../utils/CurUserContext';
 import { NavInner, NavItem, Navigation, PageContentContainer } from './styles';
 import { useNotificationsContext } from '@/components/utils/NotificationsContext';
 import { useFriendRequestsContext } from '@/components/utils/FriendRequestsContext';
+import { useVividlyTheme } from '@/styles/Theme';
 
 type Props = {
 	children: React.ReactNode;
@@ -24,6 +25,13 @@ export default function NavigationLayout(props: Props) {
 	const { numRequests, refetch: refetchRews } = useFriendRequestsContext();
 	const [isNavHidden, setIsNavHidden] = useState(false);
 	const router = useRouter();
+	const { accentColor } = useVividlyTheme();
+
+	const actionIconProps = {
+		color: accentColor,
+		variant: 'transparent' as const,
+		component: 'span' as const,
+	};
 
 	const isNotifsIndicatorVisible = numRequests > 0 || unreadCount > 0;
 
@@ -37,14 +45,14 @@ export default function NavigationLayout(props: Props) {
 			<NavInner>
 				<NavItem>
 					<Link href={curUser.user ? `/profile/${curUser.user.id}` : ''}>
-						<ActionIcon color='grape' variant='transparent' component='span'>
+						<ActionIcon {...actionIconProps}>
 							<IconUser size={20} />
 						</ActionIcon>
 					</Link>
 				</NavItem>
 				<NavItem>
 					<Link href='/feed'>
-						<ActionIcon color='grape' variant='transparent' component='span'>
+						<ActionIcon {...actionIconProps}>
 							<IconAddressBook size={20} />
 						</ActionIcon>
 					</Link>
@@ -52,7 +60,7 @@ export default function NavigationLayout(props: Props) {
 				<NavItem>
 					<Indicator color='green' disabled={!isNotifsIndicatorVisible}>
 						<Link href='/activity'>
-							<ActionIcon color='grape' variant='transparent' component='span'>
+							<ActionIcon {...actionIconProps}>
 								<IconBellRinging size={20} />
 							</ActionIcon>
 						</Link>
@@ -60,7 +68,7 @@ export default function NavigationLayout(props: Props) {
 				</NavItem>
 				<NavItem id='nav-settings'>
 					<Link href='/settings'>
-						<ActionIcon color='grape' variant='transparent' component='span'>
+						<ActionIcon {...actionIconProps}>
 							<IconSettings size={20} />
 						</ActionIcon>
 					</Link>
