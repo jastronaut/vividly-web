@@ -1,9 +1,9 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { Modal, Space, Text } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
+import { modals } from '@mantine/modals';
 
 import { Comment as CommentType } from '@/types/post';
-import { DismissWarningModal } from '@/components/DismissWarningModal';
 import { Comment } from './Comment';
 
 import { AllComments } from './styles';
@@ -45,44 +45,42 @@ type Props = {
 };
 
 export const CommentsModal = (props: Props) => {
-	const [isWarningModalOpen, setIsWarningModalOpen] = useState(false);
 	const [draft, setDraft] = useState('');
 	const { curUser } = useCurUserContext();
 	const isMobile = useMediaQuery('(max-width: 800px)');
+	const { onClose } = props;
 
-	const tryDismissModal = () => {
-		if (isWarningModalOpen) {
-			props.onClose();
-			return;
-		}
-
-		if (draft.length === 0) {
-			props.onClose();
-			return;
-		}
-
-		setIsWarningModalOpen(true);
+	const close = () => {
+		setDraft('');
+		onClose();
 	};
+
+	const tryClose = useCallback(() => {
+		if (draft.length > 1) {
+			modals.openConfirmModal({
+				centered: true,
+				children: <Text ta='center'>Abandon your comment?</Text>,
+				labels: { confirm: 'Confirm', cancel: 'Cancel' },
+				confirmProps: { color: 'red' },
+				onCancel: () => {},
+				onConfirm: () => close(),
+				withCloseButton: false,
+			});
+		} else {
+			close();
+		}
+	}, [draft, onClose]);
 
 	return (
 		<Modal
 			opened={props.isOpen}
-			onClose={tryDismissModal}
+			onClose={tryClose}
 			centered
-			padding='xl'
-			fullScreen={isMobile}
+			padding={isMobile ? 'md' : 'xl'}
 			title='Comments'
+			withCloseButton
+			zIndex={150}
 		>
-			<DismissWarningModal
-				isOpen={isWarningModalOpen}
-				onNo={() => setIsWarningModalOpen(false)}
-				onYes={() => {
-					props.onClose();
-					setIsWarningModalOpen(false);
-					setDraft('');
-				}}
-				message='Abandon this comment? 😳'
-			/>
 			<AllComments>
 				{props.comments.map(comment => (
 					<Comment
@@ -100,9 +98,12 @@ export const CommentsModal = (props: Props) => {
 				{props.commentsDisabledForFriends && <DisabledCommentsState />}
 			</AllComments>
 			<NewCommentInput
+				draft={draft}
+				setDraft={setDraft}
 				onSubmit={props.onSubmit}
 				disabled={props.commentsDisabledForFriends && !props.isPostAuthor}
 			/>
+			<Space h='xl' />
 		</Modal>
 	);
 };

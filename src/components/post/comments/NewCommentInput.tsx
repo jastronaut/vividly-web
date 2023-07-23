@@ -7,11 +7,12 @@ type Props = {
 	onSubmit: (comment: string) => void;
 	disabled?: boolean;
 	inputRef?: RefObject<HTMLTextAreaElement>;
+	draft: string;
+	setDraft: (draft: string) => void;
 };
 
 export const NewCommentInput = (props: Props) => {
-	const { disabled = false } = props;
-	const [draft, setDraft] = useState<string>('');
+	const { disabled = false, draft, setDraft } = props;
 
 	const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
