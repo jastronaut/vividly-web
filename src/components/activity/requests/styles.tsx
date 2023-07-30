@@ -11,6 +11,11 @@ export const Wrapper = styled.div<{ withHover?: boolean }>`
 	padding: ${rem(16)} ${rem(24)};
 	border-bottom: 1px solid ${props => props.theme.background.secondary};
 
+	a,
+	a:visited {
+		color: unset;
+	}
+
 	${props =>
 		props.withHover &&
 		`
@@ -27,7 +32,7 @@ export const ActionsContainer = styled(Group)`
 	/* align-self: flex-start; */
 	@media screen and (max-width: 800px) {
 		padding-top: ${rem(8)};
-		padding-left: ${rem(52)};
+		/* padding-left: ${rem(52)}; */
 	}
 `;
 

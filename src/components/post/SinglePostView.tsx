@@ -31,6 +31,7 @@ export const SinglePostView = () => {
 	const [reportModalOpen, setReportModalOpen] = useState(false);
 
 	const inputRef = useRef<HTMLTextAreaElement>(null);
+	const [draft, setDraft] = useState('');
 
 	const onClickCommentsButton = () => {
 		inputRef.current?.focus();
@@ -101,6 +102,8 @@ export const SinglePostView = () => {
 					onSubmit={addComment}
 					disabled={post.commentsDisabled && curUser.user.id !== post.authorId}
 					inputRef={inputRef}
+					draft={draft}
+					setDraft={setDraft}
 				/>
 				<SinglePostViewComments
 					comments={post.comments}

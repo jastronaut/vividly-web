@@ -11,6 +11,7 @@ import {
 import { DEFAULT_AVATAR } from '@/constants';
 import { User } from '@/types/user';
 import { Avatar } from '@/components/Avatar';
+import Link from 'next/link';
 
 export type Props = {
 	user: User;
@@ -37,11 +38,25 @@ export const FriendRequestItem = (props: Props) => {
 					/>
 					<TextContainer>
 						<Text span fw={700}>
-							{name}
+							<Link
+								href={{
+									pathname: '/profile/[id]',
+									query: { id },
+								}}
+							>
+								{name}
+							</Link>
 						</Text>
 						{` `}
 						<Text span c='dimmed'>
-							@{username}
+							<Link
+								href={{
+									pathname: '/profile/[id]',
+									query: { id },
+								}}
+							>
+								@{username}
+							</Link>
 						</Text>
 						<Text>{bio}</Text>
 					</TextContainer>

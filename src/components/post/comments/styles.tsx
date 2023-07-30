@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { createGlobalStyle } from 'styled-components';
 import { rem } from 'polished';
 import { Textarea, Group } from '@mantine/core';
 
@@ -52,4 +52,11 @@ export const Wrapper = styled.div`
 		text-decoration: underline;
 		color: ${props => props.theme.accent};
 	}
+`;
+
+export const GlobalStyles = createGlobalStyle`
+	.mantine-Modal-header, .mantine-Modal-body {
+		padding-bottom: ${rem(10)};
+	}
+	
 `;

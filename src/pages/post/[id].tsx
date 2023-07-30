@@ -20,7 +20,7 @@ const PostPage: Page<PageProps> = (props: PageProps) => {
 	const { curUser } = useCurUserContext();
 	const { id } = props;
 
-	const { token = null } = curUser;
+	const { token } = curUser;
 
 	const { data, error, isLoading } = useSWR<PostResponse>(
 		[id && token ? `${URL_PREFIX}/posts/${id}` : '', token],

@@ -21,25 +21,33 @@ export const Comment = (props: CommentProps) => {
 					<Flex>
 						<Avatar
 							src={props.author.avatarSrc}
-							size={45}
+							size={30}
 							alt={`${props.author.username}'s avatar`}
 						/>
 						<TextContainer>
-							<Link
-								href={{
-									pathname: '/profile/[id]',
-									query: { id: props.author.id },
-								}}
-								onClick={props.onClickLink}
-							>
-								<Text fw={700} fz='sm'>
+							<Text fw={700} fz='sm'>
+								<Link
+									href={{
+										pathname: '/profile/[id]',
+										query: { id: props.author.id },
+									}}
+									onClick={props.onClickLink}
+								>
 									{props.author.name}
-								</Text>
-								<Text c='dimmed' fz='sm'>
+								</Link>
+							</Text>
+							<Text c='dimmed' fz='sm'>
+								<Link
+									href={{
+										pathname: '/profile/[id]',
+										query: { id: props.author.id },
+									}}
+									onClick={props.onClickLink}
+								>
 									{` @`}
 									{props.author.username}
-								</Text>
-							</Link>
+								</Link>
+							</Text>
 							<Text onClick={props.onClickComment}>{props.content}</Text>
 						</TextContainer>
 					</Flex>

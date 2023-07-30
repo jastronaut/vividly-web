@@ -6,7 +6,7 @@ import { modals } from '@mantine/modals';
 import { Comment as CommentType } from '@/types/post';
 import { Comment } from './Comment';
 
-import { AllComments } from './styles';
+import { AllComments, GlobalStyles } from './styles';
 import { useCurUserContext } from '@/components/utils/CurUserContext';
 import { NewCommentInput } from './NewCommentInput';
 
@@ -72,38 +72,41 @@ export const CommentsModal = (props: Props) => {
 	}, [draft, onClose]);
 
 	return (
-		<Modal
-			opened={props.isOpen}
-			onClose={tryClose}
-			centered
-			padding={isMobile ? 'md' : 'xl'}
-			title='Comments'
-			withCloseButton
-			zIndex={150}
-		>
-			<AllComments>
-				{props.comments.map(comment => (
-					<Comment
-						key={comment.id}
-						{...comment}
-						onDelete={() => props.onDelete(comment.id)}
-						onClickLink={props.onClose}
-						canDelete={
-							props.isPostAuthor ||
-							(curUser ? curUser.user.id === comment.authorId : false)
-						}
-					/>
-				))}
-				{props.comments.length === 0 && <EmptyCommentsState />}
-				{props.commentsDisabledForFriends && <DisabledCommentsState />}
-			</AllComments>
-			<NewCommentInput
-				draft={draft}
-				setDraft={setDraft}
-				onSubmit={props.onSubmit}
-				disabled={props.commentsDisabledForFriends && !props.isPostAuthor}
-			/>
-			<Space h='xl' />
-		</Modal>
+		<>
+			<GlobalStyles />
+			<Modal
+				opened={props.isOpen}
+				onClose={tryClose}
+				centered
+				padding={isMobile ? 'md' : 'xl'}
+				title='Comments'
+				withCloseButton
+				zIndex={150}
+			>
+				<AllComments>
+					{props.comments.map(comment => (
+						<Comment
+							key={comment.id}
+							{...comment}
+							onDelete={() => props.onDelete(comment.id)}
+							onClickLink={props.onClose}
+							canDelete={
+								props.isPostAuthor ||
+								(curUser ? curUser.user.id === comment.authorId : false)
+							}
+						/>
+					))}
+					{props.comments.length === 0 && <EmptyCommentsState />}
+					{props.commentsDisabledForFriends && <DisabledCommentsState />}
+				</AllComments>
+				<NewCommentInput
+					draft={draft}
+					setDraft={setDraft}
+					onSubmit={props.onSubmit}
+					disabled={props.commentsDisabledForFriends && !props.isPostAuthor}
+				/>
+				<Space h='xl' />
+			</Modal>
+		</>
 	);
 };

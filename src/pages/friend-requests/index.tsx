@@ -1,10 +1,9 @@
 import { FriendRequestTabs } from '@/components/activity/requests/FriendRequestTabs';
-
 import { Page } from '../_app';
 import AppLayout from '@/components/layout/AppLayout';
 import { FadeIn } from '@/styles/Animations';
 
-const FriendsPage: Page = () => {
+const FriendRequestsPage: Page = () => {
 	return (
 		<FadeIn>
 			<FriendRequestTabs />
@@ -12,8 +11,8 @@ const FriendsPage: Page = () => {
 	);
 };
 
-FriendsPage.getLayout = (page: React.ReactNode) => {
+FriendRequestsPage.getLayout = (page: React.ReactNode) => {
 	return <AppLayout>{page}</AppLayout>;
 };
 
-export default FriendsPage;
+export default FriendRequestsPage;

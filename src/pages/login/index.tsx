@@ -10,13 +10,15 @@ import {
 } from '@mantine/core';
 import styled from 'styled-components';
 import { rem } from 'polished';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 import { STORAGE_CUR_USER_KEY } from '../../constants';
 import { makeApiCall } from '@/utils';
 import { LoginResponse } from '@/types/api';
 import LoginLogoutLayout from '@/components/layout/LoginLogoutLayout';
 import { Page } from '../_app';
-import Link from 'next/link';
+import { Loading } from '@/components/utils/Loading';
 
 const StyledContainer = styled.div`
 	background-color: ${props => props.theme.background.primary};
@@ -58,76 +60,83 @@ type LoginComponentProps = {
 	setPassword: (password: string) => void;
 	onClickSubmit: () => void;
 	loginError: LoginErrors | null;
+	isLoading: boolean;
 };
 
 const LoginComponent = (props: LoginComponentProps) => {
 	return (
 		<>
 			<Center style={{ height: '100vh' }}>
-				<StyledContainer>
-					<Stack>
-						<form
-							action=''
-							method='post'
-							onSubmit={e => {
-								e.preventDefault();
-								props.onClickSubmit();
-							}}
-						>
-							<Text style={{ textAlign: 'center' }}>Log in to Vividly</Text>
-							<Space h='md' />
-							<TextInput
-								onChange={e => props.setUsername(e.target.value)}
-								key='username'
-								type='text'
-								placeholder='username'
-								required
-								maxLength={20}
-							/>
-							<Space h='xs' />
-							<TextInput
-								onChange={e => props.setPassword(e.target.value)}
-								key='password'
-								type='password'
-								placeholder='password'
-								required
-							/>
-							{props.loginError !== null && (
-								<>
-									<Space h='xs' />
-									<Text color='red' ta='center'>
-										{props.loginError === LoginErrors.MISSING_CREDENTIALS
-											? 'Missing username and/or password. Please try again!'
-											: props.loginError === LoginErrors.INVALID_LOGIN
-											? 'Username and/or password is incorrect. Please try again!'
-											: props.loginError === LoginErrors.USER_DOES_NOT_EXIST
-											? `User does not exist. Please register first!`
-											: 'Unknown error 😅 - contact help@vividly.love'}
-									</Text>
-								</>
-							)}
-							<Space h='md' />
-							<Center>
-								<Flex
-									direction='column'
-									sx={{
-										textAlign: 'center',
-									}}
-								>
-									<Button color='grape' type='submit'>
-										Enter
-									</Button>
-									<Text>or</Text>
-									<Link href='/register'>
-										<Button color='grape' variant='light' component='span'>
-											Register
+				{props.isLoading ? (
+					<Center>
+						<Loading />
+					</Center>
+				) : (
+					<StyledContainer>
+						<Stack>
+							<form
+								action=''
+								method='post'
+								onSubmit={e => {
+									e.preventDefault();
+									props.onClickSubmit();
+								}}
+							>
+								<Text style={{ textAlign: 'center' }}>Log in to Vividly</Text>
+								<Space h='md' />
+								<TextInput
+									onChange={e => props.setUsername(e.target.value)}
+									key='username'
+									type='text'
+									placeholder='username'
+									required
+									maxLength={20}
+								/>
+								<Space h='xs' />
+								<TextInput
+									onChange={e => props.setPassword(e.target.value)}
+									key='password'
+									type='password'
+									placeholder='password'
+									required
+								/>
+								{props.loginError !== null && (
+									<>
+										<Space h='xs' />
+										<Text color='red' ta='center'>
+											{props.loginError === LoginErrors.MISSING_CREDENTIALS
+												? 'Missing username and/or password. Please try again!'
+												: props.loginError === LoginErrors.INVALID_LOGIN
+												? 'Username and/or password is incorrect. Please try again!'
+												: props.loginError === LoginErrors.USER_DOES_NOT_EXIST
+												? `User does not exist. Please register first!`
+												: 'Unknown error 😅 - contact help@vividly.love'}
+										</Text>
+									</>
+								)}
+								<Space h='md' />
+								<Center>
+									<Flex
+										direction='column'
+										sx={{
+											textAlign: 'center',
+										}}
+									>
+										<Button color='grape' type='submit'>
+											Enter
 										</Button>
-									</Link>
-								</Flex>
-							</Center>
-						</form>
-					</Stack>
-				</StyledContainer>
+										<Text>or</Text>
+										<Link href='/register'>
+											<Button color='grape' variant='light' component='span'>
+												Register
+											</Button>
+										</Link>
+									</Flex>
+								</Center>
+							</form>
+						</Stack>
+					</StyledContainer>
+				)}
 			</Center>
 		</>
 	);
@@ -138,6 +147,8 @@ const Login: Page = () => {
 	const [password, setPassword] = useState('');
 	const [loginError, setLoginError] = useState<LoginErrors | null>(null);
 	const [isPageLoading, setIsPageLoading] = useState(true);
+
+	const router = useRouter();
 
 	const onClickSubmit = () => {
 		const tryLogin = async () => {
@@ -176,7 +187,7 @@ const Login: Page = () => {
 		if (storedUser) {
 			const parsedCurUser = JSON.parse(storedUser);
 			if (parsedCurUser.token && parsedCurUser.user) {
-				window.location.href = `/profile/${parsedCurUser.user.id}`;
+				router.push(`/profile/${parsedCurUser.user.id}`);
 			} else {
 				setIsPageLoading(false);
 			}
@@ -191,6 +202,7 @@ const Login: Page = () => {
 			setPassword={setPassword}
 			onClickSubmit={onClickSubmit}
 			loginError={loginError}
+			isLoading={isPageLoading}
 		/>
 	);
 };

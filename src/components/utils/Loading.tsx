@@ -32,7 +32,11 @@ const LoadingIcon = styled.div`
 	animation: 1s linear infinite alternate levitate;
 `;
 
-export const Loading = () => (
+type LoadingProps = {
+	messageHidden?: boolean;
+};
+
+export const Loading = (props: LoadingProps) => (
 	<>
 		<Animations />
 		<Page>
@@ -42,14 +46,16 @@ export const Loading = () => (
 						🔮
 					</span>
 				</LoadingIcon>
-				<Text
-					sx={{
-						marginTop: '1.5rem',
-					}}
-					c='dimmed'
-				>
-					Loading...
-				</Text>
+				{!props.messageHidden && (
+					<Text
+						sx={{
+							marginTop: '1.5rem',
+						}}
+						c='dimmed'
+					>
+						Loading...
+					</Text>
+				)}
 			</LoadingContainer>
 		</Page>
 	</>
