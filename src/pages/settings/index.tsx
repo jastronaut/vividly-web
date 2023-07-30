@@ -7,12 +7,12 @@ import { useRouter } from 'next/router';
 
 import { Page } from '../_app';
 import { useVividlyTheme, ThemeName } from '@/styles/Theme';
-import { useCurUserContext } from '@/components/utils/CurUserContext';
-import { Loading } from '@/components/utils/Loading';
+import { useCurUserContext } from '@/components/contexts/CurUserContext';
+import { Loading } from '@/components/common/Loading';
 import {
 	AccountInfoProvider,
 	useAccountInfoContext,
-} from '@/components/utils/AccountInfoContext';
+} from '@/components/contexts/AccountInfoContext';
 import {
 	EmailSetting,
 	PasswordSetting,

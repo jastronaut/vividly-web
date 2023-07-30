@@ -9,10 +9,10 @@ import {
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
-import { useCurUserContext } from '../../utils/CurUserContext';
+import { useCurUserContext } from '../../contexts/CurUserContext';
 import { NavInner, NavItem, Navigation, PageContentContainer } from './styles';
-import { useNotificationsContext } from '@/components/utils/NotificationsContext';
-import { useFriendRequestsContext } from '@/components/utils/FriendRequestsContext';
+import { useNotificationsContext } from '@/components/contexts/NotificationsContext';
+import { useFriendRequestsContext } from '@/components/contexts/FriendRequestsContext';
 import { useVividlyTheme } from '@/styles/Theme';
 
 type Props = {

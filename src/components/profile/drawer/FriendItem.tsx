@@ -15,9 +15,9 @@ import { Friend } from '@/types/user';
 import { MenuContainer } from '@/components/post/comments/styles';
 import { TextContainer } from '@/components/activity/requests/styles';
 import { Wrapper } from '@/components/activity/requests/styles';
-import { DismissWarningModal } from '@/components/DismissWarningModal';
-import { FavoriteBadge } from '@/components/utils/FavoriteBadge';
-import { Avatar } from '@/components/Avatar';
+import { DismissWarningModal } from '@/components/common/DismissWarningModal';
+import { FavoriteBadge } from '@/components/common/FavoriteBadge';
+import { Avatar } from '@/components/common/Avatar';
 
 const TextStyled = styled(Text)`
 	line-height: ${rem(16)};

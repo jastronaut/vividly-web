@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
 
-import { Loading } from '@/components/utils/Loading';
+import { Loading } from '@/components/common/Loading';
 import AppLayout from '@/components/layout/AppLayout';
-import { withAuth } from '@/components/withAuth';
 
 const FeedbackPage = () => {
 	const [mounted, setMounted] = useState(false);
@@ -33,4 +32,4 @@ FeedbackPage.getLayout = (page: React.ReactNode) => {
 	return <AppLayout>{page}</AppLayout>;
 };
 
-export default withAuth(FeedbackPage);
+export default FeedbackPage;

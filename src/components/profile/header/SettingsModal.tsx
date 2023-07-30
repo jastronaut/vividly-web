@@ -15,10 +15,10 @@ import { useMediaQuery } from '@mantine/hooks';
 import { DEFAULT_AVATAR, IMGBB_API_KEY } from '@/constants';
 import { URL_PREFIX } from '@/constants';
 
-import { Avatar } from '@/components/Avatar';
-import { useCurUserContext } from '@/components/utils/CurUserContext';
+import { Avatar } from '@/components/common/Avatar';
+import { useCurUserContext } from '@/components/contexts/CurUserContext';
 import { showAndLogErrorNotification } from '@/showerror';
-import { DismissWarningModal } from '../../DismissWarningModal';
+import { DismissWarningModal } from '../../common/DismissWarningModal';
 import { User } from '@/types/user';
 import Link from 'next/link';
 

@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { Page } from '../_app';
-import { useCurUserContext } from '@/components/utils/CurUserContext';
+import { useCurUserContext } from '@/components/contexts/CurUserContext';
 import Link from 'next/link';
 import styled from 'styled-components';
 import { rem } from 'polished';
@@ -12,7 +12,7 @@ import { FeedPreview } from '@/components/feed/FeedPreview';
 import AppLayout from '@/components/layout/AppLayout';
 import { FadeIn } from '@/styles/Animations';
 import { FeedPreviewLoading } from '@/components/feed/FeedPreview';
-import { useFeedContext } from '@/components/utils/FeedContext';
+import { useFeedContext } from '@/components/contexts/FeedContext';
 
 const EmptyStateWrapper = styled.div`
 	margin: ${rem(300)} ${rem(100)} ${rem(100)};

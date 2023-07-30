@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useCurUserContext } from '@/components/utils/CurUserContext';
+import { useCurUserContext } from '@/components/contexts/CurUserContext';
 import { GetStaticPropsContext } from 'next';
 import useSWR from 'swr';
 
@@ -10,7 +10,7 @@ import { SinglePostView } from '@/components/post/SinglePostView';
 import { PostProvider } from '@/components/post/PostContext';
 import { URL_PREFIX } from '@/constants';
 import AppLayout from '@/components/layout/AppLayout';
-import { Loading } from '@/components/utils/Loading';
+import { Loading } from '@/components/common/Loading';
 
 type PageProps = {
 	id: string;

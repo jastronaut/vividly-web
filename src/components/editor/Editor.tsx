@@ -46,7 +46,7 @@ import {
 	NamesDropdownOption,
 	NamesDropdownContainer,
 } from './styles';
-import { DismissWarningModal } from '../DismissWarningModal';
+import { DismissWarningModal } from '../common/DismissWarningModal';
 import {
 	getWeatherEmoji,
 	kelvinToFahrenheit,

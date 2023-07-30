@@ -9,7 +9,7 @@ import {
 	HEADER_SCROLL_HEIGHT_MOBILE,
 } from '../header/constants';
 import { UserResponse } from '@/types/api';
-import { useCurUserContext } from '@/components/utils/CurUserContext';
+import { useCurUserContext } from '@/components/contexts/CurUserContext';
 
 const Wrapper = styled.div<{ scrolled: boolean }>`
 	padding: ${rem(8)} ${rem(12)};

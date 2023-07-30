@@ -10,7 +10,7 @@ import {
 } from './styles';
 import { DEFAULT_AVATAR } from '@/constants';
 import { User } from '@/types/user';
-import { Avatar } from '@/components/Avatar';
+import { Avatar } from '@/components/common/Avatar';
 import Link from 'next/link';
 
 export type Props = {

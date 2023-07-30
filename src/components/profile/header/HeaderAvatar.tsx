@@ -1,4 +1,4 @@
-import { Avatar } from '@/components/Avatar';
+import { Avatar } from '@/components/common/Avatar';
 import { DEFAULT_AVATAR } from '@/constants';
 import { Skeleton } from '@mantine/core';
 import { useWindowScroll, useMediaQuery } from '@mantine/hooks';

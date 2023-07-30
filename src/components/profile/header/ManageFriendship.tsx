@@ -15,9 +15,9 @@ import { useRouter } from 'next/router';
 import { makeApiCall } from '@/utils';
 import { UserResponse, DefaultResponse } from '@/types/api';
 import { FavoriteButton, FriendActionsMenuContainer } from './styles';
-import { useCurUserContext } from '@/components/utils/CurUserContext';
+import { useCurUserContext } from '@/components/contexts/CurUserContext';
 import { showAndLogErrorNotification } from '@/showerror';
-import { useProfileContext } from '@/components/utils/ProfileFeedContext';
+import { useProfileContext } from '@/components/contexts/ProfileFeedContext';
 
 import {
 	useAcceptFriendRequest,
@@ -28,7 +28,7 @@ import {
 	useBlockUser,
 } from '@/components/activity/requests/hooks';
 import { throwConfetti } from '@/utils';
-import { DismissWarningModal } from '@/components/DismissWarningModal';
+import { DismissWarningModal } from '@/components/common/DismissWarningModal';
 import { useVividlyTheme } from '@/styles/Theme';
 
 function showSuccessNotification(message: string) {

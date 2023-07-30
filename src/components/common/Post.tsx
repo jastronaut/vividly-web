@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { rem } from 'polished';
 
-import { Block } from '../types/post';
+import { Block } from '../../types/post';
 // import {
 // 	TextBlockContent,
 // 	ImageBlockContent,

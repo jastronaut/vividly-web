@@ -1,4 +1,4 @@
-import { useCurUserContext } from '../utils/CurUserContext';
+import { useCurUserContext } from '../contexts/CurUserContext';
 
 export function useAuth() {
 	const ctx = useCurUserContext();

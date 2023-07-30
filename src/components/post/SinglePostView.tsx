@@ -9,10 +9,10 @@ import { Footer } from './Footer';
 import { NewCommentInput } from './comments/NewCommentInput';
 import { SinglePostViewComments } from './comments/SinglePostViewComments';
 import { usePostContext } from './PostContext';
-import { useCurUserContext } from '../utils/CurUserContext';
-import { Avatar } from '../Avatar';
+import { useCurUserContext } from '../contexts/CurUserContext';
+import { Avatar } from '../common/Avatar';
 import { DEFAULT_AVATAR } from '@/constants';
-import { ReportModal, ReportType } from '../ReportModal';
+import { ReportModal, ReportType } from '../common/ReportModal';
 
 const Wrapper = styled.div`
 	padding: ${rem(16)} ${rem(24)};

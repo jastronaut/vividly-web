@@ -15,12 +15,12 @@ import { rem } from 'polished';
 import { modals } from '@mantine/modals';
 
 import { fetchWithToken, makeApiCall } from '@/utils';
-import { useCurUserContext } from '../utils/CurUserContext';
+import { useCurUserContext } from '../contexts/CurUserContext';
 import { URL_PREFIX } from '@/constants';
 import { BlockedUsersResponse, DefaultResponse } from '@/types/api';
-import { Avatar } from '../Avatar';
-import { DismissWarningModal } from '../DismissWarningModal';
-import { Loading } from '../utils/Loading';
+import { Avatar } from '../common/Avatar';
+import { DismissWarningModal } from '../common/DismissWarningModal';
+import { Loading } from '../common/Loading';
 import Link from 'next/link';
 
 const UsersWrapper = styled.div`

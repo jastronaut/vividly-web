@@ -7,7 +7,7 @@ import { AddFriendForm } from './AddFriendForm';
 import { FriendRequest } from '@/types/user';
 import { showAndLogErrorNotification } from '@/showerror';
 import { fetchWithToken, throwConfetti } from '@/utils';
-import { useCurUserContext } from '@/components/utils/CurUserContext';
+import { useCurUserContext } from '@/components/contexts/CurUserContext';
 import { FriendRequestItem } from '@/components/activity/requests/FriendRequestItem';
 import { PageWrapper } from './_style';
 import { makeApiCall } from '@/utils';

@@ -15,7 +15,7 @@ import { notifications } from '@mantine/notifications';
 
 import { makeApiCall } from '@/utils';
 import { DefaultResponse } from '@/types/api';
-import { useCurUserContext } from '../utils/CurUserContext';
+import { useCurUserContext } from '../contexts/CurUserContext';
 import { showAndLogErrorNotification } from '@/showerror';
 
 type EmailSettingProps = {

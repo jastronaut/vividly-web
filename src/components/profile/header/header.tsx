@@ -11,14 +11,14 @@ import {
 	UserInfoSection,
 	RightContent,
 } from './styles';
-import { useCurUserContext } from '@/components/utils/CurUserContext';
+import { useCurUserContext } from '@/components/contexts/CurUserContext';
 import { ProfileActions } from './ProfileActions';
 
 import { throwConfetti } from '@/utils';
 import { HeaderAvatar } from './HeaderAvatar';
 import { HEADER_SCROLL_HEIGHT, HEADER_SCROLL_HEIGHT_MOBILE } from './constants';
 import { ManageFriendshipButton } from './ManageFriendship';
-import { useProfileContext } from '@/components/utils/ProfileFeedContext';
+import { useProfileContext } from '@/components/contexts/ProfileFeedContext';
 
 type ProfileHeaderProps = {
 	isLoading: boolean;

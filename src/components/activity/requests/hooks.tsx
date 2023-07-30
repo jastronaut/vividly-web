@@ -7,7 +7,7 @@ import {
 	DefaultResponse,
 } from '@/types/api';
 import { FriendRequest, Friend } from '@/types/user';
-import { useCurUserContext } from '@/components/utils/CurUserContext';
+import { useCurUserContext } from '@/components/contexts/CurUserContext';
 
 export const useAddNewFriend = () => {
 	const [isLoading, setIsLoading] = useState(false);

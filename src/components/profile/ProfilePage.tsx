@@ -4,13 +4,13 @@ import { useRouter } from 'next/router';
 import { showAndLogErrorNotification } from '@/showerror';
 import { uri } from '@/constants';
 import { Block } from '@/types/post';
-import { useCurUserContext } from '@/components/utils/CurUserContext';
-import { useFriendsContext } from '@/components/utils/FriendsContext';
+import { useCurUserContext } from '@/components/contexts/CurUserContext';
+import { useFriendsContext } from '@/components/contexts/FriendsContext';
 
 import { ProfileContent } from '@/components/profile/content/ProfileContent';
 import { Editor } from '../editor/Editor';
 import { FadeIn } from '@/styles/Animations';
-import { useProfileContext } from '@/components/utils/ProfileFeedContext';
+import { useProfileContext } from '@/components/contexts/ProfileFeedContext';
 
 type PageProps = {
 	id: string;

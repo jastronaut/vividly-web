@@ -4,7 +4,7 @@ import Link from 'next/link';
 
 import { Comment as CommentType } from '@/types/post';
 import { MenuContainer, Wrapper, TextContainer } from './styles';
-import { Avatar } from '@/components/Avatar';
+import { Avatar } from '@/components/common/Avatar';
 
 type CommentProps = {
 	onDelete: () => void;

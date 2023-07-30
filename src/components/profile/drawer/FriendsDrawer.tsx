@@ -6,15 +6,15 @@ import { rem } from 'polished';
 
 import { FriendItem } from './FriendItem';
 import { showAndLogErrorNotification } from '@/showerror';
-import { MiniLoader } from '@/components/utils/Loading';
+import { MiniLoader } from '@/components/common/Loading';
 import {
 	useUnfriend,
 	useToggleFavorite,
 } from '@/components/activity/requests/hooks';
 import { sortFriends } from '../utils';
 import { DrawerStyles } from './styles';
-import { useFriendsContext } from '@/components/utils/FriendsContext';
-import { useFriendRequestsContext } from '@/components/utils/FriendRequestsContext';
+import { useFriendsContext } from '@/components/contexts/FriendsContext';
+import { useFriendRequestsContext } from '@/components/contexts/FriendRequestsContext';
 
 type Props = {
 	isOpen: boolean;

@@ -18,8 +18,8 @@ import { showAndLogErrorNotification } from '@/showerror';
 import { NotificationType } from '@/types/notification';
 import { EmptyTab, LoadingTab } from '../TabStates';
 import { FadeIn } from '@/styles/Animations';
-import { useNotificationsContext } from '@/components/utils/NotificationsContext';
-import { useFriendRequestsContext } from '@/components/utils/FriendRequestsContext';
+import { useNotificationsContext } from '@/components/contexts/NotificationsContext';
+import { useFriendRequestsContext } from '@/components/contexts/FriendRequestsContext';
 
 export const NotificationTabs = () => {
 	const router = useRouter();

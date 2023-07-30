@@ -2,7 +2,7 @@ import React from 'react';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 
 import { VividlyThemeProvider } from '../styles/Theme';
-import { Post } from '../components/Post';
+import { Post } from '../components/common/Post';
 import { BlockType } from '@/types/post';
 
 export default {

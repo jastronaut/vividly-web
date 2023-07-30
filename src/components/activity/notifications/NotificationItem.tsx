@@ -14,7 +14,7 @@ import { DEFAULT_AVATAR } from '@/constants';
 import { getPostTime } from '@/components/utils/time';
 
 import { getBlockPreview } from '@/components/utils/getBlockPreview';
-import { Avatar } from '@/components/Avatar';
+import { Avatar } from '@/components/common/Avatar';
 
 function getNotificationActionMessage(notification: NotificationBody) {
 	switch (notification.type) {

@@ -2,11 +2,11 @@ import React from 'react';
 import { GetStaticPropsContext } from 'next';
 
 import { Page } from '../_app';
-import { useCurUserContext } from '@/components/utils/CurUserContext';
-import { FriendsProvider } from '@/components/utils/FriendsContext';
+import { useCurUserContext } from '@/components/contexts/CurUserContext';
+import { FriendsProvider } from '@/components/contexts/FriendsContext';
 import AppLayout from '@/components/layout/AppLayout';
 import { UserProfileLoadingState } from '@/components/profile/UserProfileLoadingState';
-import { ProfileProvider } from '@/components/utils/ProfileFeedContext';
+import { ProfileProvider } from '@/components/contexts/ProfileFeedContext';
 import Profile from '@/components/profile/ProfilePage';
 
 type PageProps = {

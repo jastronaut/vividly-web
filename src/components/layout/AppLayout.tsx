@@ -1,7 +1,7 @@
-import { CurUserProvider } from '../utils/CurUserContext';
-import { NotificationsProvider } from '../utils/NotificationsContext';
-import { FriendRequestsProvider } from '../utils/FriendRequestsContext';
-import { FeedProvider } from '../utils/FeedContext';
+import { CurUserProvider } from '../contexts/CurUserContext';
+import { NotificationsProvider } from '../contexts/NotificationsContext';
+import { FriendRequestsProvider } from '../contexts/FriendRequestsContext';
+import { FeedProvider } from '../contexts/FeedContext';
 import NavigationLayout from './navigation/NavigationLayout';
 
 type Props = {

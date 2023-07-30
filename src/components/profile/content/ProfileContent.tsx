@@ -6,7 +6,7 @@ import {
 	ProfileFeedResponse as Feed,
 	ProfileFeedResponse,
 } from '@/types/api';
-import { useCurUserContext } from '@/components/utils/CurUserContext';
+import { useCurUserContext } from '@/components/contexts/CurUserContext';
 
 import { ProfileHeaderComponent } from '../header/header';
 import { FriendsDrawer } from '../drawer/FriendsDrawer';

@@ -7,7 +7,7 @@ import { Comment as CommentType } from '@/types/post';
 import { Comment } from './Comment';
 
 import { AllComments, GlobalStyles } from './styles';
-import { useCurUserContext } from '@/components/utils/CurUserContext';
+import { useCurUserContext } from '@/components/contexts/CurUserContext';
 import { NewCommentInput } from './NewCommentInput';
 
 const EmptyCommentsState = () => {

@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { rem } from 'polished';
 import { Avatar } from '@mantine/core';
 
-import { DEFAULT_AVATAR } from '../constants';
+import { DEFAULT_AVATAR } from '../../constants';
 
 const Wrapper = styled.div`
 	display: flex;

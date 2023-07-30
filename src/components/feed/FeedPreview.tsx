@@ -9,8 +9,8 @@ import { getBlockPreview } from '../utils/getBlockPreview';
 import { getPostTime } from '../utils/time';
 
 import { Wrapper, TextContainer } from '@/components/activity/requests/styles';
-import { FavoriteBadge } from '../utils/FavoriteBadge';
-import { Avatar } from '../Avatar';
+import { FavoriteBadge } from '../common/FavoriteBadge';
+import { Avatar } from '../common/Avatar';
 
 const WrapperStyled = styled(Wrapper)<{ isUnread?: boolean }>`
 	@media (max-width: 800px) {

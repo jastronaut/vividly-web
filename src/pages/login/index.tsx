@@ -18,7 +18,7 @@ import { makeApiCall } from '@/utils';
 import { LoginResponse } from '@/types/api';
 import LoginLogoutLayout from '@/components/layout/LoginLogoutLayout';
 import { Page } from '../_app';
-import { Loading } from '@/components/utils/Loading';
+import { Loading } from '@/components/common/Loading';
 
 const StyledContainer = styled.div`
 	background-color: ${props => props.theme.background.primary};
