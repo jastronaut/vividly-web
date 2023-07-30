@@ -25,6 +25,10 @@ export const InlineEditorWrapper = styled.div`
 	@media screen and (max-width: 800px) {
 		margin: 0 ${rem(8)} ${rem(25)};
 	}
+
+	[data-slate-placeholder='true'] {
+		position: unset !important;
+	}
 `;
 
 export const NamesDropdownOption = styled.div<{ isHighlighted: boolean }>`
