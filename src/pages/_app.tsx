@@ -2,7 +2,7 @@ import { AppProps } from 'next/app';
 import { NextPage } from 'next';
 import Head from 'next/head';
 import { SWRConfig } from 'swr';
-import * as Sentry from '@sentry/nextjs';
+// import * as Sentry from '@sentry/nextjs';
 
 import { fetcher } from '../utils';
 import { Layout } from '../components/layout/Layout';
