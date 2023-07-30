@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Page } from '../_app';
 import { useCurUserContext } from '@/components/utils/CurUserContext';
 import Link from 'next/link';
@@ -5,6 +6,7 @@ import styled from 'styled-components';
 import { rem } from 'polished';
 import { IconMoodPlus, IconPencil } from '@tabler/icons-react';
 import { Text, Button } from '@mantine/core';
+import { useRouter } from 'next/router';
 
 import { FeedPreview } from '@/components/feed/FeedPreview';
 import AppLayout from '@/components/layout/AppLayout';
@@ -52,13 +54,20 @@ const LoadingState = () => {
 export const FeedPage: Page = () => {
 	const { curUser } = useCurUserContext();
 	const { feed: items, isLoading } = useFeedContext();
+	const router = useRouter();
 
 	const showLoadingState = isLoading || !curUser;
+
+	useEffect(() => {
+		if (!curUser || !curUser.token) {
+			router.push('/login');
+		}
+	}, [curUser, router]);
 
 	return (
 		<FadeIn>
 			{showLoadingState && <LoadingState />}
-			{items ? (
+			{items && curUser.token ? (
 				items.length > 0 ? (
 					items.map(item => (
 						<Link
