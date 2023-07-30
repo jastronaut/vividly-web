@@ -299,13 +299,7 @@ export const SettingsModal = (props: Props) => {
 					maxRows={3}
 				/>
 				<Space h='md' />
-				<Button
-					size='sm'
-					color='grape'
-					radius='xl'
-					type='submit'
-					disabled={!formIsDirty}
-				>
+				<Button size='sm' radius='xl' type='submit' disabled={!formIsDirty}>
 					Save
 				</Button>
 				<Space h='md' />

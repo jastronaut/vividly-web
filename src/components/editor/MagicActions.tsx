@@ -49,7 +49,6 @@ export const OracleInput = (props: OracleInputProps) => {
 					/>
 					<Button
 						variant='light'
-						color='grape'
 						radius='lg'
 						size='sm'
 						onClick={onSubmit}
@@ -148,7 +147,6 @@ export const MusicInput = (props: MusicInputProps) => {
 					/>
 					<Button
 						variant='light'
-						color='grape'
 						radius='lg'
 						size='sm'
 						onClick={onSubmit}

@@ -38,12 +38,7 @@ export const NewCommentInput = (props: Props) => {
 					ref={props.inputRef}
 				/>
 				<Flex justify='flex-end'>
-					<Button
-						radius='xl'
-						color='grape'
-						type='submit'
-						disabled={draft.length < 1}
-					>
+					<Button radius='xl' type='submit' disabled={draft.length < 1}>
 						Send
 					</Button>
 				</Flex>

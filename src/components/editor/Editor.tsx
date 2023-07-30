@@ -604,7 +604,6 @@ export const Editor = (props: EditorProps) => {
 			/>
 			<Flex justify='flex-end'>
 				<Button
-					color='grape'
 					radius='lg'
 					onClick={processDraftAndSubmit}
 					disabled={draftEmpty}
