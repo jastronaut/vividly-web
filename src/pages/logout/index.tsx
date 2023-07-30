@@ -3,6 +3,7 @@ import { STORAGE_CUR_USER_KEY } from '@/constants';
 
 import LoginLogoutLayout from '@/components/layout/LoginLogoutLayout';
 import { Page } from '../_app';
+import { withAuth } from '@/components/withAuth';
 
 const Logout: Page = () => {
 	return (
@@ -28,4 +29,4 @@ Logout.getLayout = page => {
 	return <LoginLogoutLayout>{page}</LoginLogoutLayout>;
 };
 
-export default Logout;
+export default withAuth(Logout);
