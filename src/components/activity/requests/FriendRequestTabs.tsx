@@ -31,8 +31,7 @@ export const FriendRequestTabs = () => {
 		mutate,
 	} = useSWR<FriendRequestsResponse>(
 		[token ? `${URL_PREFIX}/friends/requests` : '', token],
-		// @ts-ignore
-		([url, token]) => fetchWithToken(url, token),
+		([url, token]: [string, string]) => fetchWithToken(url, token),
 		{ shouldRetryOnError: false }
 	);
 

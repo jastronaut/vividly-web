@@ -47,8 +47,7 @@ export const BlockedUsersSetting = () => {
 
 	const { data, error, isLoading, mutate } = useSWR<BlockedUsersResponse>(
 		[token && isListVisible ? `${URL_PREFIX}/blocked_users` : '', token],
-		// @ts-ignore
-		([url, token]) => fetchWithToken(url, token),
+		([url, token]: [string, string]) => fetchWithToken(url, token),
 		{ shouldRetryOnError: true }
 	);
 

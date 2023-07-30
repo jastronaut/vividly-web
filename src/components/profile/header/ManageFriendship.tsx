@@ -356,14 +356,13 @@ export const ManageFriendshipButton = (props: ProfileHeaderProps) => {
 							</Indicator>
 						</Menu.Target>
 						<Menu.Dropdown>
-							{friendButtonAction === 'inbound' && user.friendRequest ? (
+							{friendButtonAction === 'inbound' && friendRequest ? (
 								<>
 									<Menu.Item
 										icon={<IconUserPlus size={14} />}
 										onClick={() => {
 											setChosenFriendButtonAction('accept');
-											// @ts-ignore
-											acceptFriendRequest(user?.friendRequest?.id);
+											acceptFriendRequest(friendRequest?.id);
 										}}
 									>
 										Accept friend request
@@ -372,21 +371,19 @@ export const ManageFriendshipButton = (props: ProfileHeaderProps) => {
 										icon={<IconUserOff size={14} />}
 										onClick={() => {
 											setChosenFriendButtonAction('decline');
-											// @ts-ignore
-											declineFriendRequest(user.friendRequest.id);
+											declineFriendRequest(friendRequest.id);
 										}}
 										color='red'
 									>
 										Decline friend request
 									</Menu.Item>
 								</>
-							) : friendButtonAction === 'outbound' && user.friendRequest ? (
+							) : friendButtonAction === 'outbound' && friendRequest ? (
 								<Menu.Item
 									icon={<IconUserOff size={14} />}
 									onClick={() => {
 										setChosenFriendButtonAction('cancel');
-										// @ts-ignore
-										cancelFriendRequest(user.friendRequest.id);
+										cancelFriendRequest(friendRequest.id);
 									}}
 								>
 									Cancel friend request

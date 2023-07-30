@@ -51,8 +51,7 @@ export const ProfileProvider = (props: Props) => {
 		mutate: mutateUser,
 	} = useSWR<UserResponse>(
 		[profileId && token ? `${uri}/users/${profileId}` : '', token],
-		// @ts-ignore
-		([url, token]) => fetchWithToken(url, token),
+		([url, token]: [string, string]) => fetchWithToken(url, token),
 		{ shouldRetryOnError: true }
 	);
 
@@ -91,8 +90,7 @@ export const ProfileProvider = (props: Props) => {
 				];
 			return null;
 		},
-		// @ts-ignore
-		([url, token]) => fetchWithToken(url, token),
+		([url, token]: [string, string]) => fetchWithToken(url, token),
 		{ revalidateFirstPage: false, shouldRetryOnError: true }
 	);
 

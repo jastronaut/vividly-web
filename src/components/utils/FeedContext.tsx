@@ -34,8 +34,7 @@ export const FeedProvider = (props: Props) => {
 
 	const { data, error, isLoading, mutate } = useSWR<FeedResponse>(
 		[token ? `${URL_PREFIX}/feed/friends` : '', token],
-		// @ts-ignore
-		([url, token]) => fetchWithToken(url, token),
+		([url, token]: [string, string]) => fetchWithToken(url, token),
 		{ shouldRetryOnError: false }
 	);
 

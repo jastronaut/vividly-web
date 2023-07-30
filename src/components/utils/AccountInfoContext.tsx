@@ -32,8 +32,7 @@ export const AccountInfoProvider = ({ children }: Props) => {
 
 	const { data, error, isLoading, mutate } = useSWR<AuthInfoResponse>(
 		[token ? `${URL_PREFIX}/auth/info` : '', token],
-		// @ts-ignore
-		([url, token]) => fetchWithToken(url, token),
+		([url, token]: [string, string]) => fetchWithToken(url, token),
 		{ shouldRetryOnError: true }
 	);
 

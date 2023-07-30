@@ -34,8 +34,7 @@ export const FriendRequestsProvider = (props: Props) => {
 
 	const { data, isLoading, error, mutate } = useSWR<FriendRequestsResponse>(
 		[token ? `${uri}/friends/requests` : '', token],
-		// @ts-ignore
-		([url, token]) => fetchWithToken(url, token),
+		([url, token]: [string, string]) => fetchWithToken(url, token),
 		{ shouldRetryOnError: false }
 	);
 

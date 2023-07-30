@@ -24,8 +24,7 @@ const PostPage: Page<PageProps> = (props: PageProps) => {
 
 	const { data, error, isLoading } = useSWR<PostResponse>(
 		[id && token ? `${URL_PREFIX}/posts/${id}` : '', token],
-		// @ts-ignore
-		([url, token]) => fetchWithToken(url, token)
+		([url, token]: [string, string]) => fetchWithToken(url, token)
 	);
 
 	useEffect(() => {

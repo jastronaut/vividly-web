@@ -66,8 +66,7 @@ export const FriendsProvider = (props: Props) => {
 				return [`${uri}/friends?cursor=${previousPageData.cursor}`, token];
 			return null;
 		},
-		// @ts-ignore
-		([url, token]) => fetchWithToken(url, token),
+		([url, token]: [string, string]) => fetchWithToken(url, token),
 		{ revalidateFirstPage: false, shouldRetryOnError: true }
 	);
 
