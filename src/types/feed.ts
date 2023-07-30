@@ -7,6 +7,7 @@ export type FeedFriendship = {
 	isFavorite: boolean;
 	lastReadPostId: number;
 	lastReadPostTime: number;
+	isUnread: boolean;
 	friend: User & {
 		posts?: BasePost[];
 	};
@@ -29,12 +30,9 @@ export function sortFeedFriendships(items: FeedFriendship[]): FeedFriendship[] {
 			return -1;
 		}
 
-		const isAUnread = a.lastReadPostTime < lastPostA.createdTime;
-		const isBUnread = b.lastReadPostTime < lastPostB.createdTime;
-
-		if (isAUnread && !isBUnread) {
+		if (a.isUnread && !b.isUnread) {
 			return -1;
-		} else if (!isAUnread && isBUnread) {
+		} else if (!a.isUnread && b.isUnread) {
 			return 1;
 		}
 
