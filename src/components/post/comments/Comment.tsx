@@ -25,29 +25,37 @@ export const Comment = (props: CommentProps) => {
 							alt={`${props.author.username}'s avatar`}
 						/>
 						<TextContainer>
-							<Text fw={700} fz='sm'>
-								<Link
-									href={{
-										pathname: '/profile/[id]',
-										query: { id: props.author.id },
+							<Flex>
+								<Text fw={700} fz='sm'>
+									<Link
+										href={{
+											pathname: '/profile/[id]',
+											query: { id: props.author.id },
+										}}
+										onClick={props.onClickLink}
+									>
+										{props.author.name}
+									</Link>
+								</Text>
+								<Text
+									c='dimmed'
+									fz='sm'
+									sx={{
+										marginLeft: '4px',
 									}}
-									onClick={props.onClickLink}
 								>
-									{props.author.name}
-								</Link>
-							</Text>
-							<Text c='dimmed' fz='sm'>
-								<Link
-									href={{
-										pathname: '/profile/[id]',
-										query: { id: props.author.id },
-									}}
-									onClick={props.onClickLink}
-								>
-									{` @`}
-									{props.author.username}
-								</Link>
-							</Text>
+									<Link
+										href={{
+											pathname: '/profile/[id]',
+											query: { id: props.author.id },
+										}}
+										onClick={props.onClickLink}
+									>
+										{` @`}
+										{props.author.username}
+									</Link>
+								</Text>
+							</Flex>
 							<Text onClick={props.onClickComment}>{props.content}</Text>
 						</TextContainer>
 					</Flex>
