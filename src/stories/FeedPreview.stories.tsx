@@ -13,6 +13,7 @@ const ItemBase = {
 		isFavorite: false,
 		lastReadPostId: 1,
 		lastReadPostTime: now - 1000,
+		isUnread: true,
 
 		friend: {
 			id: 1,
