@@ -1,6 +1,5 @@
 import React from 'react';
 import { GetStaticPropsContext } from 'next';
-import dynamic from 'next/dynamic';
 
 import { Page } from '../_app';
 import { useCurUserContext } from '@/components/utils/CurUserContext';
@@ -8,10 +7,7 @@ import { FriendsProvider } from '@/components/utils/FriendsContext';
 import AppLayout from '@/components/layout/AppLayout';
 import { UserProfileLoadingState } from '@/components/profile/UserProfileLoadingState';
 import { ProfileProvider } from '@/components/utils/ProfileFeedContext';
-
-const DynamicProfile = dynamic(() => import('./_components'), {
-	ssr: false,
-});
+import Profile from '@/components/profile/ProfilePage';
 
 type PageProps = {
 	id: string;
@@ -28,7 +24,7 @@ const ProfilePage: Page<PageProps> = props => {
 					<UserProfileLoadingState />
 				) : (
 					<ProfileProvider profileId={id}>
-						<DynamicProfile id={id} />
+						<Profile id={id} />
 					</ProfileProvider>
 				)}
 			</>

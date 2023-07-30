@@ -7,10 +7,10 @@ import * as Sentry from '@sentry/nextjs';
 import { fetcher } from '../utils';
 import { Layout } from '../components/layout/Layout';
 
-Sentry.init({
-	environment: process.env.NODE_ENV,
-	enabled: process.env.NODE_ENV === 'production',
-});
+// Sentry.init({
+// 	environment: process.env.NODE_ENV,
+// 	enabled: process.env.NODE_ENV === 'production',
+// });
 
 export type Page<P = unknown> = NextPage<P> & {
 	getLayout?: (page: React.ReactNode) => React.ReactNode;

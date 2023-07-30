@@ -8,7 +8,7 @@ import { useCurUserContext } from '@/components/utils/CurUserContext';
 import { useFriendsContext } from '@/components/utils/FriendsContext';
 
 import { ProfileContent } from '@/components/profile/content/ProfileContent';
-import { Editor } from '../../components/editor/Editor';
+import { Editor } from '../editor/Editor';
 import { FadeIn } from '@/styles/Animations';
 import { useProfileContext } from '@/components/utils/ProfileFeedContext';
 
