@@ -60,6 +60,7 @@ import {
 	generateOracleResponse,
 	isDraftEmpty,
 	stripBlocks,
+	withEmbeds,
 } from './utils';
 import { Block, BlockType } from '@/types/post';
 
@@ -86,19 +87,6 @@ const openWeatherKey =
 	process.env.REACT_APP_OPEN_WEATHER_API_KEY ||
 	process.env.OPEN_WEATHER_API_KEY ||
 	process.env.NEXT_PUBLIC_OPEN_WEATHER_API_KEY;
-
-const withEmbeds = (props: SlateEditorType) => {
-	const editor = props;
-	const { isVoid } = editor;
-	editor.isVoid = element =>
-		element.type === EditorBlockType.IMAGE ||
-		element.type === EditorBlockType.LINK ||
-		element.type === EditorBlockType.MAGIC ||
-		element.type === EditorBlockType.ORACLE
-			? true
-			: isVoid(element);
-	return editor;
-};
 
 interface BaseElementProps {
 	children: React.ReactNode;

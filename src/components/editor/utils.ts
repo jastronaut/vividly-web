@@ -11,6 +11,19 @@ import { Block } from '@/types/post';
 const IBB_KEY =
 	process.env.IMGBB_API_KEY || process.env.NEXT_PUBLIC_IMGBB_API_KEY;
 
+export const withEmbeds = (props: SlateEditorType) => {
+	const editor = props;
+	const { isVoid } = editor;
+	editor.isVoid = element =>
+		element.type === EditorBlockType.IMAGE ||
+		element.type === EditorBlockType.LINK ||
+		element.type === EditorBlockType.MAGIC ||
+		element.type === EditorBlockType.ORACLE
+			? true
+			: isVoid(element);
+	return editor;
+};
+
 export function getWeatherEmoji(weather: Weather, time: number) {
 	const id = weather.id;
 	const night = time < 3 || time > 17;

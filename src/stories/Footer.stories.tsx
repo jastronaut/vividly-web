@@ -12,7 +12,13 @@ export default {
 
 const Template: ComponentStory<typeof Footer> = args => (
 	<VividlyThemeProvider>
-		<Card shadow='sm' p='xl' radius='md' withBorder style={{ width: '500px' }}>
+		<Card
+			shadow='sm'
+			p='xl'
+			radius='md'
+			withBorder
+			style={{ width: '500px', height: '120px' }}
+		>
 			<Footer {...args} />
 		</Card>
 	</VividlyThemeProvider>
