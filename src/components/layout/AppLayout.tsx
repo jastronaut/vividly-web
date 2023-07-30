@@ -1,6 +1,7 @@
 import { CurUserProvider } from '../utils/CurUserContext';
 import { NotificationsProvider } from '../utils/NotificationsContext';
 import { FriendRequestsProvider } from '../utils/FriendRequestsContext';
+import { FeedProvider } from '../utils/FeedContext';
 import NavigationLayout from './navigation/NavigationLayout';
 
 type Props = {
@@ -10,11 +11,13 @@ type Props = {
 const AppLayout = ({ children }: Props) => {
 	return (
 		<CurUserProvider>
-			<FriendRequestsProvider>
-				<NotificationsProvider>
-					<NavigationLayout>{children}</NavigationLayout>
-				</NotificationsProvider>
-			</FriendRequestsProvider>
+			<FeedProvider>
+				<FriendRequestsProvider>
+					<NotificationsProvider>
+						<NavigationLayout>{children}</NavigationLayout>
+					</NotificationsProvider>
+				</FriendRequestsProvider>
+			</FeedProvider>
 		</CurUserProvider>
 	);
 };

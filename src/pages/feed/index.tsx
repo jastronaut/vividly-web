@@ -6,17 +6,11 @@ import { rem } from 'polished';
 import { IconMoodPlus, IconPencil } from '@tabler/icons-react';
 import { Text, Button } from '@mantine/core';
 
-import { useEffect } from 'react';
-import useSWR from 'swr';
-
-import { URL_PREFIX } from '@/constants';
-import { fetchWithToken } from '@/utils';
-import { FeedResponse, sortFeedFriendships } from '@/types/feed';
-import { showAndLogErrorNotification } from '@/showerror';
 import { FeedPreview } from '@/components/feed/FeedPreview';
 import AppLayout from '@/components/layout/AppLayout';
 import { FadeIn } from '@/styles/Animations';
 import { FeedPreviewLoading } from '@/components/feed/FeedPreview';
+import { useFeedContext } from '@/components/utils/FeedContext';
 
 const EmptyStateWrapper = styled.div`
 	margin: ${rem(300)} ${rem(100)} ${rem(100)};
@@ -57,38 +51,26 @@ const LoadingState = () => {
 
 export const FeedPage: Page = () => {
 	const { curUser } = useCurUserContext();
-	const { token } = curUser;
-
-	const { data, error, isLoading, mutate } = useSWR<FeedResponse>(
-		[token ? `${URL_PREFIX}/feed/friends` : '', token],
-		// @ts-ignore
-		([url, token]) => fetchWithToken(url, token),
-		{ shouldRetryOnError: false }
-	);
-
-	useEffect(() => {
-		if (error) {
-			showAndLogErrorNotification(`Couldn't load feed.`, error);
-		}
-	}, [error]);
-
-	const items = data ? sortFeedFriendships(data.data) : [];
+	const { feed: items, isLoading } = useFeedContext();
 
 	const showLoadingState = isLoading || !curUser;
 
 	return (
 		<FadeIn>
 			{showLoadingState && <LoadingState />}
-			{items.map(item => (
-				<Link
-					href={`/profile/${item.friend.id}`}
-					key={`link-${item.friend.id}`}
-				>
-					<FeedPreview item={item} />
-				</Link>
-			))}
-			{items.length < 1 && !showLoadingState ? (
-				<EmptyState id={curUser.user.id} />
+			{items ? (
+				items.length > 0 ? (
+					items.map(item => (
+						<Link
+							href={`/profile/${item.friend.id}`}
+							key={`link-${item.friend.id}`}
+						>
+							<FeedPreview item={item} />
+						</Link>
+					))
+				) : (
+					<EmptyState id={curUser.user.id} />
+				)
 			) : null}
 		</FadeIn>
 	);
