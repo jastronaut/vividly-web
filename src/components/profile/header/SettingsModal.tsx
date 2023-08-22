@@ -22,15 +22,10 @@ import { DismissWarningModal } from '../../common/DismissWarningModal';
 import { User } from '@/types/user';
 import Link from 'next/link';
 
-function getErrorText(errorCode: string | null) {
-	switch (errorCode) {
-		case 'USERNAME_TAKEN':
-			return 'Username is taken';
-		case 'USERNAME_INVALID':
-			return 'Username is invalid';
-		default:
-			return null;
-	}
+// validate username
+export function validateUsername(username: string) {
+	const usernameRegex = /^[a-zA-Z0-9_]{3,20}$/;
+	return usernameRegex.test(username);
 }
 
 function createImageUploadRequest(file: File) {
@@ -73,6 +68,10 @@ export const SettingsModal = (props: Props) => {
 		try {
 			// change username
 			if (username !== curUser.user.username) {
+				if (!validateUsername(username)) {
+					throw new Error('USERNAME_INVALID');
+				}
+
 				const usernameRes = await fetch(`${URL_PREFIX}/users/username/change`, {
 					method: 'POST',
 					headers: {
@@ -85,7 +84,7 @@ export const SettingsModal = (props: Props) => {
 				const usernameData = await usernameRes.json();
 
 				if (usernameData.error) {
-					throw new Error(usernameData.errorCode);
+					throw new Error(usernameData.error);
 				}
 			}
 
@@ -101,7 +100,7 @@ export const SettingsModal = (props: Props) => {
 
 			const data = await req.json();
 			if (data.error) {
-				throw new Error(data.errorCode);
+				throw new Error(data.error);
 			}
 
 			props.onClickSave(data.user);
@@ -283,7 +282,10 @@ export const SettingsModal = (props: Props) => {
 					placeholder='Enter your username'
 					maxLength={20}
 					minLength={3}
-					error={getErrorText(error)}
+					error={
+						error === 'USERNAME_INVALID' &&
+						'Username can only contain letters, numbers, and underscores.'
+					}
 				/>
 				<Space h='sm' />
 				<Textarea
