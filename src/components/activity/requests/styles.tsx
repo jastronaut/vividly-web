@@ -28,11 +28,18 @@ export const Wrapper = styled.div<{ withHover?: boolean }>`
 	}
 `;
 
+export const WrapperStyled = styled(Wrapper)`
+	display: grid;
+	grid-template-columns: auto 1fr auto;
+`;
+
 export const ActionsContainer = styled(Group)`
-	/* align-self: flex-start; */
 	@media screen and (max-width: 800px) {
 		padding-top: ${rem(8)};
-		/* padding-left: ${rem(52)}; */
+	}
+
+	@media screen and (max-width: 500px) {
+		grid-column: 2 / 4;
 	}
 `;
 

@@ -2,12 +2,7 @@ import { ActionIcon, Flex, Text } from '@mantine/core';
 import { IconCheck, IconX, IconBan } from '@tabler/icons-react';
 import { useRouter } from 'next/router';
 
-import {
-	Wrapper,
-	TextContainer,
-	ActionsContainer,
-	LeftContent,
-} from './styles';
+import { WrapperStyled, TextContainer, ActionsContainer } from './styles';
 import { DEFAULT_AVATAR } from '@/constants';
 import { User } from '@/types/user';
 import { Avatar } from '@/components/common/Avatar';
@@ -27,69 +22,65 @@ export const FriendRequestItem = (props: Props) => {
 
 	const profileLink = `/profile/${id}`;
 	return (
-		<Wrapper withHover>
-			<Flex wrap='wrap' style={{ justifyContent: 'space-between' }}>
-				<LeftContent>
-					<Avatar
-						src={avatarSrc || DEFAULT_AVATAR}
-						onClick={() => router.push(profileLink)}
-						size={40}
-						alt={`${username}'s avatar`}
-					/>
-					<TextContainer>
-						<Text span fw={700}>
-							<Link
-								href={{
-									pathname: '/profile/[id]',
-									query: { id },
-								}}
-							>
-								{name}
-							</Link>
-						</Text>
-						{` `}
-						<Text span c='dimmed'>
-							<Link
-								href={{
-									pathname: '/profile/[id]',
-									query: { id },
-								}}
-							>
-								@{username}
-							</Link>
-						</Text>
-						<Text>{bio}</Text>
-					</TextContainer>
-				</LeftContent>
-				<ActionsContainer spacing={'xs'}>
-					{onClickAccept && (
-						<ActionIcon
-							variant='filled'
-							color='green'
-							onClick={onClickAccept}
-							title='Accept friend request'
-						>
-							<IconCheck size={16} />
-						</ActionIcon>
-					)}
+		<WrapperStyled withHover>
+			<Avatar
+				src={avatarSrc || DEFAULT_AVATAR}
+				onClick={() => router.push(profileLink)}
+				size={40}
+				alt={`${username}'s avatar`}
+			/>
+			<TextContainer>
+				<Text span fw={700}>
+					<Link
+						href={{
+							pathname: '/profile/[id]',
+							query: { id },
+						}}
+					>
+						{name}
+					</Link>
+				</Text>
+				{` `}
+				<Text span c='dimmed'>
+					<Link
+						href={{
+							pathname: '/profile/[id]',
+							query: { id },
+						}}
+					>
+						@{username}
+					</Link>
+				</Text>
+				<Text>{bio}</Text>
+			</TextContainer>
+			<ActionsContainer spacing={'xs'}>
+				{onClickAccept && (
 					<ActionIcon
 						variant='filled'
-						color='red'
-						onClick={props.onClickDecline}
-						title='Remove friend request'
+						color='green'
+						onClick={onClickAccept}
+						title='Accept friend request'
 					>
-						<IconX size={16} />
+						<IconCheck size={16} />
 					</ActionIcon>
-					<ActionIcon
-						variant='filled'
-						color='gray'
-						onClick={props.onClickBlock}
-						title='Block user'
-					>
-						<IconBan size={16} />
-					</ActionIcon>
-				</ActionsContainer>
-			</Flex>
-		</Wrapper>
+				)}
+				<ActionIcon
+					variant='filled'
+					color='red'
+					onClick={props.onClickDecline}
+					title='Remove friend request'
+				>
+					<IconX size={16} />
+				</ActionIcon>
+				<ActionIcon
+					variant='filled'
+					color='gray'
+					onClick={props.onClickBlock}
+					title='Block user'
+				>
+					<IconBan size={16} />
+				</ActionIcon>
+			</ActionsContainer>
+		</WrapperStyled>
 	);
 };
