@@ -50,11 +50,6 @@ export const Wrapper = styled.div`
 		color: unset;
 	}
 
-	a:hover .mantine-Text-root {
-		text-decoration: underline;
-		color: ${props => props.theme.accent};
-	}
-
 	.comment-content a {
 		color: ${props => props.theme.accent};
 	}
