@@ -23,7 +23,7 @@ export const InlineEditorWrapper = styled.div`
 	margin: 0;
 
 	@media screen and (max-width: 800px) {
-		margin: 0 ${rem(8)} ${rem(25)};
+		margin: 0 ${rem(8)} ${rem(10)};
 	}
 
 	[data-slate-placeholder='true'] {

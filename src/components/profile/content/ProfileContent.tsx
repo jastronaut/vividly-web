@@ -84,7 +84,10 @@ export const ProfileContent = (props: ProfileContentProps) => {
 				<FriendsDrawer isOpen={friendsDrawerOpen} close={close} />
 			)}
 
-			<ProfileContentContainer isLoading={isLoading || showBottomStuff}>
+			<ProfileContentContainer
+				isLoading={isLoading || showBottomStuff}
+				isOwnProfile={isLoggedInUser}
+			>
 				<div>{props.children}</div>
 
 				<ProfilePosts

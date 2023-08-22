@@ -11,16 +11,17 @@ export const ProfileHeaderContainer = styled.div`
 	}
 `;
 
-export const ProfileContentContainer = styled.div<{ isLoading: boolean }>`
+export const ProfileContentContainer = styled.div<{
+	isLoading: boolean;
+	isOwnProfile: boolean;
+}>`
 	padding: ${rem(24)};
 	display: flex;
 	flex-direction: ${props => (props.isLoading ? 'column' : 'column-reverse')};
 	border-top: none;
-	min-height: calc(100vh - 164px);
 
 	@media screen and (max-width: 800px) {
-		padding-bottom: ${rem(45)};
-		min-height: calc(100vh - 190px);
+		padding-bottom: ${props => (props.isOwnProfile ? 0 : rem(45))};
 	}
 
 	@media screen and (max-width: 500px) {
@@ -30,8 +31,6 @@ export const ProfileContentContainer = styled.div<{ isLoading: boolean }>`
 `;
 
 export const ContentWrapper = styled.div`
-	min-height: calc(100vh - 50px);
-
 	@media screen and (min-width: 801px) {
 		border: 1px solid ${props => props.theme.background.secondary};
 	}

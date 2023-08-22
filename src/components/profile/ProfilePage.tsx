@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import { useRouter } from 'next/router';
 
 import { showAndLogErrorNotification } from '@/showerror';
@@ -128,7 +128,7 @@ const Profile = (props: PageProps) => {
 		};
 	}, []);
 
-	useEffect(() => {
+	useLayoutEffect(() => {
 		if (
 			feed &&
 			initLoad &&
