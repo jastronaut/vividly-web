@@ -44,13 +44,23 @@ export const MenuContainer = styled(Group)`
 `;
 
 export const Wrapper = styled.div`
+	margin-right: ${rem(8)};
+
 	a {
 		color: unset;
 	}
 
-	a:hover .mantine-Text-root:first-of-type {
+	a:hover .mantine-Text-root {
 		text-decoration: underline;
 		color: ${props => props.theme.accent};
+	}
+
+	.comment-content a {
+		color: ${props => props.theme.accent};
+	}
+
+	.comment-content {
+		overflow-wrap: anywhere;
 	}
 `;
 
