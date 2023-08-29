@@ -20,16 +20,19 @@ import { DismissWarningModal } from '../../common/DismissWarningModal';
 import { MusicBlock } from '@/components/post/blocks/MusicBlock';
 import { ReportModal, ReportType } from '@/components/common/ReportModal';
 import { useProfileContext } from '@/components/contexts/ProfileFeedContext';
+import { Linkified } from '@/components/common/Linkified';
 
 export const addNewlines = (txt: string, id: string) =>
 	txt.length < 1 ? (
 		<br key={`${id}-br-1`} />
 	) : txt.indexOf('\n') < 0 ? (
-		<Text key={`${id}-0`}>{txt}</Text>
+		<Text key={`${id}-0`}>
+			<Linkified>{txt}</Linkified>
+		</Text>
 	) : (
 		txt.split('\n').map((item, index) => (
 			<Text key={`${id}-${index}`}>
-				{item}
+				<Linkified>{item}</Linkified>
 				<br />
 			</Text>
 		))

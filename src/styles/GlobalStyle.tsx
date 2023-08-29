@@ -26,6 +26,10 @@ export const GlobalStyle = createGlobalStyle`
         color: unset;
     }
 
+    a.linkified {
+		color: ${props => props.theme.accent};
+	}
+
     * {
         box-sizing: border-box;
     }

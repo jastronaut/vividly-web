@@ -12,6 +12,10 @@ export type LikesResponse = {
 	likes: number;
 };
 
+export interface UserInfoResponse extends DefaultResponse {
+	user: User;
+}
+
 export interface UserResponse extends DefaultResponse {
 	user: User;
 	friendship: Friend | null;

@@ -11,8 +11,10 @@ import styled from 'styled-components';
 import { rem } from 'polished';
 import { IconStar, IconInfoCircle } from '@tabler/icons-react';
 import { useWindowScroll, useMediaQuery } from '@mantine/hooks';
+
 import { HEADER_SCROLL_HEIGHT, HEADER_SCROLL_HEIGHT_MOBILE } from './constants';
 import { getRgba } from '@/components/utils/getRgba';
+import { Linkified } from '@/components/common/Linkified';
 
 type FavoriteButtonProps = {
 	isFavorite: boolean;
@@ -243,7 +245,7 @@ export const HeaderText = (props: HeaderTextProps) => {
 							}}
 							fz={isMobile ? 'sm' : 'md'}
 						>
-							{props.bio}
+							<Linkified>{props.bio}</Linkified>
 						</Text>
 					) : (
 						<Text fs='italic'>No bio yet.</Text>

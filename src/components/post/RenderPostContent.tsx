@@ -1,11 +1,12 @@
 import { ImageBlock } from '@/components/post/blocks/blocks';
 import { LinkBlockContent } from '@/components/post/blocks/LinkBlockContent';
 import { BlockType, Block } from '@/types/post';
+import { Linkified } from '../common/Linkified';
 
 export function renderPostContent(content: Block, key: string) {
 	switch (content.type) {
 		case BlockType.TEXT:
-			return <p key={key}>{content.text}</p>;
+			return <Linkified key={key}>{content.text}</Linkified>;
 		case BlockType.IMAGE:
 			return (
 				<ImageBlock

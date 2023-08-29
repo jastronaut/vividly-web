@@ -1,11 +1,11 @@
 import { Flex, Space, Text, Menu, ActionIcon } from '@mantine/core';
 import { IconDots, IconTrash } from '@tabler/icons-react';
 import Link from 'next/link';
-import Linkify from 'linkify-react';
 
 import { Comment as CommentType } from '@/types/post';
 import { MenuContainer, Wrapper, TextContainer } from './styles';
 import { Avatar } from '@/components/common/Avatar';
+import { Linkified } from '@/components/common/Linkified';
 
 type CommentProps = {
 	onDelete: () => void;
@@ -58,7 +58,7 @@ export const Comment = (props: CommentProps) => {
 								</Text>
 							</Flex>
 							<Text className='comment-content' onClick={props.onClickComment}>
-								<Linkify>{props.content}</Linkify>
+								<Linkified>{props.content}</Linkified>
 							</Text>
 						</TextContainer>
 					</Flex>
