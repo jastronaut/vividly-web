@@ -17,7 +17,12 @@ export const DismissWarningModal = (props: Props) => {
 			centered
 			size='sm'
 			withCloseButton={false}
+			overlayProps={{
+				opacity: 0.55,
+				blur: 3,
+			}}
 		>
+			<Modal.Overlay />
 			<Center>
 				<Stack>
 					<Text ta='center' style={{ marginBottom: '0' }}>

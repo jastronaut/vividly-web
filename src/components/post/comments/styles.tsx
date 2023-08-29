@@ -56,6 +56,7 @@ export const Wrapper = styled.div`
 
 	.comment-content {
 		overflow-wrap: anywhere;
+		line-height: 1.3;
 	}
 `;
 
