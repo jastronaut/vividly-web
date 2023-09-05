@@ -122,11 +122,12 @@ export const PostProvider = (props: Props) => {
 	const toggleDisableComments = useCallback(async () => {
 		try {
 			const resp = await makeApiCall<DefaultResponse>({
-				uri: `/posts/${post.id}/comments/${
-					post.commentsDisabled ? 'enable' : 'disable'
-				}`,
+				uri: `/posts/${post.id}/comments-closed`,
 				method: 'POST',
 				token,
+				body: {
+					enabled: !post.commentsDisabled,
+				},
 			});
 			if (resp.success) {
 				setPost(post => {
