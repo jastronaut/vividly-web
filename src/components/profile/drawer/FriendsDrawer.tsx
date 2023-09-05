@@ -63,6 +63,10 @@ export const FriendsDrawer = (props: Props) => {
 				onClose={props.close}
 				title='Friends'
 				position='right'
+				overlayProps={{
+					opacity: 0.55,
+					blur: 3,
+				}}
 			>
 				<Center>
 					<Link href='/friend-requests'>

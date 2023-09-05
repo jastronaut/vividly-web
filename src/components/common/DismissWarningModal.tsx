@@ -22,7 +22,6 @@ export const DismissWarningModal = (props: Props) => {
 				blur: 3,
 			}}
 		>
-			<Modal.Overlay />
 			<Center>
 				<Stack>
 					<Text ta='center' style={{ marginBottom: '0' }}>

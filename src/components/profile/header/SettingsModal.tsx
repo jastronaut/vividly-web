@@ -208,6 +208,10 @@ export const SettingsModal = (props: Props) => {
 			onClose={tryClose}
 			title='Edit profile'
 			fullScreen={isMobile}
+			overlayProps={{
+				opacity: 0.55,
+				blur: 3,
+			}}
 		>
 			<DismissWarningModal
 				isOpen={isWarningModalOpen}

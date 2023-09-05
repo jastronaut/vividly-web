@@ -51,7 +51,6 @@ export const Loading = (props: LoadingProps) => (
 						sx={{
 							marginTop: '1.5rem',
 						}}
-						c='dimmed'
 					>
 						Loading...
 					</Text>
