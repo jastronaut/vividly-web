@@ -10,7 +10,7 @@ import { STORAGE_CUR_USER_KEY } from '../../constants';
 import { CurUser } from '@/types/user';
 import { showAndLogErrorNotification } from '@/showerror';
 import { makeApiCall } from '@/utils';
-import LoginLogoutLayout from '@/components/layout/LoginLogoutLayout';
+import GradientLayout from '@/components/layout/GradientLayout';
 import { Page } from '../_app';
 
 const usernameRegex = /^[a-zA-Z0-9_]+$/;
@@ -287,7 +287,7 @@ const Register: Page = () => {
 };
 
 Register.getLayout = (page: React.ReactNode) => (
-	<LoginLogoutLayout>{page}</LoginLogoutLayout>
+	<GradientLayout>{page}</GradientLayout>
 );
 
 export default Register;

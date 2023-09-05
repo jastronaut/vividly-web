@@ -16,7 +16,7 @@ import { useRouter } from 'next/router';
 import { STORAGE_CUR_USER_KEY } from '../../constants';
 import { makeApiCall } from '@/utils';
 import { LoginResponse } from '@/types/api';
-import LoginLogoutLayout from '@/components/layout/LoginLogoutLayout';
+import GradientLayout from '@/components/layout/GradientLayout';
 import { Page } from '../_app';
 import { Loading } from '@/components/common/Loading';
 
@@ -207,6 +207,6 @@ const Login: Page = () => {
 	);
 };
 
-Login.getLayout = page => <LoginLogoutLayout>{page}</LoginLogoutLayout>;
+Login.getLayout = page => <GradientLayout>{page}</GradientLayout>;
 
 export default Login;

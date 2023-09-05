@@ -1,7 +1,7 @@
 import { Button, Center } from '@mantine/core';
 import { STORAGE_CUR_USER_KEY } from '@/constants';
 
-import LoginLogoutLayout from '@/components/layout/LoginLogoutLayout';
+import GradientLayout from '@/components/layout/GradientLayout';
 import { Page } from '../_app';
 import { withAuth } from '@/components/hooks/withAuth';
 
@@ -26,7 +26,7 @@ const Logout: Page = () => {
 };
 
 Logout.getLayout = page => {
-	return <LoginLogoutLayout>{page}</LoginLogoutLayout>;
+	return <GradientLayout>{page}</GradientLayout>;
 };
 
 export default withAuth(Logout);

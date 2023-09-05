@@ -51,7 +51,7 @@ type Props = {
 	children: React.ReactNode;
 };
 
-const LoginLogoutLayout = (props: Props) => {
+const GradientLayout = (props: Props) => {
 	return (
 		<>
 			<GlobalStyle />
@@ -60,4 +60,4 @@ const LoginLogoutLayout = (props: Props) => {
 	);
 };
 
-export default LoginLogoutLayout;
+export default GradientLayout;
