@@ -1,7 +1,8 @@
-import { Title, Center, Button, Stack } from '@mantine/core';
+import { Text, Title, Center, Stack, UnstyledButton } from '@mantine/core';
 import { useSearchParams } from 'next/navigation';
 
 import { Page } from '../_app';
+import GradientLayout from '@/components/layout/GradientLayout';
 
 function errorToMessage(code: string) {
 	switch (code) {
@@ -25,20 +26,27 @@ export const Content = () => {
 						'@media (max-width: 800px)': {
 							width: '100%',
 						},
+						a: {
+							textDecoration: 'underline',
+						},
 					}}
 					align='center'
 				>
-					<Title order={2} align='center'>
-						{error ? errorToMessage(error) : 'Your account has been verified!'}
-					</Title>
 					{error ? (
-						<Button variant='outline' component='a' href='/login' size='md'>
-							Login
-						</Button>
+						<>
+							<Title ta='center'>❌ {errorToMessage(error)}</Title>
+							<Text>
+								<a href='mailto:supportp@vividly.love'>Contact support</a> if
+								you think this is a mistake.
+							</Text>
+						</>
 					) : (
-						<Button variant='light' component='a' href='/feed' size='lg'>
-							Start sharing Vividly 🔮
-						</Button>
+						<>
+							<Title>Email verified ✅</Title>
+							<UnstyledButton component='a' href='/feed' variant='subtle'>
+								Start sharing Vividly 🔮
+							</UnstyledButton>
+						</>
 					)}
 				</Stack>
 			</Center>
@@ -54,8 +62,6 @@ const VerificationPage: Page = () => {
 	);
 };
 
-VerificationPage.getLayout = (page: React.ReactNode) => {
-	return <>{page}</>;
-};
+VerificationPage.getLayout = page => <GradientLayout>{page}</GradientLayout>;
 
 export default VerificationPage;
