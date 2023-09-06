@@ -58,12 +58,6 @@ export const FeedPage: Page = () => {
 
 	const showLoadingState = isLoading || !curUser;
 
-	useEffect(() => {
-		if (!curUser || !curUser.token) {
-			router.push('/login');
-		}
-	}, [curUser, router]);
-
 	return (
 		<FadeIn>
 			{showLoadingState && <LoadingState />}

@@ -104,13 +104,12 @@ export const PostPreview = (props: Props) => {
 	const onClickLikeDebug = useCallback(async () => {
 		setLikesLoading(true);
 		try {
+			setIsLiked(!isLiked);
 			const resp = await makeApiCall<LikesResponse>({
 				uri: `/posts/${post.id}/${isLiked ? 'unlike' : 'like'}`,
 				method: 'POST',
 				token,
 			});
-
-			setIsLiked(!isLiked);
 			setLikeCount(resp.likes);
 		} catch (err) {
 			showAndLogErrorNotification(`Can't like post.id ${post.id}`, err);

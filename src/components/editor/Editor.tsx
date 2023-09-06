@@ -383,12 +383,12 @@ export const EditorWithActions = (props: EditorWithActionsProps) => {
 			</EditorContainer>
 			<Space h='sm' />
 			<Flex gap='md'>
-				<FileButton
-					onChange={(f: File | null) => addImage(editor, f)}
-					accept='image/png,image/jpeg'
-				>
-					{props => (
-						<Tooltip label='Add an image' position='bottom' withArrow>
+				<Tooltip label='Add an image' position='bottom' withArrow>
+					<FileButton
+						onChange={(f: File | null) => addImage(editor, f)}
+						accept='image/png,image/jpeg'
+					>
+						{props => (
 							<ActionIcon
 								aria-label='Upload image'
 								{...actionIconProps}
@@ -396,9 +396,9 @@ export const EditorWithActions = (props: EditorWithActionsProps) => {
 							>
 								<IconPhoto />
 							</ActionIcon>
-						</Tooltip>
-					)}
-				</FileButton>
+						)}
+					</FileButton>
+				</Tooltip>
 				<Tooltip label='Add current time' position='bottom' withArrow>
 					<ActionIcon
 						{...actionIconProps}

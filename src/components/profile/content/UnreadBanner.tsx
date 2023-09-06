@@ -8,7 +8,6 @@ import {
 	HEADER_SCROLL_HEIGHT,
 	HEADER_SCROLL_HEIGHT_MOBILE,
 } from '../header/constants';
-import { useCurUserContext } from '@/components/contexts/CurUserContext';
 import { Friend } from '@/types/user';
 
 const Wrapper = styled.div<{ scrolled: boolean }>`
@@ -18,11 +17,10 @@ const Wrapper = styled.div<{ scrolled: boolean }>`
 	transition: all 0.2s ease-in;
 	opacity: 1;
 	position: fixed;
-	top: 0;
 	left: 0;
 	z-index: 100;
 	width: 100%;
-	top: ${props => (props.scrolled ? rem(90) : rem(100))};
+	top: ${props => (props.scrolled ? rem(100) : rem(110))};
 
 	button {
 		box-shadow: ${props => `0 0 ${rem(4)} ${props.theme.accent}`};
@@ -80,14 +78,11 @@ type Props = {
 };
 
 export const UnreadBanner = (props: Props) => {
-	const { curUser } = useCurUserContext();
 	const { friend } = props;
 
 	if (!friend) {
 		return null;
 	}
-
-	const user = friend.friend;
 
 	if (!friend.lastReadPostId) {
 		return null;
