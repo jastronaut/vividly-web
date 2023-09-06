@@ -242,6 +242,7 @@ export const HeaderText = (props: HeaderTextProps) => {
 						<Text
 							sx={{
 								lineHeight: 1,
+								wordBreak: 'break-word',
 							}}
 							fz={isMobile ? 'sm' : 'md'}
 						>
