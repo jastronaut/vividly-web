@@ -8,8 +8,8 @@ import {
 	HEADER_SCROLL_HEIGHT,
 	HEADER_SCROLL_HEIGHT_MOBILE,
 } from '../header/constants';
-import { UserResponse } from '@/types/api';
 import { useCurUserContext } from '@/components/contexts/CurUserContext';
+import { Friend } from '@/types/user';
 
 const Wrapper = styled.div<{ scrolled: boolean }>`
 	padding: ${rem(8)} ${rem(12)};
@@ -17,14 +17,16 @@ const Wrapper = styled.div<{ scrolled: boolean }>`
 	justify-content: center;
 	transition: all 0.2s ease-in;
 	opacity: 1;
-
 	position: fixed;
 	top: 0;
 	left: 0;
 	z-index: 100;
 	width: 100%;
-
 	top: ${props => (props.scrolled ? rem(90) : rem(100))};
+
+	button {
+		box-shadow: ${props => `0 0 ${rem(4)} ${props.theme.accent}`};
+	}
 
 	@media screen and (max-width: 800px) {
 		top: ${props => (props.scrolled ? rem(50) : rem(70))};
@@ -66,7 +68,7 @@ const UnreadBannerButton = (props: UnreadBannerProps) => {
 
 	return (
 		<Wrapper scrolled={isScrolled}>
-			<Button color='blue' size='md' onClick={onClick}>
+			<Button size='md' onClick={onClick}>
 				Jump to unread posts
 			</Button>
 		</Wrapper>
@@ -74,32 +76,30 @@ const UnreadBannerButton = (props: UnreadBannerProps) => {
 };
 
 type Props = {
-	user?: UserResponse | undefined;
+	friend: Friend | undefined;
 };
 
 export const UnreadBanner = (props: Props) => {
 	const { curUser } = useCurUserContext();
-	const { user } = props;
+	const { friend } = props;
 
-	if (!user || !curUser) {
+	if (!friend) {
 		return null;
 	}
 
-	if (user.user.id === curUser.user.id) {
+	const user = friend.friend;
+
+	if (!friend.lastReadPostId) {
 		return null;
 	}
 
-	if (!user.friendship || !user.friendship.lastReadPostId) {
+	if (!friend.newestPostId) {
 		return null;
 	}
 
-	if (!user.friendship.newestPostId) {
+	if (friend.lastReadPostId >= friend.newestPostId) {
 		return null;
 	}
 
-	if (user.friendship.lastReadPostId >= user.friendship.newestPostId) {
-		return null;
-	}
-
-	return <UnreadBannerButton unreadPostId={user.friendship.lastReadPostId} />;
+	return <UnreadBannerButton unreadPostId={friend.lastReadPostId} />;
 };

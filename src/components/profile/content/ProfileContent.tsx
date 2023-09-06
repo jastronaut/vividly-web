@@ -78,7 +78,9 @@ export const ProfileContent = (props: ProfileContentProps) => {
 				openFriendsDrawer={open}
 				closeFriendsDrawer={close}
 			/>
-			<UnreadBanner user={user} />
+			<UnreadBanner
+				friend={user && user.friendship ? user.friendship : undefined}
+			/>
 
 			{isLoggedInUser && (
 				<FriendsDrawer isOpen={friendsDrawerOpen} close={close} />
