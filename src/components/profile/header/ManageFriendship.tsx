@@ -9,6 +9,7 @@ import {
 	IconMoodSmile,
 	IconBan,
 	IconMoodEmpty,
+	IconFlag,
 } from '@tabler/icons-react';
 import { useRouter } from 'next/router';
 
@@ -30,6 +31,7 @@ import {
 import { throwConfetti } from '@/utils';
 import { DismissWarningModal } from '@/components/common/DismissWarningModal';
 import { useVividlyTheme } from '@/styles/Theme';
+import { ReportModal, ReportType } from '@/components/common/ReportModal';
 
 function showSuccessNotification(message: string) {
 	notifications.show({
@@ -56,6 +58,7 @@ export const ManageFriendshipButton = (props: ProfileHeaderProps) => {
 	const [warningModalOpen, setWarningModalOpen] = useState(false);
 	const [blockWarningModalOpen, setBlockWarningModalOpen] = useState(false);
 	const [unblockWarningModalOpen, setUnblockWarningModalOpen] = useState(false);
+	const [reportModalOpen, setReportModalOpen] = useState(false);
 
 	const { refetchFeed, updateUser } = useProfileContext();
 	const { accentColor } = useVividlyTheme();
@@ -314,16 +317,31 @@ export const ManageFriendshipButton = (props: ProfileHeaderProps) => {
 			/>
 			<DismissWarningModal
 				isOpen={blockWarningModalOpen}
-				message={'Are you sure you want to block this user?'}
+				message={'Block this user?'}
 				onNo={() => setBlockWarningModalOpen(false)}
 				onYes={onConfirmBlock}
 			/>
 			<DismissWarningModal
 				isOpen={unblockWarningModalOpen}
-				message={'Are you sure you want to unblock this user?'}
+				message={'Unblock this user?'}
 				onNo={() => setUnblockWarningModalOpen(false)}
 				onYes={onConfirmUnblock}
 			/>
+			<ReportModal
+				isOpen={reportModalOpen}
+				onSubmit={() => {
+					setBlockWarningModalOpen(true);
+					setReportModalOpen(false);
+					notifications.show({
+						message: 'Report sent',
+					});
+				}}
+				onCancel={() => setReportModalOpen(false)}
+				reportType={ReportType.USER}
+				username={user?.user.username || ''}
+				userId={user?.user.id || 0}
+			/>
+
 			<FriendActionsMenuContainer id='friend-menu-container'>
 				<Group spacing='sm'>
 					<Menu position='bottom-end' withArrow offset={0}>
@@ -423,6 +441,14 @@ export const ManageFriendshipButton = (props: ProfileHeaderProps) => {
 									Block user
 								</Menu.Item>
 							)}
+
+							<Menu.Item
+								icon={<IconFlag size={14} />}
+								color='red'
+								onClick={() => setReportModalOpen(true)}
+							>
+								Report user
+							</Menu.Item>
 						</Menu.Dropdown>
 					</Menu>
 

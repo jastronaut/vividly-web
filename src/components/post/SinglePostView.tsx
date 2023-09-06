@@ -51,8 +51,8 @@ export const SinglePostView = () => {
 		<>
 			<ReportModal
 				isOpen={reportModalOpen}
-				onNo={() => setReportModalOpen(false)}
-				onYes={() => setReportModalOpen(false)}
+				onCancel={() => setReportModalOpen(false)}
+				onSubmit={() => setReportModalOpen(false)}
 				postId={post.id}
 				reportType={ReportType.POST}
 				username={post.author?.username || ''}

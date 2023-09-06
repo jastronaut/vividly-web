@@ -21,6 +21,7 @@ import { MusicBlock } from '@/components/post/blocks/MusicBlock';
 import { ReportModal, ReportType } from '@/components/common/ReportModal';
 import { useProfileContext } from '@/components/contexts/ProfileFeedContext';
 import { Linkified } from '@/components/common/Linkified';
+import { notifications } from '@mantine/notifications';
 
 export const addNewlines = (txt: string, id: string) =>
 	txt.length < 1 ? (
@@ -214,8 +215,13 @@ export const PostPreview = (props: Props) => {
 
 			<ReportModal
 				isOpen={reportModalOpen}
-				onYes={() => {}}
-				onNo={() => setReportModalOpen(false)}
+				onCancel={() => setReportModalOpen(false)}
+				onSubmit={() => {
+					setReportModalOpen(false);
+					notifications.show({
+						message: 'Report sent',
+					});
+				}}
 				reportType={ReportType.POST}
 				username={user?.user.username || ''}
 				userId={user?.user.id || 0}

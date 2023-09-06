@@ -27,8 +27,8 @@ export enum ReportType {
 
 type Props = {
 	isOpen: boolean;
-	onNo: () => void;
-	onYes: () => void;
+	onCancel: () => void;
+	onSubmit?: () => void;
 	reportType: ReportType;
 	username: string;
 	userId: number;
@@ -88,7 +88,10 @@ export const ReportModal = (props: Props) => {
 				throw new Error(res.error);
 			}
 
-			props.onNo();
+			if (props.onSubmit) {
+				props.onSubmit();
+			}
+
 			notifications.show({
 				title: 'Report submitted',
 				message: 'Thank you for your feedback!',
@@ -110,7 +113,7 @@ export const ReportModal = (props: Props) => {
 	return (
 		<Modal
 			opened={props.isOpen}
-			onClose={props.onNo}
+			onClose={props.onCancel}
 			centered
 			size='sm'
 			withCloseButton={false}
@@ -149,7 +152,7 @@ export const ReportModal = (props: Props) => {
 									Submit
 								</Button>
 								<Space w='md' />
-								<Button radius='lg' color='gray' onClick={props.onNo}>
+								<Button radius='lg' color='gray' onClick={props.onCancel}>
 									Cancel
 								</Button>
 							</Flex>
