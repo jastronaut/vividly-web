@@ -9,17 +9,38 @@ import {
 import { FriendRequest, Friend } from '@/types/user';
 import { useCurUserContext } from '@/components/contexts/CurUserContext';
 
+type ErrorCodesType = {
+	[key: string]: string;
+};
+
+const ErrorCodes: ErrorCodesType = {
+	ALREADY_FRIENDS: 'You are already friends with this user!',
+	ALREADY_REQUESTED: 'You have already sent a friend request to this user!',
+	USER_BLOCKED: `You can't send a friend request to this user!`,
+	USER_NOT_FOUND: 'User does not exist!',
+	CANNOT_ADD_SELF: `You can't add yourself as a friend! 😅`,
+	MAX_FRIENDS: `You've reached the friend limit!`,
+	SERVER_ERROR: `Couldn't add friend. Please try again later!`,
+};
+
 export const useAddNewFriend = () => {
 	const [isLoading, setIsLoading] = useState(false);
 	const [friendRequest, setFriendRequest] = useState<FriendRequest | null>(
 		null
 	);
 	const [error, setError] = useState<string | null>(null);
-	const { token } = useCurUserContext().curUser;
+	const { curUser } = useCurUserContext();
+	const { token } = curUser;
 
 	const addFriend = useCallback(
 		async (username: string) => {
 			if (!username) return;
+
+			if (username === curUser.user.username) {
+				setError(ErrorCodes.CANNOT_ADD_SELF);
+				return;
+			}
+
 			setError(null);
 			setIsLoading(true);
 			try {
@@ -29,14 +50,14 @@ export const useAddNewFriend = () => {
 					token,
 				});
 
-				if (!resp.success) {
-					throw new Error(resp.error);
+				if (resp.errorCode) {
+					throw new Error(ErrorCodes[resp.errorCode]);
 				}
 
 				setFriendRequest(resp.friendRequest);
 			} catch (err) {
 				console.error(err);
-				setError(`Couldn't add friend. Please try again later!`);
+				setError(err ? err.toString() : ErrorCodes.SERVER_ERROR);
 			}
 
 			setIsLoading(false);

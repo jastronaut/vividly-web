@@ -1,5 +1,13 @@
 import { useState, useEffect } from 'react';
-import { TextInput, Button, Group, Text, Space, Alert } from '@mantine/core';
+import {
+	TextInput,
+	Button,
+	Group,
+	Text,
+	Space,
+	Alert,
+	Center,
+} from '@mantine/core';
 import { IconAt, IconAlertCircle } from '@tabler/icons-react';
 
 import { FriendRequest } from '@/types/user';
@@ -39,6 +47,10 @@ export const AddFriendForm = (props: Props) => {
 					maxLength={20}
 					value={username}
 					minLength={3}
+					autoCapitalize='none'
+					autoComplete='off'
+					// hacky way to prevent autocomplete from showing on safari
+					name='searchFakeName'
 					onChange={e => setUsername(e.currentTarget.value.trim())}
 				/>
 				<Button
@@ -53,11 +65,12 @@ export const AddFriendForm = (props: Props) => {
 			{error && (
 				<>
 					<Space h='xs' />
-					<Alert
-						icon={<IconAlertCircle size={18} />}
-						color='red'
-						sx={{ display: 'block', width: 'fit-content' }}
-					>{`${error} 😢`}</Alert>
+					<Center>
+						<Alert
+							icon={<IconAlertCircle size={18} />}
+							color='red'
+						>{`${error} 😢`}</Alert>
+					</Center>
 				</>
 			)}
 		</>
