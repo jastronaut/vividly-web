@@ -4,11 +4,7 @@ import useSWR from 'swr';
 import { useCurUserContext } from './CurUserContext';
 import { fetchWithToken } from '@/utils';
 import { URL_PREFIX } from '@/constants';
-import {
-	sortFeedFriendships,
-	FeedResponse,
-	FeedFriendship,
-} from '@/types/feed';
+import { FeedResponse, FeedFriendship } from '@/types/feed';
 
 type FeedContext = {
 	isLoading: boolean;
@@ -43,7 +39,7 @@ export const FeedProvider = (props: Props) => {
 	}, [mutate]);
 
 	// sort feed friendships
-	const feed = data ? sortFeedFriendships(data.data) : [];
+	const feed = data ? data.data : [];
 
 	const unreadFeed = feed.filter(friendship => friendship.isUnread);
 
