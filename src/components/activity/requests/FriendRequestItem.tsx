@@ -1,4 +1,4 @@
-import { ActionIcon, Flex, Text } from '@mantine/core';
+import { ActionIcon, Tooltip, Text } from '@mantine/core';
 import { IconCheck, IconX, IconBan } from '@tabler/icons-react';
 import { useRouter } from 'next/router';
 
@@ -55,31 +55,38 @@ export const FriendRequestItem = (props: Props) => {
 			</TextContainer>
 			<ActionsContainer spacing={'xs'}>
 				{onClickAccept && (
+					<Tooltip label='Accept friend request' position='bottom' withArrow>
+						<ActionIcon
+							variant='filled'
+							color='green'
+							onClick={onClickAccept}
+							aria-label='Accept friend request'
+						>
+							<IconCheck size={16} />
+						</ActionIcon>
+					</Tooltip>
+				)}
+
+				<Tooltip label='Remove friend request' position='bottom' withArrow>
 					<ActionIcon
 						variant='filled'
-						color='green'
-						onClick={onClickAccept}
-						title='Accept friend request'
+						color='red'
+						onClick={props.onClickDecline}
+						aria-label='Remove friend request'
 					>
-						<IconCheck size={16} />
+						<IconX size={16} />
 					</ActionIcon>
-				)}
-				<ActionIcon
-					variant='filled'
-					color='red'
-					onClick={props.onClickDecline}
-					title='Remove friend request'
-				>
-					<IconX size={16} />
-				</ActionIcon>
-				<ActionIcon
-					variant='filled'
-					color='gray'
-					onClick={props.onClickBlock}
-					title='Block user'
-				>
-					<IconBan size={16} />
-				</ActionIcon>
+				</Tooltip>
+				<Tooltip label='Block user' position='bottom' withArrow>
+					<ActionIcon
+						variant='filled'
+						color='gray'
+						onClick={props.onClickBlock}
+						aria-label='Block user'
+					>
+						<IconBan size={16} />
+					</ActionIcon>
+				</Tooltip>
 			</ActionsContainer>
 		</WrapperStyled>
 	);
