@@ -7,7 +7,7 @@ import { FriendsProvider } from '@/components/contexts/FriendsContext';
 import AppLayout from '@/components/layout/AppLayout';
 import { UserProfileLoadingState } from '@/components/profile/UserProfileLoadingState';
 import { ProfileProvider } from '@/components/contexts/ProfileFeedContext';
-import Profile from '@/components/profile/ProfilePage';
+import Profile from '@/components/profile/Profile';
 
 type PageProps = {
 	id: string;

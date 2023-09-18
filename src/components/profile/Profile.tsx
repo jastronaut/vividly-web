@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useLayoutEffect, useRef } from 'react';
+import React, {
+	useState,
+	useEffect,
+	useLayoutEffect,
+	useRef,
+	useCallback,
+} from 'react';
 import { useRouter } from 'next/router';
 
 import { showAndLogErrorNotification } from '@/showerror';
@@ -11,6 +17,8 @@ import { ProfileContent } from '@/components/profile/content/ProfileContent';
 import { Editor } from '../editor/Editor';
 import { FadeIn } from '@/styles/Animations';
 import { useProfileContext } from '@/components/contexts/ProfileFeedContext';
+import { useFeedContext } from '../contexts/FeedContext';
+import { NextUserBanner } from './NextUserBanner';
 
 type PageProps = {
 	id: string;
@@ -21,6 +29,7 @@ const Profile = (props: PageProps) => {
 	const { curUser, updateCurUser } = useCurUserContext();
 	const { token } = curUser;
 	const router = useRouter();
+	const { feed: friendsFeed } = useFeedContext();
 
 	const {
 		feed,
@@ -37,6 +46,7 @@ const Profile = (props: PageProps) => {
 
 	const { friends, refetchFriends } = useFriendsContext();
 
+	const [swiped, setSwiped] = useState(false);
 	const [initLoad, setInitLoad] = useState(true);
 	const chatEndRef = useRef<HTMLDivElement>(null);
 
@@ -48,10 +58,19 @@ const Profile = (props: PageProps) => {
 		  }))
 		: [];
 
+	const nextFriendship = friendsFeed[0];
+	const isLoggedInUser = !!user && curUser.user.id === user.user.id;
+
 	const onSubmitPost = (blocks: Block[]) => {
 		setInitLoad(false);
 		addPostFromBlocks(blocks);
 		setInitLoad(true);
+		if (chatEndRef.current) {
+			window.scrollTo({
+				top: chatEndRef.current.offsetTop,
+				// behavior: 'smooth',
+			});
+		}
 	};
 
 	const onDeletePost = (postId: number, pageIndex: number) => {
@@ -78,6 +97,7 @@ const Profile = (props: PageProps) => {
 			return;
 		}
 
+		/*
 		const { lastReadPostId, newestPostId } = user.friendship;
 		if (lastReadPostId !== newestPostId) {
 			fetch(`${uri}/feed/uid/${user.user.id}/read`, {
@@ -92,6 +112,7 @@ const Profile = (props: PageProps) => {
 					console.log({ err });
 				});
 		}
+		*/
 	}, [user]);
 
 	useEffect(() => {
@@ -112,8 +133,8 @@ const Profile = (props: PageProps) => {
 			// chatEndRef.current.scrollIntoView({ behavior: 'smooth' });
 			window.scrollTo(0, chatEndRef.current.offsetTop);
 		}
+
 		return () => {
-			console.log('reset init load');
 			setInitLoad(true);
 		};
 	}, [id]);
@@ -164,6 +185,7 @@ const Profile = (props: PageProps) => {
 					onClickLoadMore={loadMore}
 					hasMorePosts={hasMore}
 					feed={feed}
+					isLoggedInUser={isLoggedInUser}
 				>
 					{isEditorVisible && (
 						<Editor
@@ -176,6 +198,12 @@ const Profile = (props: PageProps) => {
 					)}
 				</ProfileContent>
 				<div ref={chatEndRef} id='end' />
+				<NextUserBanner
+					nextFriendship={nextFriendship}
+					user={user?.user}
+					isLoading={isUserLoading || isPostsLoading}
+					isLoggedInUser={isLoggedInUser}
+				/>
 			</>
 		</FadeIn>
 	);

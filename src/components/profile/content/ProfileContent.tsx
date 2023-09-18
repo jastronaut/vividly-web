@@ -33,16 +33,17 @@ type ProfileContentProps = {
 	children?: React.ReactNode;
 	hasMorePosts?: boolean;
 	onClickLoadMore?: () => void;
+	isLoggedInUser: boolean;
 };
 
 export const ProfileContent = (props: ProfileContentProps) => {
 	const { curUser } = useCurUserContext();
-	const { isUserLoading, isPostsLoading } = props;
+
+	const { isUserLoading, isPostsLoading, isLoggedInUser } = props;
 	const [friendsDrawerOpen, { open, close }] = useDisclosure(false);
 
 	const user = props.user;
 	const feed: Feed[] = props.feed || [];
-	const isLoggedInUser = !!user && curUser.user.id === user.user.id;
 
 	const isLoading = isUserLoading || isPostsLoading;
 
