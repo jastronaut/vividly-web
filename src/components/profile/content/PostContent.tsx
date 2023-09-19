@@ -2,26 +2,28 @@ import { useState, useCallback } from 'react';
 import styled from 'styled-components';
 import { rem } from 'polished';
 import { Text } from '@mantine/core';
+import { notifications } from '@mantine/notifications';
 
 import { Post, BlockType, Block } from '@/types/post';
-import { showAndLogErrorNotification } from '@/showerror';
-import { Footer } from '@/components/post/Footer';
-import { ImageBlock } from '@/components/post/blocks/blocks';
-import { LinkBlockContent } from '@/components/post/blocks/LinkBlockContent';
-import { useCurUserContext } from '../../contexts/CurUserContext';
-import { CommentsModal } from '@/components/post/comments/CommentsModal';
 import { makeApiCall } from '@/utils';
 import {
 	LikesResponse,
 	NewCommentResponse,
 	DefaultResponse,
 } from '@/types/api';
+
+import { showAndLogErrorNotification } from '@/showerror';
+import { Footer } from '@/components/post/Footer';
+import { ImageBlock } from '@/components/post/blocks/blocks';
+import { LinkBlockContent } from '@/components/post/blocks/LinkBlockContent';
+import { useCurUserContext } from '../../contexts/CurUserContext';
+import { CommentsModal } from '@/components/post/comments/CommentsModal';
 import { DismissWarningModal } from '../../common/DismissWarningModal';
 import { MusicBlock } from '@/components/post/blocks/MusicBlock';
 import { ReportModal, ReportType } from '@/components/common/ReportModal';
 import { useProfileContext } from '@/components/contexts/ProfileFeedContext';
 import { Linkified } from '@/components/common/Linkified';
-import { notifications } from '@mantine/notifications';
+import { QuoteBlock } from '@/components/post/blocks/QuoteBlock';
 
 export const addNewlines = (txt: string, id: string) =>
 	txt.length < 1 ? (
@@ -68,6 +70,8 @@ function renderPostContent(content: Block, key: string) {
 			);
 		case BlockType.MUSIC:
 			return <MusicBlock key={key} {...content} />;
+		case BlockType.QUOTE:
+			return <QuoteBlock key={key} {...content} />;
 		default:
 			return <p key={key}>Unknown block type</p>;
 	}
@@ -77,10 +81,12 @@ type Props = {
 	post: Post;
 	onDeletePost: (id: number) => void;
 	isOwnPost: boolean;
+	onClickQuotePost: (post: Post) => void;
+	onClickComments?: () => void;
 };
 
-export const PostPreview = (props: Props) => {
-	const { post } = props;
+export const PostContent = (props: Props) => {
+	const { post, onClickComments } = props;
 	const [commentsOpen, setCommentsOpen] = useState(false);
 	const [comments, setComments] = useState(post.comments);
 	const [isLiked, setIsLiked] = useState(post.isLikedByUser);
@@ -239,7 +245,9 @@ export const PostPreview = (props: Props) => {
 			<Footer
 				commentCount={comments.length}
 				timestamp={post.createdTime}
-				onClickComment={() => setCommentsOpen(true)}
+				onClickComment={
+					onClickComments ? onClickComments : () => setCommentsOpen(true)
+				}
 				likeCount={likeCount}
 				isLiked={isLiked}
 				onClickLike={likesLoading ? () => null : onClickLikeDebug}
@@ -248,6 +256,7 @@ export const PostPreview = (props: Props) => {
 				commentsDisabled={commentsDisabled}
 				toggleDisableComments={toggleDisableComments}
 				onReport={() => setReportModalOpen(true)}
+				onClickQuotePost={() => props.onClickQuotePost(post)}
 			/>
 		</div>
 	);

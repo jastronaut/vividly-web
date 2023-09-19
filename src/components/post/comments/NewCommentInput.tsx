@@ -9,6 +9,7 @@ type Props = {
 	inputRef?: RefObject<HTMLTextAreaElement>;
 	draft: string;
 	setDraft: (draft: string) => void;
+	unfocused?: boolean;
 };
 
 export const NewCommentInput = (props: Props) => {
@@ -29,8 +30,8 @@ export const NewCommentInput = (props: Props) => {
 			<form onSubmit={onSubmit}>
 				<CommentTextArea
 					placeholder='Say something nice'
-					autoFocus
-					data-autofocus
+					autoFocus={props.unfocused ? false : true}
+					data-autofocus={props.unfocused ? false : true}
 					value={draft}
 					maxLength={500}
 					onChange={e => setDraft(e.currentTarget.value)}

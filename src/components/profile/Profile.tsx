@@ -1,17 +1,16 @@
-import React, {
-	useState,
-	useEffect,
-	useLayoutEffect,
-	useRef,
-	useCallback,
-} from 'react';
+import React, { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import { useRouter } from 'next/router';
+import { createEditor } from 'slate';
+import { withReact } from 'slate-react';
+import { withHistory } from 'slate-history';
 
+import { addQuote, withEmbeds } from '../editor/utils';
 import { showAndLogErrorNotification } from '@/showerror';
 import { uri } from '@/constants';
-import { Block } from '@/types/post';
+import { Block, Post } from '@/types/post';
 import { useCurUserContext } from '@/components/contexts/CurUserContext';
 import { useFriendsContext } from '@/components/contexts/FriendsContext';
+import { BlockType } from '@/types/post';
 
 import { ProfileContent } from '@/components/profile/content/ProfileContent';
 import { Editor } from '../editor/Editor';
@@ -19,6 +18,8 @@ import { FadeIn } from '@/styles/Animations';
 import { useProfileContext } from '@/components/contexts/ProfileFeedContext';
 import { useFeedContext } from '../contexts/FeedContext';
 import { NextUserBanner } from './NextUserBanner';
+import { PostDrawer } from './PostDrawer/PostDrawer';
+import { PostDrawerProvider } from '../contexts/PostDrawerContext';
 
 type PageProps = {
 	id: string;
@@ -46,9 +47,12 @@ const Profile = (props: PageProps) => {
 
 	const { friends, refetchFriends } = useFriendsContext();
 
-	const [swiped, setSwiped] = useState(false);
 	const [initLoad, setInitLoad] = useState(true);
 	const chatEndRef = useRef<HTMLDivElement>(null);
+
+	const [editor] = useState(() =>
+		withHistory(withReact(withEmbeds(createEditor())))
+	);
 
 	// map friends response to array of objects containing a friend's name and username
 	const friendsNamesList = friends
@@ -87,6 +91,15 @@ const Profile = (props: PageProps) => {
 		}
 	};
 
+	const onClickQuotePost = (post: Post) => {
+		addQuote(editor, {
+			type: BlockType.QUOTE,
+			postId: post.id,
+			preview: post.content[0],
+		});
+		scrollToBottom();
+	};
+
 	useEffect(() => {
 		if (user?.user.id === curUser.user.id) {
 			updateCurUser(user.user);
@@ -97,7 +110,6 @@ const Profile = (props: PageProps) => {
 			return;
 		}
 
-		/*
 		const { lastReadPostId, newestPostId } = user.friendship;
 		if (lastReadPostId !== newestPostId) {
 			fetch(`${uri}/feed/uid/${user.user.id}/read`, {
@@ -112,7 +124,6 @@ const Profile = (props: PageProps) => {
 					console.log({ err });
 				});
 		}
-		*/
 	}, [user]);
 
 	useEffect(() => {
@@ -176,34 +187,39 @@ const Profile = (props: PageProps) => {
 	return (
 		<FadeIn>
 			<>
-				<ProfileContent
-					initLoad={initLoad}
-					user={user}
-					isUserLoading={isUserLoading}
-					isPostsLoading={isPostsLoading}
-					onDeletePost={onDeletePost}
-					onClickLoadMore={loadMore}
-					hasMorePosts={hasMore}
-					feed={feed}
-					isLoggedInUser={isLoggedInUser}
-				>
-					{isEditorVisible && (
-						<Editor
-							isOpen={true}
-							onChange={_val => console.log('printed')}
-							onSubmit={onSubmitPost}
-							friendsList={friendsNamesList}
-							onClickMagicPostActions={scrollToBottom}
-						/>
-					)}
-				</ProfileContent>
-				<div ref={chatEndRef} id='end' />
-				<NextUserBanner
-					nextFriendship={nextFriendship}
-					user={user?.user}
-					isLoading={isUserLoading || isPostsLoading}
-					isLoggedInUser={isLoggedInUser}
-				/>
+				<PostDrawerProvider>
+					<ProfileContent
+						initLoad={initLoad}
+						user={user}
+						isUserLoading={isUserLoading}
+						isPostsLoading={isPostsLoading}
+						onDeletePost={onDeletePost}
+						onClickLoadMore={loadMore}
+						hasMorePosts={hasMore}
+						feed={feed}
+						isLoggedInUser={isLoggedInUser}
+						onClickQuotePost={onClickQuotePost}
+					>
+						{isEditorVisible && (
+							<Editor
+								isOpen={true}
+								onChange={_val => console.log('printed')}
+								onSubmit={onSubmitPost}
+								friendsList={friendsNamesList}
+								onClickMagicPostActions={scrollToBottom}
+								editor={editor}
+							/>
+						)}
+					</ProfileContent>
+					<div ref={chatEndRef} id='end' />
+					<NextUserBanner
+						nextFriendship={nextFriendship}
+						user={user?.user}
+						isLoading={isUserLoading || isPostsLoading}
+						isLoggedInUser={isLoggedInUser}
+					/>
+					<PostDrawer onClickQuotePost={onClickQuotePost} />
+				</PostDrawerProvider>
 			</>
 		</FadeIn>
 	);

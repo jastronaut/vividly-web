@@ -4,6 +4,7 @@ import { ImageBlock } from '@/components/post/blocks/blocks';
 import { LinkBlockContent } from '@/components/post/blocks/LinkBlockContent';
 import { BlockType, Block } from '@/types/post';
 import { Linkified } from '../common/Linkified';
+import { QuoteBlock } from './blocks/QuoteBlock';
 
 export function renderPostContent(content: Block, key: string) {
 	switch (content.type) {
@@ -32,6 +33,8 @@ export function renderPostContent(content: Block, key: string) {
 					url={content.url}
 				/>
 			);
+		case BlockType.QUOTE:
+			return <QuoteBlock key={key} {...content} />;
 		default:
 			return <p key={key}>Unknown block type</p>;
 	}

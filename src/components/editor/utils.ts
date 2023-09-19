@@ -6,7 +6,7 @@ import { Transforms } from 'slate';
 
 import { BlockType as EditorBlockType } from '../../types/editor';
 import { ImgBBUploadResponse } from '@/types/api';
-import { Block } from '@/types/post';
+import { Block, QuoteBlock } from '@/types/post';
 
 const IBB_KEY =
 	process.env.IMGBB_API_KEY || process.env.NEXT_PUBLIC_IMGBB_API_KEY;
@@ -18,7 +18,8 @@ export const withEmbeds = (props: SlateEditorType) => {
 		element.type === EditorBlockType.IMAGE ||
 		element.type === EditorBlockType.LINK ||
 		element.type === EditorBlockType.MAGIC ||
-		element.type === EditorBlockType.ORACLE
+		element.type === EditorBlockType.ORACLE ||
+		element.type === EditorBlockType.QUOTE
 			? true
 			: isVoid(element);
 	return editor;
@@ -208,6 +209,17 @@ export const addOracleResponsePreview = (
 	};
 
 	Transforms.insertNodes(editor, node);
+	finishAddingBlock(editor);
+};
+
+export const addQuote = (editor: ReactEditor, quote: QuoteBlock) => {
+	removeBlankBlock(editor);
+	Transforms.insertNodes(editor, {
+		type: EditorBlockType.QUOTE,
+		postId: quote.postId,
+		preview: quote.preview,
+		children: [{ text: '' }],
+	});
 	finishAddingBlock(editor);
 };
 

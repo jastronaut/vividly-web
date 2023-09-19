@@ -9,7 +9,7 @@ import {
 import { useCurUserContext } from '@/components/contexts/CurUserContext';
 
 import { ProfileHeaderComponent } from '../header/header';
-import { FriendsDrawer } from '../drawer/FriendsDrawer';
+import { FriendsDrawer } from '../FriendsDrawer/FriendsDrawer';
 import {
 	ProfileContentContainer,
 	ContentWrapper,
@@ -22,6 +22,7 @@ import {
 } from './ProfileStates';
 import { UnreadBanner } from './UnreadBanner';
 import { ProfilePosts } from './ProfilePosts';
+import { Post } from '@/types/post';
 
 type ProfileContentProps = {
 	user?: UserResponse;
@@ -34,6 +35,7 @@ type ProfileContentProps = {
 	hasMorePosts?: boolean;
 	onClickLoadMore?: () => void;
 	isLoggedInUser: boolean;
+	onClickQuotePost: (post: Post) => void;
 };
 
 export const ProfileContent = (props: ProfileContentProps) => {
@@ -98,6 +100,7 @@ export const ProfileContent = (props: ProfileContentProps) => {
 					onDeletePost={props.onDeletePost}
 					feed={feed}
 					isLoading={isLoading}
+					onClickQuotePost={props.onClickQuotePost}
 				/>
 
 				{showMorePostsButton && (

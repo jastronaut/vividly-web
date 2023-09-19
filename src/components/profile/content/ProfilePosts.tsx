@@ -1,13 +1,15 @@
 import { ProfileFeedResponse as Feed } from '@/types/api';
 
-import { PostPreview } from './PostPreview';
+import { PostContent } from './PostContent';
 import { PostsLoading } from './ProfileStates';
+import { Post } from '@/types/post';
 
 type Props = {
 	feed: Feed[];
 	onDeletePost: (id: number, pageIndex: number) => void;
 	isLoggedInUser: boolean;
 	isLoading: boolean;
+	onClickQuotePost: (post: Post) => void;
 };
 
 export const ProfilePosts = (props: Props) => {
@@ -29,11 +31,12 @@ export const ProfilePosts = (props: Props) => {
 				>
 					{posts.data
 						? posts.data.map(post => (
-								<PostPreview
+								<PostContent
 									key={`ppp-${post.id}`}
 									post={post}
 									onDeletePost={id => onDeletePost(id, index)}
 									isOwnPost={isLoggedInUser}
+									onClickQuotePost={props.onClickQuotePost}
 								/>
 						  ))
 						: null}

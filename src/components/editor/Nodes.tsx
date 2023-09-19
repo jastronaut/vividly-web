@@ -7,6 +7,7 @@ import { MagicTextWrapper } from './styles';
 import { ImageBlock as ImageBlockContent } from '../post/blocks/blocks';
 import { LinkBlockContent } from '../post/blocks/LinkBlockContent';
 import { MusicBlock as MusicPostBlock } from '../post/blocks/MusicBlock';
+import { QuoteBlock as QuotePostBlock } from '../post/blocks/QuoteBlock';
 
 interface BaseElementProps {
 	children: React.ReactNode;
@@ -106,6 +107,27 @@ export const MusicBlock = (props: BaseElementProps) => {
 			{children}
 			<div contentEditable={false}>
 				<MusicPostBlock inEditor {...element} />
+			</div>
+		</div>
+	);
+};
+
+export const QuoteBlock = (props: BaseElementProps) => {
+	const { attributes, children, element } = props;
+	if (element.type !== EditorBlockType.QUOTE) {
+		return null;
+	}
+
+	return (
+		<div {...attributes}>
+			{children}
+			<div
+				contentEditable={false}
+				style={{
+					position: 'relative',
+				}}
+			>
+				<QuotePostBlock {...element} />
 			</div>
 		</div>
 	);

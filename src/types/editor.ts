@@ -1,5 +1,6 @@
 import { BaseEditor, Descendant } from 'slate';
 import { ReactEditor } from 'slate-react';
+import { Block } from './post';
 
 export enum BlockType {
 	TEXT = 'text',
@@ -9,6 +10,7 @@ export enum BlockType {
 	MAGIC = 'magic',
 	VIDEO = 'video',
 	ORACLE = 'oracle',
+	QUOTE = 'quote',
 }
 
 export type CustomText = { type?: BlockType.TEXT; text: string };
@@ -58,6 +60,13 @@ export type MusicElement = {
 	children: CustomText[];
 };
 
+export type QuoteElement = {
+	type: BlockType.QUOTE;
+	postId: number;
+	preview: Block;
+	children: CustomText[];
+};
+
 export type ElementType =
 	| CustomElement
 	| ImageElement
@@ -65,7 +74,8 @@ export type ElementType =
 	| LinkElement
 	| MagicElement
 	| OracleElement
-	| MusicElement;
+	| MusicElement
+	| QuoteElement;
 
 export type Weather = {
 	id: number;

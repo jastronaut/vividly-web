@@ -73,7 +73,7 @@ export const DisplayName = styled.h3`
 	}
 `;
 
-export const PostPreview = styled.div`
+export const FeedPostPreview = styled.div`
 	color: #a8a8a8;
 	display: flex;
 	> p {
@@ -112,10 +112,10 @@ export const FeedPreview = (props: FeedPreviewProps) => {
 			<InfoContainer>
 				<DisplayName>{displayName}</DisplayName>
 				{post && (
-					<PostPreview>
+					<FeedPostPreview>
 						<p>{post.content}</p>
 						<p>{post.timestamp}</p>
-					</PostPreview>
+					</FeedPostPreview>
 				)}
 			</InfoContainer>
 		</Wrapper>

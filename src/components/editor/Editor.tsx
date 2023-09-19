@@ -72,6 +72,7 @@ import {
 	MagicBlock,
 	OracleBlock,
 	MusicBlock,
+	QuoteBlock,
 } from './Nodes';
 import { showAndLogErrorNotification } from '@/showerror';
 import { MusicInput, OracleInput } from './MagicActions';
@@ -107,6 +108,8 @@ const Element = (props: BaseElementProps) => {
 			return <OracleBlock {...props} />;
 		case EditorBlockType.MUSIC:
 			return <MusicBlock {...props} />;
+		case EditorBlockType.QUOTE:
+			return <QuoteBlock {...props} />;
 		default:
 			return <Text {...attributes}>{children}</Text>;
 	}
@@ -469,13 +472,15 @@ type EditorProps = {
 		username: string;
 	}[];
 	onClickMagicPostActions: () => void;
+	editor: TheEditor;
 };
 
 export const Editor = (props: EditorProps) => {
-	const [editor] = useState(() =>
-		withHistory(withReact(withEmbeds(createEditor())))
-	);
+	const { editor } = props;
 	const [isWarningModalOpen, setIsWarningModalOpen] = useState(false);
+	// const [editor] = useState(() =>
+	// withHistory(withReact(withEmbeds(createEditor())))
+	// );
 	const [draft, setDraft] = useState<ElementType[]>([]);
 	const draftEmpty = useMemo(() => isDraftEmpty(draft), [draft]);
 
@@ -538,6 +543,13 @@ export const Editor = (props: EditorProps) => {
 						appleMusicEmbedUrl: node.appleMusicEmbedUrl,
 						spotifyEmbedUrl: node.spotifyEmbedUrl,
 						youtubeEmbedUrl: node.youtubeEmbedUrl,
+					});
+					break;
+				case EditorBlockType.QUOTE:
+					blocks.push({
+						type: BlockType.QUOTE,
+						postId: node.postId,
+						preview: node.preview,
 					});
 					break;
 				default:

@@ -9,7 +9,9 @@ import {
 	IconBan,
 	IconMessageCircleOff,
 	IconFlag,
+	IconBlockquote,
 } from '@tabler/icons-react';
+
 import { Group, Button, Text, Menu, ActionIcon, Tooltip } from '@mantine/core';
 
 import { getPostTime } from '../utils/time';
@@ -39,6 +41,7 @@ export type FooterProps = {
 	commentsDisabled: boolean;
 	toggleDisableComments: () => void;
 	onReport: () => void;
+	onClickQuotePost: () => void;
 };
 
 export const Footer = (props: FooterProps) => {
@@ -114,6 +117,12 @@ export const Footer = (props: FooterProps) => {
 										</span>
 									</Menu.Item>
 								</Tooltip>
+								<Menu.Item
+									icon={<IconBlockquote size={14} />}
+									onClick={props.onClickQuotePost}
+								>
+									Quote post
+								</Menu.Item>
 							</>
 						) : (
 							<Menu.Item

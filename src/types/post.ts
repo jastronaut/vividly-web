@@ -17,6 +17,7 @@ export enum BlockType {
 	IMAGE = 'image',
 	MUSIC = 'music',
 	LINK = 'link',
+	QUOTE = 'quote',
 }
 
 export type TextBlock = {
@@ -46,7 +47,18 @@ export type LinkBlock = {
 	url: string;
 };
 
-export type Block = TextBlock | ImageBlock | MusicBlock | LinkBlock;
+export type QuoteBlock = {
+	type: BlockType.QUOTE;
+	postId: number;
+	preview: Block;
+};
+
+export type Block =
+	| TextBlock
+	| ImageBlock
+	| MusicBlock
+	| LinkBlock
+	| QuoteBlock;
 
 export type BasePost = {
 	id: number;
