@@ -27,8 +27,7 @@ type PostDrawerContentProps = {
 };
 
 export const PostPreviewDrawerContent = (props: PostDrawerContentProps) => {
-	const { post, likePost, toggleDisableComments, addComment } =
-		usePostContext();
+	const { post, addComment } = usePostContext();
 	const [commentDraft, setCommentDraft] = useState('');
 
 	const onDelete = async () => {
@@ -139,7 +138,7 @@ export const PostDrawer = (props: PostDrawerProps) => {
 					<MiniLoader />
 				</Center>
 			) : !data?.post ? (
-				<div> not found</div>
+				<Center>Post not found :(</Center>
 			) : (
 				<PostProvider post={data.post} curUser={curUser}>
 					<PostPreviewDrawerContent
