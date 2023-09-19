@@ -10,6 +10,7 @@ const Container = styled.div`
 	border-radius: ${rem(4)};
 	margin: ${rem(4)} 0;
 	width: 95%;
+	background-color: ${props => props.theme.background.primary};
 
 	:hover {
 		cursor: pointer;
@@ -27,8 +28,14 @@ const Container = styled.div`
 
 export const QuoteBlock = (props: QuoteBlockType) => {
 	const { setPostId } = usePostDrawerContext();
+
+	const onClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+		e.stopPropagation();
+		setPostId(props.postId);
+	};
+
 	return (
-		<Container onClick={() => setPostId(props.postId)}>
+		<Container onClick={onClick}>
 			<blockquote>
 				{renderPostContent(props.preview, `quote-${props.postId}`)}
 			</blockquote>
