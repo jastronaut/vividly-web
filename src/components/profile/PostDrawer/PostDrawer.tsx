@@ -14,7 +14,7 @@ import { usePostDrawerContext } from '@/components/contexts/PostDrawerContext';
 import { Comment } from '@/components/post/comments/Comment';
 import { MiniLoader } from '@/components/common/Loading';
 import { PostContent } from '../content/PostContent';
-import { CommentsSection } from './styles';
+import { CommentsSection, PostSection } from './styles';
 import { NewCommentInput } from '@/components/post/comments/NewCommentInput';
 
 type PostDrawerContentProps = {
@@ -32,14 +32,16 @@ export const PostPreviewDrawerContent = (props: PostDrawerContentProps) => {
 	return (
 		<>
 			<Space h={rem(14)} />
-			<PostContent
-				post={post}
-				onDeletePost={() => {}}
-				isOwnPost={props.curUserId === post?.author?.id}
-				onClickQuotePost={() => props.onClickQuotePost(post)}
-				onClickComments={() => {}}
-				withQuotes={props.withQuotePost}
-			/>
+			<PostSection>
+				<PostContent
+					post={post}
+					onDeletePost={() => {}}
+					isOwnPost={props.curUserId === post?.author?.id}
+					onClickQuotePost={() => props.onClickQuotePost(post)}
+					onClickComments={() => {}}
+					withQuotes={props.withQuotePost}
+				/>
+			</PostSection>
 			<CommentsSection>
 				{post.comments.map(comment => (
 					<Comment
@@ -99,7 +101,11 @@ export const PostDrawer = (props: PostDrawerProps) => {
 			opened={isOpen}
 			onClose={onClose}
 			position='right'
-			title={withTitle ? `${curUser.user.name}'s post` : undefined}
+			title={
+				withTitle && curUser.user?.name
+					? `${curUser.user.name}'s post`
+					: undefined
+			}
 			overlayProps={{
 				opacity: 0.55,
 				blur: 3,
