@@ -8,6 +8,7 @@ import { ImageBlock as ImageBlockContent } from '../post/blocks/blocks';
 import { LinkBlockContent } from '../post/blocks/LinkBlockContent';
 import { MusicBlock as MusicPostBlock } from '../post/blocks/MusicBlock';
 import { QuoteBlock as QuotePostBlock } from '../post/blocks/QuoteBlock';
+import { BlockType } from '@/types/post';
 
 interface BaseElementProps {
 	children: React.ReactNode;
@@ -127,7 +128,11 @@ export const QuoteBlock = (props: BaseElementProps) => {
 					position: 'relative',
 				}}
 			>
-				<QuotePostBlock {...element} />
+				<QuotePostBlock
+					postId={element.postId}
+					preview={element.preview}
+					type={BlockType.QUOTE}
+				/>
 			</div>
 		</div>
 	);
