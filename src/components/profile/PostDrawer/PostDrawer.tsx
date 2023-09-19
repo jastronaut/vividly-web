@@ -21,6 +21,7 @@ type PostDrawerContentProps = {
 	post: Post;
 	curUserId: number;
 	onClickQuotePost: (post: Post) => void;
+	withQuotePost: boolean;
 };
 
 export const PostPreviewDrawerContent = (props: PostDrawerContentProps) => {
@@ -37,6 +38,7 @@ export const PostPreviewDrawerContent = (props: PostDrawerContentProps) => {
 				isOwnPost={props.curUserId === post?.author?.id}
 				onClickQuotePost={() => props.onClickQuotePost(post)}
 				onClickComments={() => {}}
+				withQuotes={props.withQuotePost}
 			/>
 			<CommentsSection>
 				{post.comments.map(comment => (
@@ -62,9 +64,12 @@ export const PostPreviewDrawerContent = (props: PostDrawerContentProps) => {
 
 type PostDrawerProps = {
 	onClickQuotePost: (post: Post) => void;
+	withQuotePost?: boolean;
+	withTitle?: boolean;
 };
 
 export const PostDrawer = (props: PostDrawerProps) => {
+	const { withQuotePost = true, withTitle = false } = props;
 	const { postId, isOpen, closePostId } = usePostDrawerContext();
 	const { curUser } = useCurUserContext();
 
@@ -94,6 +99,7 @@ export const PostDrawer = (props: PostDrawerProps) => {
 			opened={isOpen}
 			onClose={onClose}
 			position='right'
+			title={withTitle ? `${curUser.user.name}'s post` : undefined}
 			overlayProps={{
 				opacity: 0.55,
 				blur: 3,
@@ -115,6 +121,7 @@ export const PostDrawer = (props: PostDrawerProps) => {
 						post={data.post}
 						curUserId={curUser.user.id}
 						onClickQuotePost={onClickQuotePost}
+						withQuotePost={withQuotePost}
 					/>
 				</PostProvider>
 			)}

@@ -1,5 +1,4 @@
 import { Flex, Text } from '@mantine/core';
-import Link from 'next/link';
 import styled from 'styled-components';
 import { rem } from 'polished';
 
@@ -15,6 +14,7 @@ import { getPostTime } from '@/components/utils/time';
 
 import { getBlockPreview } from '@/components/utils/getBlockPreview';
 import { Avatar } from '@/components/common/Avatar';
+import { usePostDrawerContext } from '@/components/contexts/PostDrawerContext';
 
 function getNotificationActionMessage(notification: NotificationBody) {
 	switch (notification.type) {
@@ -63,49 +63,47 @@ interface Props {
 
 export const NotificationItem = (props: Props) => {
 	const { createdTime, body, sender, isUnread } = props.notification;
+	const { setPostId } = usePostDrawerContext();
 
 	const timestamp = getPostTime(createdTime);
 	const notificationActionMessage = getNotificationActionMessage(body);
 	const notificationContentPreview = getNotificationContentPreview(body);
-
-	const link =
-		body.type === NotificationType.ANNOUNCEMENT
-			? '/announcements'
-			: `/post/${body.post.id}`;
 
 	if (body.type === NotificationType.ANNOUNCEMENT) {
 		return <div>lol</div>;
 	}
 
 	return (
-		<Link href={link} style={{ color: 'unset' }}>
-			<WrapperStyled isUnread={isUnread} withHover>
-				<Flex>
-					<Avatar
-						src={sender.avatarSrc || DEFAULT_AVATAR}
-						alt={`${sender.name}'s avatar`}
-						size={30}
-					/>
-					<TextContainer>
-						<Text fw={700} component='span'>
-							{sender.name}
+		<WrapperStyled
+			isUnread={isUnread}
+			withHover
+			onClick={() => setPostId(body.post.id)}
+		>
+			<Flex>
+				<Avatar
+					src={sender.avatarSrc || DEFAULT_AVATAR}
+					alt={`${sender.name}'s avatar`}
+					size={30}
+				/>
+				<TextContainer>
+					<Text fw={700} component='span'>
+						{sender.name}
+					</Text>
+					{` `}
+					{notificationActionMessage}
+					{body.type === NotificationType.COMMENT && (
+						<Text
+							sx={{
+								lineHeight: rem(20),
+							}}
+						>
+							{body.message}
 						</Text>
-						{` `}
-						{notificationActionMessage}
-						{body.type === NotificationType.COMMENT && (
-							<Text
-								sx={{
-									lineHeight: rem(20),
-								}}
-							>
-								{body.message}
-							</Text>
-						)}
-						<Text c='dimmed'>{notificationContentPreview}</Text>
-					</TextContainer>
-					<Text c='dimmed'>{timestamp}</Text>
-				</Flex>
-			</WrapperStyled>
-		</Link>
+					)}
+					<Text c='dimmed'>{notificationContentPreview}</Text>
+				</TextContainer>
+				<Text c='dimmed'>{timestamp}</Text>
+			</Flex>
+		</WrapperStyled>
 	);
 };

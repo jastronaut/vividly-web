@@ -20,6 +20,7 @@ import { EmptyTab, LoadingTab } from '../TabStates';
 import { FadeIn } from '@/styles/Animations';
 import { useNotificationsContext } from '@/components/contexts/NotificationsContext';
 import { useFriendRequestsContext } from '@/components/contexts/FriendRequestsContext';
+import { PostDrawer } from '@/components/profile/PostDrawer/PostDrawer';
 
 export const NotificationTabs = () => {
 	const router = useRouter();
@@ -275,6 +276,11 @@ export const NotificationTabs = () => {
 						) : null}
 					</Stack>
 				</Center>
+				<PostDrawer
+					onClickQuotePost={() => {}}
+					withQuotePost={false}
+					withTitle
+				/>
 			</PageWrapper>
 		</>
 	);

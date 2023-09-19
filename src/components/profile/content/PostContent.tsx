@@ -83,10 +83,11 @@ type Props = {
 	isOwnPost: boolean;
 	onClickQuotePost: (post: Post) => void;
 	onClickComments?: () => void;
+	withQuotes?: boolean;
 };
 
 export const PostContent = (props: Props) => {
-	const { post, onClickComments } = props;
+	const { post, onClickComments, withQuotes = true } = props;
 	const [commentsOpen, setCommentsOpen] = useState(false);
 	const [comments, setComments] = useState(post.comments);
 	const [isLiked, setIsLiked] = useState(post.isLikedByUser);
@@ -257,6 +258,7 @@ export const PostContent = (props: Props) => {
 				toggleDisableComments={toggleDisableComments}
 				onReport={() => setReportModalOpen(true)}
 				onClickQuotePost={() => props.onClickQuotePost(post)}
+				withQuotes={withQuotes}
 			/>
 		</div>
 	);

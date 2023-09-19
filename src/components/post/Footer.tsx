@@ -42,6 +42,7 @@ export type FooterProps = {
 	toggleDisableComments: () => void;
 	onReport: () => void;
 	onClickQuotePost: () => void;
+	withQuotes: boolean;
 };
 
 export const Footer = (props: FooterProps) => {
@@ -117,12 +118,14 @@ export const Footer = (props: FooterProps) => {
 										</span>
 									</Menu.Item>
 								</Tooltip>
-								<Menu.Item
-									icon={<IconBlockquote size={14} />}
-									onClick={props.onClickQuotePost}
-								>
-									Quote post
-								</Menu.Item>
+								{props.withQuotes && (
+									<Menu.Item
+										icon={<IconBlockquote size={14} />}
+										onClick={props.onClickQuotePost}
+									>
+										Quote post
+									</Menu.Item>
+								)}
 							</>
 						) : (
 							<Menu.Item
