@@ -8,8 +8,11 @@ export const EditorContainer = styled.div`
 	background-color: ${props => props.theme.background.secondary};
 	border-radius: ${rem(8)};
 	overflow: scroll;
-
 	min-height: ${rem(100)};
+
+	img {
+		width: 90%;
+	}
 `;
 
 export const MagicTextWrapper = styled.div`
