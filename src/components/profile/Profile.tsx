@@ -77,6 +77,31 @@ const Profile = (props: PageProps) => {
 		}
 	};
 
+	const findPostInFeedAndDelete = (postId: number) => {
+		let pageIndex = 0;
+		let found = false;
+		let postIndex = 0;
+		for (const page of feed) {
+			for (const post of page.data) {
+				if (post.id === postId) {
+					found = true;
+					break;
+				}
+				postIndex++;
+			}
+			if (found) {
+				break;
+			}
+			pageIndex++;
+		}
+
+		if (!found) {
+			return;
+		}
+
+		onDeletePost(postId, pageIndex);
+	};
+
 	const onDeletePost = (postId: number, pageIndex: number) => {
 		try {
 			deletePost(postId, pageIndex);
@@ -218,7 +243,10 @@ const Profile = (props: PageProps) => {
 						isLoading={isUserLoading || isPostsLoading}
 						isLoggedInUser={isLoggedInUser}
 					/>
-					<PostDrawer onClickQuotePost={onClickQuotePost} />
+					<PostDrawer
+						onClickQuotePost={onClickQuotePost}
+						deletePost={findPostInFeedAndDelete}
+					/>
 				</PostDrawerProvider>
 			</>
 		</FadeIn>

@@ -24,6 +24,7 @@ type PostDrawerContentProps = {
 	onClickQuotePost: (post: Post) => void;
 	withQuotePost: boolean;
 	onClose: () => void;
+	deletePost?: (postId: number) => void;
 };
 
 export const PostPreviewDrawerContent = (props: PostDrawerContentProps) => {
@@ -31,6 +32,11 @@ export const PostPreviewDrawerContent = (props: PostDrawerContentProps) => {
 	const [commentDraft, setCommentDraft] = useState('');
 
 	const onDelete = async () => {
+		if (props.deletePost) {
+			props.deletePost(post.id);
+			props.onClose();
+			return;
+		}
 		try {
 			const resp = await makeApiCall<DefaultResponse>({
 				uri: `/posts/${post.id}`,
@@ -86,6 +92,7 @@ type PostDrawerProps = {
 	onClickQuotePost: (post: Post) => void;
 	withQuotePost?: boolean;
 	withTitle?: boolean;
+	deletePost?: (postId: number) => void;
 };
 
 export const PostDrawer = (props: PostDrawerProps) => {
@@ -148,6 +155,7 @@ export const PostDrawer = (props: PostDrawerProps) => {
 						withQuotePost={withQuotePost}
 						onClose={onClose}
 						token={token}
+						deletePost={props.deletePost}
 					/>
 				</PostProvider>
 			)}
