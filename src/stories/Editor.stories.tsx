@@ -7,7 +7,7 @@ import styled from 'styled-components';
 
 import { EditorWithActions } from '../components/editor/Editor';
 import { VividlyThemeProvider } from '../styles/Theme';
-import { BlockType } from '@/types/editor';
+import { EditorBlockType } from '@/types/editor';
 import { withEmbeds } from '@/components/editor/utils';
 import { InlineEditorWrapper } from '@/components/editor/styles';
 
@@ -50,29 +50,29 @@ const emptyChildren = {
 Primary.args = {
 	initialValue: [
 		{
-			type: BlockType.TEXT,
+			type: EditorBlockType.TEXT,
 			children: [{ text: 'A line of text in a paragraph.' }],
 		},
 		{
-			type: BlockType.IMAGE,
+			type: EditorBlockType.IMAGE,
 			url: 'https://i.ibb.co/YQz8PST/tumblr-1bc11f163eb6a3bca192be4504b6ff9e-a858f2b1-400.jpg',
 			width: 414,
 			height: 276,
 			...emptyChildren,
 		},
 		{
-			type: BlockType.TEXT,
+			type: EditorBlockType.TEXT,
 			children: [{ text: '2 A line of text in a paragraph.' }],
 		},
 		{
-			type: BlockType.IMAGE,
+			type: EditorBlockType.IMAGE,
 			url: 'https://i.ibb.co/P1XbY7D/1670228032635028.jpg',
 			...emptyChildren,
 			width: 621,
 			height: 414,
 		},
 		{
-			type: BlockType.LINK,
+			type: EditorBlockType.LINK,
 			url: 'https://www.google.com',
 			title: 'Google',
 			description: 'Search engine',
@@ -86,7 +86,7 @@ export const Empty = Template.bind({});
 Empty.args = {
 	initialValue: [
 		{
-			type: BlockType.TEXT,
+			type: EditorBlockType.TEXT,
 			children: [{ text: '' }],
 		},
 	],
@@ -96,7 +96,7 @@ export const Link = Template.bind({});
 Link.args = {
 	initialValue: [
 		{
-			type: BlockType.LINK,
+			type: EditorBlockType.LINK,
 			url: 'https://www.google.com',
 			title: 'Google',
 			description: 'Search engine',
@@ -110,7 +110,7 @@ export const Youtube = Template.bind({});
 Youtube.args = {
 	initialValue: [
 		{
-			type: BlockType.MUSIC,
+			type: EditorBlockType.MUSIC,
 			youtubeEmbedUrl: 'https://www.youtube.com/embed/5qap5aO4i9A',
 			children: [{ text: '' }],
 		},
@@ -121,7 +121,7 @@ export const Spotify = Template.bind({});
 Spotify.args = {
 	initialValue: [
 		{
-			type: BlockType.MUSIC,
+			type: EditorBlockType.MUSIC,
 			spotifyEmbedUrl:
 				'https://open.spotify.com/embed/track/77iRifbhkJGvGBBRNykUwN?utm_source=generator',
 			children: [{ text: '' }],
@@ -133,7 +133,7 @@ export const AppleMusic = Template.bind({});
 AppleMusic.args = {
 	initialValue: [
 		{
-			type: BlockType.MUSIC,
+			type: EditorBlockType.MUSIC,
 			appleMusicEmbedUrl:
 				'https://embed.music.apple.com/us/album/silver/1544377328?i=1544377598',
 			children: [{ text: '' }],

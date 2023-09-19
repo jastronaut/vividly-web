@@ -3,7 +3,7 @@ import { Collapse, Flex, Button, TextInput, Space, Text } from '@mantine/core';
 import { IconCloud, IconLink } from '@tabler/icons-react';
 
 import { MusicElement } from '@/types/editor';
-import { BlockType } from '@/types/editor';
+import { EditorBlockType } from '@/types/editor';
 
 const spotifyRegex = /https:\/\/open\.spotify\.com\/track\/[a-zA-Z0-9]+/g;
 const appleRegex =
@@ -86,7 +86,7 @@ export const MusicInput = (props: MusicInputProps) => {
 			const youtubeShortenedMatch = query.match(youtubeShortenedRegex);
 
 			const musicData: MusicElement = {
-				type: BlockType.MUSIC,
+				type: EditorBlockType.MUSIC,
 				children: [{ text: query }],
 			};
 

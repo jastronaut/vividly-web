@@ -4,9 +4,9 @@ import { ReactEditor } from 'slate-react';
 import dayjs from 'dayjs';
 import { Transforms } from 'slate';
 
-import { BlockType as EditorBlockType } from '../../types/editor';
+import { EditorBlockType } from '../../types/editor';
 import { ImgBBUploadResponse } from '@/types/api';
-import { Block, QuoteBlock } from '@/types/post';
+import { Block, QuoteBlock, BlockType } from '@/types/post';
 
 const IBB_KEY =
 	process.env.IMGBB_API_KEY || process.env.NEXT_PUBLIC_IMGBB_API_KEY;
@@ -278,7 +278,7 @@ export const stripBlocks = (blocks: Block[]) => {
 
 	while (index >= 0) {
 		const block = blocksCopy[index];
-		if (!block || (block.type === EditorBlockType.TEXT && block.text === '')) {
+		if (!block || (block.type === BlockType.TEXT && block.text === '')) {
 			blocks.pop();
 			index--;
 		} else {

@@ -2,7 +2,7 @@ import { BaseEditor, Descendant } from 'slate';
 import { ReactEditor } from 'slate-react';
 import { Block } from './post';
 
-export enum BlockType {
+export enum EditorBlockType {
 	TEXT = 'text',
 	IMAGE = 'image',
 	MUSIC = 'music',
@@ -13,12 +13,15 @@ export enum BlockType {
 	QUOTE = 'quote',
 }
 
-export type CustomText = { type?: BlockType.TEXT; text: string };
+export type CustomText = { type?: EditorBlockType.TEXT; text: string };
 
-export type CustomElement = { type: BlockType.TEXT; children: CustomText[] };
+export type CustomElement = {
+	type: EditorBlockType.TEXT;
+	children: CustomText[];
+};
 
 export type ImageElement = {
-	type: BlockType.IMAGE;
+	type: EditorBlockType.IMAGE;
 	url: string;
 	width: number;
 	height: number;
@@ -26,13 +29,13 @@ export type ImageElement = {
 };
 
 export type VideoElementType = {
-	type: BlockType.VIDEO;
+	type: EditorBlockType.VIDEO;
 	url: string;
 	children: CustomText[];
 };
 
 export type LinkElement = {
-	type: BlockType.LINK;
+	type: EditorBlockType.LINK;
 	description?: string;
 	imageURL?: string;
 	title?: string;
@@ -41,19 +44,19 @@ export type LinkElement = {
 };
 
 export type MagicElement = {
-	type: BlockType.MAGIC;
+	type: EditorBlockType.MAGIC;
 	data: string;
 	children: CustomText[];
 };
 
 export type OracleElement = {
-	type: BlockType.ORACLE;
+	type: EditorBlockType.ORACLE;
 	question: string;
 	children: CustomText[];
 };
 
 export type MusicElement = {
-	type: BlockType.MUSIC;
+	type: EditorBlockType.MUSIC;
 	spotifyEmbedUrl?: string;
 	appleMusicEmbedUrl?: string;
 	youtubeEmbedUrl?: string;
@@ -61,7 +64,7 @@ export type MusicElement = {
 };
 
 export type QuoteElement = {
-	type: BlockType.QUOTE;
+	type: EditorBlockType.QUOTE;
 	postId: number;
 	preview: Block;
 	children: CustomText[];

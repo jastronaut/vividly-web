@@ -2,7 +2,7 @@ import React from 'react';
 import { Element } from 'slate';
 import { Text } from '@mantine/core';
 
-import { BlockType as EditorBlockType } from '../../types/editor';
+import { EditorBlockType } from '../../types/editor';
 import { MagicTextWrapper } from './styles';
 import { ImageBlock as ImageBlockContent } from '../post/blocks/blocks';
 import { LinkBlockContent } from '../post/blocks/LinkBlockContent';
@@ -107,7 +107,7 @@ export const MusicBlock = (props: BaseElementProps) => {
 		<div {...attributes}>
 			{children}
 			<div contentEditable={false}>
-				<MusicPostBlock inEditor {...element} />
+				<MusicPostBlock inEditor {...element} type={BlockType.MUSIC} />
 			</div>
 		</div>
 	);

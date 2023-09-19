@@ -39,7 +39,7 @@ import {
 	IconMusic,
 } from '@tabler/icons-react';
 
-import { BlockType as EditorBlockType, MusicElement } from '../../types/editor';
+import { EditorBlockType, MusicElement } from '../../types/editor';
 import {
 	EditorContainer,
 	InlineEditorWrapper,

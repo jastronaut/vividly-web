@@ -1,8 +1,8 @@
-import { MusicElement } from '@/types/editor';
+import { MusicBlock as MusicBlockType } from '@/types/post';
 import { useMediaQuery } from '@mantine/hooks';
 
 export const MusicBlock = (
-	props: Partial<MusicElement> & { inEditor?: boolean }
+	props: Partial<MusicBlockType> & { inEditor?: boolean }
 ) => {
 	const isMobile = useMediaQuery('(max-width: 800px)');
 	const {
