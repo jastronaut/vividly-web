@@ -52,7 +52,7 @@ export const ProfileProvider = (props: Props) => {
 	} = useSWR<UserResponse>(
 		[profileId && token ? `${uri}/users/${profileId}` : '', token],
 		([url, token]: [string, string]) => fetchWithToken(url, token),
-		{ shouldRetryOnError: true }
+		{ shouldRetryOnError: false, refreshInterval: 15000 }
 	);
 
 	// get user's posts
