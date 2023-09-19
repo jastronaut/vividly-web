@@ -4,8 +4,8 @@ import { rem } from 'polished';
 import useSWR from 'swr';
 
 import { Post } from '@/types/post';
-import { PostResponse } from '@/types/api';
-import { fetchWithToken } from '@/utils';
+import { DefaultResponse, PostResponse } from '@/types/api';
+import { fetchWithToken, makeApiCall } from '@/utils';
 import { URL_PREFIX } from '@/constants';
 import { useCurUserContext } from '@/components/contexts/CurUserContext';
 import { PostProvider, usePostContext } from '@/components/post/PostContext';
@@ -20,8 +20,10 @@ import { NewCommentInput } from '@/components/post/comments/NewCommentInput';
 type PostDrawerContentProps = {
 	post: Post;
 	curUserId: number;
+	token: string;
 	onClickQuotePost: (post: Post) => void;
 	withQuotePost: boolean;
+	onClose: () => void;
 };
 
 export const PostPreviewDrawerContent = (props: PostDrawerContentProps) => {
@@ -29,13 +31,30 @@ export const PostPreviewDrawerContent = (props: PostDrawerContentProps) => {
 		usePostContext();
 	const [commentDraft, setCommentDraft] = useState('');
 
+	const onDelete = async () => {
+		try {
+			const resp = await makeApiCall<DefaultResponse>({
+				uri: `/posts/${post.id}`,
+				method: 'DELETE',
+				token: props.token,
+			});
+
+			if (!resp.success) {
+				throw new Error(resp.error);
+			}
+			props.onClose();
+		} catch (err) {
+			console.error(err);
+		}
+	};
+
 	return (
 		<>
 			<Space h={rem(14)} />
 			<PostSection>
 				<PostContent
 					post={post}
-					onDeletePost={() => {}}
+					onDeletePost={onDelete}
 					isOwnPost={props.curUserId === post?.author?.id}
 					onClickQuotePost={() => props.onClickQuotePost(post)}
 					onClickComments={() => {}}
@@ -128,6 +147,8 @@ export const PostDrawer = (props: PostDrawerProps) => {
 						curUserId={curUser.user.id}
 						onClickQuotePost={onClickQuotePost}
 						withQuotePost={withQuotePost}
+						onClose={onClose}
+						token={token}
 					/>
 				</PostProvider>
 			)}
