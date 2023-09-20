@@ -18,6 +18,7 @@ export enum BlockType {
 	MUSIC = 'music',
 	LINK = 'link',
 	QUOTE = 'quote',
+	LOCATION = 'location',
 }
 
 export type TextBlock = {
@@ -53,12 +54,21 @@ export type QuoteBlock = {
 	preview: Block;
 };
 
+export type LocationBlock = {
+	type: BlockType.LOCATION;
+	locality: string;
+	region: string;
+	name: string;
+	icon: string;
+};
+
 export type Block =
 	| TextBlock
 	| ImageBlock
 	| MusicBlock
 	| LinkBlock
-	| QuoteBlock;
+	| QuoteBlock
+	| LocationBlock;
 
 export type BasePost = {
 	id: number;

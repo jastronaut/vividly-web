@@ -7,15 +7,14 @@ import React, {
 } from 'react';
 import {
 	BaseEditor,
-	createEditor,
 	Descendant,
 	Element as ElementType,
 	Editor as SlateEditorType,
 	Range,
 	Transforms,
 } from 'slate';
-import { Slate, Editable, withReact, ReactEditor } from 'slate-react';
-import { HistoryEditor, withHistory } from 'slate-history';
+import { Slate, Editable, ReactEditor } from 'slate-react';
+import { HistoryEditor } from 'slate-history';
 import * as linkify from 'linkifyjs';
 import dayjs from 'dayjs';
 import {
@@ -37,14 +36,20 @@ import {
 	IconX,
 	IconCrystalBall,
 	IconMusic,
+	IconMap2,
 } from '@tabler/icons-react';
 
-import { EditorBlockType, MusicElement } from '../../types/editor';
+import {
+	EditorBlockType,
+	LocationElement,
+	MusicElement,
+} from '../../types/editor';
 import {
 	EditorContainer,
 	InlineEditorWrapper,
 	NamesDropdownOption,
 	NamesDropdownContainer,
+	EditorSubmitButtonContainer,
 } from './styles';
 import { DismissWarningModal } from '../common/DismissWarningModal';
 import {
@@ -60,7 +65,6 @@ import {
 	generateOracleResponse,
 	isDraftEmpty,
 	stripBlocks,
-	withEmbeds,
 } from './utils';
 import { Block, BlockType } from '@/types/post';
 
@@ -73,9 +77,10 @@ import {
 	OracleBlock,
 	MusicBlock,
 	QuoteBlock,
+	LocationBlock,
 } from './Nodes';
 import { showAndLogErrorNotification } from '@/showerror';
-import { MusicInput, OracleInput } from './MagicActions';
+import { MusicInput, OracleInput, LocationSelector } from './MagicActions';
 import { useVividlyTheme } from '@/styles/Theme';
 
 type TheEditor = BaseEditor & ReactEditor & HistoryEditor;
@@ -110,6 +115,8 @@ const Element = (props: BaseElementProps) => {
 			return <MusicBlock {...props} />;
 		case EditorBlockType.QUOTE:
 			return <QuoteBlock {...props} />;
+		case EditorBlockType.LOCATION:
+			return <LocationBlock {...props} />;
 		default:
 			return <Text {...attributes}>{children}</Text>;
 	}
@@ -131,6 +138,8 @@ export const EditorWithActions = (props: EditorWithActionsProps) => {
 	const { editor } = props;
 	const [isOracleInputVisible, setIsOracleInputVisible] = useState(false);
 	const [isMusicInputVisible, setIsMusicInputVisible] = useState(false);
+	const [isLocationSelectorVisible, setIsLocationSelectorVisible] =
+		useState(false);
 	const [target, setTarget] = useState<Range | null>(null);
 	const [searchName, setSearchName] = useState<string | null>(null);
 	const [namesIndex, setNamesIndex] = useState(0);
@@ -266,6 +275,15 @@ export const EditorWithActions = (props: EditorWithActionsProps) => {
 		}
 	};
 
+	const toggleLocationSelector = () => {
+		if (isLocationSelectorVisible) {
+			setIsLocationSelectorVisible(false);
+		} else {
+			props.onClickMagicPostActions();
+			setIsLocationSelectorVisible(true);
+		}
+	};
+
 	const onClickAskOracle = useCallback(
 		(question: string) => {
 			addOracleResponsePreview(editor, question);
@@ -279,6 +297,13 @@ export const EditorWithActions = (props: EditorWithActionsProps) => {
 		editor.insertNode(music);
 		finishAddingBlock(editor);
 		toggleMusicInput();
+	};
+
+	const onSelectLocation = (location: LocationElement) => {
+		removeBlankBlock(editor);
+		editor.insertNode(location);
+		finishAddingBlock(editor);
+		toggleLocationSelector();
 	};
 
 	const mentionsVisible = target && chars.length > 0;
@@ -454,12 +479,27 @@ export const EditorWithActions = (props: EditorWithActionsProps) => {
 						<IconMusic />
 					</ActionIcon>
 				</Tooltip>
+
+				<Tooltip label='Add current location' position='bottom' withArrow>
+					<ActionIcon
+						variant={isLocationSelectorVisible ? 'filled' : 'light'}
+						{...actionIconProps}
+						onClick={toggleLocationSelector}
+						title='Add current location'
+					>
+						<IconMap2 />
+					</ActionIcon>
+				</Tooltip>
 			</Flex>
 			<OracleInput
 				isVisible={isOracleInputVisible}
 				onClickAskOracle={onClickAskOracle}
 			/>
 			<MusicInput isVisible={isMusicInputVisible} onSubmit={onClickAddMusic} />
+			<LocationSelector
+				isVisible={isLocationSelectorVisible}
+				onSubmit={onSelectLocation}
+			/>
 		</>
 	);
 };
@@ -561,6 +601,15 @@ export const Editor = (props: EditorProps) => {
 						preview: node.preview,
 					});
 					break;
+				case EditorBlockType.LOCATION:
+					blocks.push({
+						type: BlockType.LOCATION,
+						region: node.region,
+						locality: node.locality,
+						name: node.name,
+						icon: node.icon,
+					});
+					break;
 				default:
 					break;
 			}
@@ -619,7 +668,7 @@ export const Editor = (props: EditorProps) => {
 				onClickMagicPostActions={props.onClickMagicPostActions}
 				isFullscreen={isFullscreen}
 			/>
-			<Flex justify='flex-end'>
+			<EditorSubmitButtonContainer>
 				<Button
 					radius='lg'
 					onClick={processDraftAndSubmit}
@@ -627,7 +676,7 @@ export const Editor = (props: EditorProps) => {
 				>
 					Post
 				</Button>
-			</Flex>
+			</EditorSubmitButtonContainer>
 		</InlineEditorWrapper>
 	);
 };

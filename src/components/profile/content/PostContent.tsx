@@ -26,6 +26,7 @@ import { Linkified } from '@/components/common/Linkified';
 import { QuoteBlock } from '@/components/post/blocks/QuoteBlock';
 import { EditPostModal } from '@/components/post/EditPostModal';
 import { formatPostTime } from '@/components/utils/time';
+import { LocationBlock } from '@/components/post/blocks/LocationBlock';
 
 export const addNewlines = (txt: string, id: string) =>
 	txt.length < 1 ? (
@@ -74,6 +75,8 @@ function renderPostContent(content: Block, key: string) {
 			return <MusicBlock key={key} {...content} />;
 		case BlockType.QUOTE:
 			return <QuoteBlock key={key} {...content} />;
+		case BlockType.LOCATION:
+			return <LocationBlock key={key} {...content} />;
 		default:
 			return <p key={key}>Unknown block type</p>;
 	}

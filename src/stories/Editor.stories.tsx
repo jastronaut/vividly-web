@@ -12,7 +12,7 @@ import { withEmbeds } from '@/components/editor/utils';
 import { InlineEditorWrapper } from '@/components/editor/styles';
 
 const Wrapper = styled.div`
-	width: 800px;
+	width: 400px;
 `;
 
 export default {
@@ -136,6 +136,20 @@ AppleMusic.args = {
 			type: EditorBlockType.MUSIC,
 			appleMusicEmbedUrl:
 				'https://embed.music.apple.com/us/album/silver/1544377328?i=1544377598',
+			children: [{ text: '' }],
+		},
+	],
+};
+
+export const Location = Template.bind({});
+Location.args = {
+	initialValue: [
+		{
+			type: EditorBlockType.LOCATION,
+			name: 'Cava',
+			locality: 'Ashburn',
+			region: 'VA',
+			icon: 'https://ss3.4sqi.net/img/categories_v2/food/mediterranean_bg_32.png',
 			children: [{ text: '' }],
 		},
 	],

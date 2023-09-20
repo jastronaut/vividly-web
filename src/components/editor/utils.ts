@@ -19,7 +19,8 @@ export const withEmbeds = (props: SlateEditorType) => {
 		element.type === EditorBlockType.LINK ||
 		element.type === EditorBlockType.MAGIC ||
 		element.type === EditorBlockType.ORACLE ||
-		element.type === EditorBlockType.QUOTE
+		element.type === EditorBlockType.QUOTE ||
+		element.type === EditorBlockType.LOCATION
 			? true
 			: isVoid(element);
 	return editor;
@@ -318,7 +319,6 @@ export function postBlockToDescendant(block: Block): Descendant {
 				youtubeEmbedUrl: block.youtubeEmbedUrl,
 				children: [{ text: '' }],
 			};
-
 		case BlockType.QUOTE:
 			return {
 				type: EditorBlockType.QUOTE,
@@ -326,7 +326,15 @@ export function postBlockToDescendant(block: Block): Descendant {
 				preview: block.preview,
 				children: [{ text: '' }],
 			};
-
+		case BlockType.LOCATION:
+			return {
+				type: EditorBlockType.LOCATION,
+				locality: block.locality,
+				region: block.region,
+				name: block.name,
+				icon: block.icon,
+				children: [{ text: '' }],
+			};
 		default:
 			return {
 				type: EditorBlockType.TEXT,

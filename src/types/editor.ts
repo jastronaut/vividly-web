@@ -11,6 +11,7 @@ export enum EditorBlockType {
 	VIDEO = 'video',
 	ORACLE = 'oracle',
 	QUOTE = 'quote',
+	LOCATION = 'location',
 }
 
 export type CustomText = { type?: EditorBlockType.TEXT; text: string };
@@ -70,6 +71,15 @@ export type QuoteElement = {
 	children: CustomText[];
 };
 
+export type LocationElement = {
+	type: EditorBlockType.LOCATION;
+	name: string;
+	icon: string;
+	locality: string;
+	region: string;
+	children: CustomText[];
+};
+
 export type ElementType =
 	| CustomElement
 	| ImageElement
@@ -78,7 +88,8 @@ export type ElementType =
 	| MagicElement
 	| OracleElement
 	| MusicElement
-	| QuoteElement;
+	| QuoteElement
+	| LocationElement;
 
 export type Weather = {
 	id: number;

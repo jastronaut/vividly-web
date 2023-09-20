@@ -17,6 +17,11 @@ const nextConfig = {
 				hostname: 'i.ibb.co',
 				pathname: '/**/*',
 			},
+			{
+				protocol: 'https',
+				hostname: 'ss3.4sqi.net',
+				pathname: '/img/categories_v2/**/*',
+			},
 		],
 	},
 	compiler: {

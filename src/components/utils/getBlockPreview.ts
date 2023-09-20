@@ -16,6 +16,8 @@ export function getBlockPreview(block: Block | null) {
 			return `🎧🎵`;
 		case BlockType.QUOTE:
 			return 'Quote';
+		case BlockType.LOCATION:
+			return '📍';
 		default:
 			return '';
 	}

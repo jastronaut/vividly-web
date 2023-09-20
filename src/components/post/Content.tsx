@@ -5,6 +5,7 @@ import { LinkBlockContent } from '@/components/post/blocks/LinkBlockContent';
 import { BlockType, Block } from '@/types/post';
 import { Linkified } from '../common/Linkified';
 import { QuoteBlock } from './blocks/QuoteBlock';
+import { LocationBlock } from './blocks/LocationBlock';
 
 export function renderPostContent(
 	content: Block,
@@ -39,6 +40,8 @@ export function renderPostContent(
 			);
 		case BlockType.QUOTE:
 			return <QuoteBlock key={key} {...content} quoteDepth={quoteDepth} />;
+		case BlockType.LOCATION:
+			return <LocationBlock key={key} {...content} />;
 		default:
 			return <p key={key}>Unknown block type</p>;
 	}

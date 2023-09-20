@@ -20,3 +20,6 @@ export const IMGBB_API_KEY =
 
 export const SENTRY_DSN =
 	process.env.NEXT_PUBLIC_SENTRY_DSN || process.env.SENTRY_DSN;
+
+export const FOURSQUARE_API_KEY =
+	process.env.NEXT_PUBLIC_FOURSQUARE_API_KEY || process.env.FOURSQUARE_API_KEY;

@@ -72,3 +72,35 @@ export const NamesDropdownContainer = styled.div`
 	visibility: visible;
 	background-color: ${props => props.theme.background.primary};
 `;
+
+export const LocationSelectorContainer = styled.div`
+	max-width: ${rem(400)};
+	display: grid;
+	grid-template-columns: auto 1fr auto;
+	align-items: center;
+	margin-right: ${rem(8)};
+
+	@media screen and (max-width: 800px) {
+		width: 100%;
+	}
+`;
+
+export const LocationSelectorFormContainer = styled.div`
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+	@media screen and (max-width: 800px) {
+		flex-direction: column;
+		align-items: flex-start;
+	}
+`;
+
+export const EditorSubmitButtonContainer = styled.div`
+	display: flex;
+	justify-content: flex-end;
+
+	@media screen and (max-width: 800px) {
+		margin-top: ${rem(16)};
+	}
+`;

@@ -127,3 +127,24 @@ export type BlockedUsersResponse = DefaultResponse &
 	{
 		blockedUser: BlockedUser;
 	}[];
+
+export type FoursquarePlace = {
+	fsq_id: string;
+	name: string;
+	categories: {
+		id: number;
+		name: string;
+		icon: {
+			prefix: string;
+			suffix: string;
+		};
+	}[];
+	location: {
+		locality: string;
+		region: string;
+	};
+};
+
+export type FoursquarePlacesResponse = {
+	results: FoursquarePlace[];
+};
