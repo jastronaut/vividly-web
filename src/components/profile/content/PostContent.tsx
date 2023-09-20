@@ -24,6 +24,8 @@ import { ReportModal, ReportType } from '@/components/common/ReportModal';
 import { useProfileContext } from '@/components/contexts/ProfileFeedContext';
 import { Linkified } from '@/components/common/Linkified';
 import { QuoteBlock } from '@/components/post/blocks/QuoteBlock';
+import { EditPostModal } from '@/components/post/EditPostModal';
+import { formatPostTime } from '@/components/utils/time';
 
 export const addNewlines = (txt: string, id: string) =>
 	txt.length < 1 ? (
@@ -84,10 +86,13 @@ type Props = {
 	onClickQuotePost: (post: Post) => void;
 	onClickComments?: () => void;
 	withQuotes?: boolean;
+	onEdit?: () => void;
+	pageIndex: number;
 };
 
 export const PostContent = (props: Props) => {
-	const { post, onClickComments, withQuotes = true } = props;
+	const { post: originalPost, onClickComments, withQuotes = true } = props;
+	const [post, setPost] = useState(originalPost);
 	const [commentsOpen, setCommentsOpen] = useState(false);
 	const [comments, setComments] = useState(post.comments);
 	const [isLiked, setIsLiked] = useState(post.isLikedByUser);
@@ -98,11 +103,13 @@ export const PostContent = (props: Props) => {
 	);
 	const [deleteWarningOpen, setDeleteWarningOpen] = useState(false);
 	const [reportModalOpen, setReportModalOpen] = useState(false);
+	const [editPostModalOpen, setEditPostModalOpen] = useState(false);
 
 	const { user } = useProfileContext();
 
 	const { curUser } = useCurUserContext();
 	const { token } = curUser;
+	const postDraft = editPostModalOpen ? post.content : null;
 
 	const tryDeletePost = (id: number) => {
 		setDeleteWarningOpen(true);
@@ -201,6 +208,13 @@ export const PostContent = (props: Props) => {
 		}
 	}, [post.id, commentsDisabled, token]);
 
+	const updatePost = (blocks: Block[]) => {
+		setPost({
+			...post,
+			content: blocks,
+		});
+	};
+
 	return (
 		<div style={{ marginBottom: '16px' }} id={`${props.post.id}`}>
 			<PostContentWrapper>
@@ -217,6 +231,16 @@ export const PostContent = (props: Props) => {
 					props.onDeletePost(post.id);
 				}}
 				message='Delete this post?'
+			/>
+
+			<EditPostModal
+				onSubmit={updatePost}
+				isOpen={editPostModalOpen}
+				onClose={() => setEditPostModalOpen(false)}
+				initialDraft={postDraft}
+				createdTime={formatPostTime(post.createdTime)}
+				pageIndex={props.pageIndex}
+				postId={post.id}
 			/>
 
 			<ReportModal
@@ -259,6 +283,7 @@ export const PostContent = (props: Props) => {
 				onReport={() => setReportModalOpen(true)}
 				onClickQuotePost={() => props.onClickQuotePost(post)}
 				withQuotes={withQuotes}
+				onEdit={() => setEditPostModalOpen(true)}
 			/>
 		</div>
 	);

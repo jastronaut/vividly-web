@@ -24,6 +24,11 @@ type ProfilePostsContext = {
 	updateUser: (user: Partial<UserResponse>) => void;
 	addPostFromBlocks: (blocks: Block[]) => void;
 	refetchUser: () => void;
+	updatePostFromBlocks: (
+		blocks: Block[],
+		postId: number,
+		pageIndex: number
+	) => void;
 };
 
 const ProfilePostsContext = createContext<ProfilePostsContext>(
@@ -184,6 +189,50 @@ export const ProfileProvider = (props: Props) => {
 		[token, mutatePosts]
 	);
 
+	const updatePostFromBlocks = useCallback(
+		async (blocks: Block[], postId: number, pageIndex: number) => {
+			const res = await fetch(`${uri}/posts/${postId}`, {
+				method: 'PUT',
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${token}`,
+				},
+				body: JSON.stringify({
+					content: blocks,
+				}),
+			});
+			const resp = await res.json();
+
+			mutatePosts(
+				currentData => {
+					if (currentData && currentData.length) {
+						return currentData.map((page, index) => {
+							if (index === pageIndex) {
+								const newPage = {
+									...page,
+									data: page.data.map(post =>
+										post.id === postId
+											? {
+													...post,
+													...resp.post,
+													content: blocks,
+											  }
+											: post
+									),
+								};
+								return newPage;
+							}
+							return page;
+						});
+					}
+					return currentData;
+				},
+				{ revalidate: true }
+			);
+		},
+		[token, mutatePosts]
+	);
+
 	const refetchUser = useCallback(() => {
 		mutateUser(undefined, true);
 	}, [mutateUser]);
@@ -209,6 +258,7 @@ export const ProfileProvider = (props: Props) => {
 				updateUser: updateUserProfile,
 				addPostFromBlocks,
 				refetchUser,
+				updatePostFromBlocks,
 			}}
 		>
 			{props.children}

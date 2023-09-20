@@ -36,5 +36,5 @@ export const formatPostTime = (timestamp: number) => {
 	const timestampStr = timestamp.toString();
 	return dayjs(
 		timestampStr.length > 10 ? timestamp : dayjs.unix(timestamp)
-	).format('MMM D, YYYY');
+	).format('MMM D, YYYY @ h:mm A');
 };

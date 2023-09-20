@@ -10,6 +10,7 @@ import {
 	IconMessageCircleOff,
 	IconFlag,
 	IconBlockquote,
+	IconEdit,
 } from '@tabler/icons-react';
 
 import { Group, Button, Text, Menu, ActionIcon, Tooltip } from '@mantine/core';
@@ -43,6 +44,7 @@ export type FooterProps = {
 	onReport: () => void;
 	onClickQuotePost: () => void;
 	withQuotes: boolean;
+	onEdit: () => void;
 };
 
 export const Footer = (props: FooterProps) => {
@@ -95,6 +97,14 @@ export const Footer = (props: FooterProps) => {
 					<Menu.Dropdown>
 						{props.isOwnPost ? (
 							<>
+								{props.withQuotes && (
+									<Menu.Item
+										icon={<IconEdit size={14} />}
+										onClick={props.onEdit}
+									>
+										Edit post
+									</Menu.Item>
+								)}
 								<Menu.Item
 									color='red'
 									icon={<IconTrash size={14} />}

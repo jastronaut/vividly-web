@@ -2,7 +2,7 @@ import { Weather } from '@/types/editor';
 import { Element, Editor as SlateEditorType } from 'slate';
 import { ReactEditor } from 'slate-react';
 import dayjs from 'dayjs';
-import { Transforms } from 'slate';
+import { Descendant, Transforms } from 'slate';
 
 import { EditorBlockType } from '../../types/editor';
 import { ImgBBUploadResponse } from '@/types/api';
@@ -288,3 +288,49 @@ export const stripBlocks = (blocks: Block[]) => {
 
 	return blocks;
 };
+
+export function postBlockToDescendant(block: Block): Descendant {
+	switch (block.type) {
+		case BlockType.TEXT:
+			return {
+				type: EditorBlockType.TEXT,
+				children: [{ text: block.text }],
+			};
+		case BlockType.IMAGE:
+			return {
+				type: EditorBlockType.IMAGE,
+				url: block.url,
+				width: block.width,
+				height: block.height,
+				children: [{ text: '' }],
+			};
+		case BlockType.LINK:
+			return {
+				type: EditorBlockType.LINK,
+				url: block.url,
+				children: [{ text: '' }],
+			};
+		case BlockType.MUSIC:
+			return {
+				type: EditorBlockType.MUSIC,
+				spotifyEmbedUrl: block.spotifyEmbedUrl,
+				appleMusicEmbedUrl: block.appleMusicEmbedUrl,
+				youtubeEmbedUrl: block.youtubeEmbedUrl,
+				children: [{ text: '' }],
+			};
+
+		case BlockType.QUOTE:
+			return {
+				type: EditorBlockType.QUOTE,
+				postId: block.postId,
+				preview: block.preview,
+				children: [{ text: '' }],
+			};
+
+		default:
+			return {
+				type: EditorBlockType.TEXT,
+				children: [{ text: '' }],
+			};
+	}
+}

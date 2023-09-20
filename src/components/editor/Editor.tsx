@@ -124,6 +124,7 @@ type EditorWithActionsProps = {
 		name: string;
 	}[];
 	onClickMagicPostActions: () => void;
+	isFullscreen: boolean;
 };
 
 export const EditorWithActions = (props: EditorWithActionsProps) => {
@@ -304,7 +305,7 @@ export const EditorWithActions = (props: EditorWithActionsProps) => {
 
 	return (
 		<>
-			<EditorContainer>
+			<EditorContainer isFullscreen>
 				<Slate
 					editor={editor}
 					value={props.initialValue}
@@ -464,7 +465,6 @@ export const EditorWithActions = (props: EditorWithActionsProps) => {
 };
 
 type EditorProps = {
-	isOpen: boolean;
 	onChange: (value: any) => void;
 	onSubmit: (value: Block[]) => void;
 	friendsList: {
@@ -473,16 +473,25 @@ type EditorProps = {
 	}[];
 	onClickMagicPostActions: () => void;
 	editor: TheEditor;
+	initialValue?: Descendant[];
+	isFullscreen?: boolean;
 };
 
 export const Editor = (props: EditorProps) => {
-	const { editor } = props;
+	const { editor, isFullscreen = false } = props;
 	const [isWarningModalOpen, setIsWarningModalOpen] = useState(false);
 	// const [editor] = useState(() =>
 	// withHistory(withReact(withEmbeds(createEditor())))
 	// );
 	const [draft, setDraft] = useState<ElementType[]>([]);
 	const draftEmpty = useMemo(() => isDraftEmpty(draft), [draft]);
+
+	const initialValue = props.initialValue || [
+		{
+			type: EditorBlockType.TEXT,
+			children: [{ text: '' }],
+		},
+	];
 
 	// todo: make this work when leaving the page
 	const tryDismissModal = () => {
@@ -587,7 +596,7 @@ export const Editor = (props: EditorProps) => {
 	}, [draft, editor]);
 
 	return (
-		<InlineEditorWrapper>
+		<InlineEditorWrapper isFullscreen={isFullscreen}>
 			<DismissWarningModal
 				isOpen={isWarningModalOpen}
 				onNo={() => setIsWarningModalOpen(false)}
@@ -603,16 +612,12 @@ export const Editor = (props: EditorProps) => {
 				message='Abandon this post? 😳'
 			/>
 			<EditorWithActions
-				initialValue={[
-					{
-						type: EditorBlockType.TEXT,
-						children: [{ text: '' }],
-					},
-				]}
+				initialValue={initialValue}
 				onChange={setDraft}
 				editor={editor}
 				friendsNames={props.friendsList}
 				onClickMagicPostActions={props.onClickMagicPostActions}
+				isFullscreen={isFullscreen}
 			/>
 			<Flex justify='flex-end'>
 				<Button

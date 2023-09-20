@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { rem } from 'polished';
 
-export const EditorContainer = styled.div`
+export const EditorContainer = styled.div<{ isFullscreen: boolean }>`
 	margin: 0 auto;
 	width: 100%;
 	padding: ${rem(8)} 0 ${rem(8)} ${rem(8)};
@@ -9,6 +9,10 @@ export const EditorContainer = styled.div`
 	border-radius: ${rem(8)};
 	overflow: scroll;
 	min-height: ${rem(100)};
+
+	@media screen and (min-width: 801px) {
+		width: ${props => (props.isFullscreen ? '100%' : '50%')};
+	}
 
 	img {
 		width: 90%;
@@ -22,11 +26,17 @@ export const MagicTextWrapper = styled.div`
 	background-color: ${props => props.theme.background.hover};
 `;
 
-export const InlineEditorWrapper = styled.div`
+export const InlineEditorWrapper = styled.div<{ isFullscreen: boolean }>`
 	margin: 0;
 
 	@media screen and (max-width: 800px) {
-		margin: 0 ${rem(8)} ${rem(10)};
+		margin: ${props => (props.isFullscreen ? 0 : `0 ${rem(8)} ${rem(10)}`)};
+		width: ${props => (props.isFullscreen ? '100%' : 'auto')};
+	}
+
+	@media screen and (min-width: 801px) {
+		height: ${props => (props.isFullscreen ? rem(800) : 'auto')};
+		width: ${props => (props.isFullscreen ? rem(800) : 'auto')};
 	}
 
 	[data-slate-placeholder='true'] {

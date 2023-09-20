@@ -227,7 +227,6 @@ const Profile = (props: PageProps) => {
 					>
 						{isEditorVisible && (
 							<Editor
-								isOpen={true}
 								onChange={_val => console.log('printed')}
 								onSubmit={onSubmitPost}
 								friendsList={friendsNamesList}

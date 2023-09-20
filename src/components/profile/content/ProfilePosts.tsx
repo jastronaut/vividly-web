@@ -37,6 +37,7 @@ export const ProfilePosts = (props: Props) => {
 									onDeletePost={id => onDeletePost(id, index)}
 									isOwnPost={isLoggedInUser}
 									onClickQuotePost={props.onClickQuotePost}
+									pageIndex={index}
 								/>
 						  ))
 						: null}
