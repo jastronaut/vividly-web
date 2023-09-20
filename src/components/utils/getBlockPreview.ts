@@ -14,6 +14,8 @@ export function getBlockPreview(block: Block | null) {
 			return `🔗 ${block.url.slice(0, 100)}`;
 		case BlockType.MUSIC:
 			return `🎧🎵`;
+		case BlockType.QUOTE:
+			return 'Quote';
 		default:
 			return '';
 	}
