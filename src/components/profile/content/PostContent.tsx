@@ -87,11 +87,16 @@ type Props = {
 	onClickComments?: () => void;
 	withQuotes?: boolean;
 	onEdit?: () => void;
-	pageIndex: number;
+	pageIndex?: number;
 };
 
 export const PostContent = (props: Props) => {
-	const { post: originalPost, onClickComments, withQuotes = true } = props;
+	const {
+		post: originalPost,
+		onClickComments,
+		withQuotes = true,
+		pageIndex = 0,
+	} = props;
 	const [post, setPost] = useState(originalPost);
 	const [commentsOpen, setCommentsOpen] = useState(false);
 	const [comments, setComments] = useState(post.comments);
@@ -239,7 +244,7 @@ export const PostContent = (props: Props) => {
 				onClose={() => setEditPostModalOpen(false)}
 				initialDraft={postDraft}
 				createdTime={formatPostTime(post.createdTime)}
-				pageIndex={props.pageIndex}
+				pageIndex={pageIndex}
 				postId={post.id}
 			/>
 
