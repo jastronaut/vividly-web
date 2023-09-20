@@ -6,7 +6,11 @@ import { BlockType, Block } from '@/types/post';
 import { Linkified } from '../common/Linkified';
 import { QuoteBlock } from './blocks/QuoteBlock';
 
-export function renderPostContent(content: Block, key: string) {
+export function renderPostContent(
+	content: Block,
+	key: string,
+	quoteDepth?: number
+) {
 	switch (content.type) {
 		case BlockType.TEXT:
 			return (
@@ -34,7 +38,7 @@ export function renderPostContent(content: Block, key: string) {
 				/>
 			);
 		case BlockType.QUOTE:
-			return <QuoteBlock key={key} {...content} />;
+			return <QuoteBlock key={key} {...content} quoteDepth={quoteDepth} />;
 		default:
 			return <p key={key}>Unknown block type</p>;
 	}
