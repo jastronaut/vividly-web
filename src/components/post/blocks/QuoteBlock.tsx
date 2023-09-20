@@ -13,6 +13,10 @@ const Container = styled.div`
 	width: 95%;
 	background-color: ${props => props.theme.background.primary};
 
+	@media screen and (max-width: 800px) {
+		margin: ${rem(2)} 0;
+	}
+
 	:hover {
 		cursor: pointer;
 		background-color: ${props => props.theme.accent}20;
