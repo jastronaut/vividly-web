@@ -13,17 +13,20 @@ const Container = styled.div`
 	width: 95%;
 	background-color: ${props => props.theme.background.primary};
 
+	blockquote {
+		color: ${props => props.theme.text.muted};
+	}
+
 	@media screen and (max-width: 800px) {
 		margin: ${rem(2)} 0;
+		blockquote {
+			margin: ${rem(8)} ${rem(16)};
+		}
 	}
 
 	:hover {
 		cursor: pointer;
 		background-color: ${props => props.theme.accent}20;
-	}
-
-	blockquote {
-		color: ${props => props.theme.text.muted};
 	}
 
 	img {
