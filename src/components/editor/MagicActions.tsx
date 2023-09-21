@@ -207,7 +207,7 @@ export const LocationSelector = (props: LocationSelectorProps) => {
 						{
 							method: 'GET',
 							headers: {
-								Authorization: FOURSQUARE_API_KEY,
+								Authorization: `${FOURSQUARE_API_KEY}`,
 								'Content-Type': 'application/json',
 							},
 						}
