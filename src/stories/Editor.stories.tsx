@@ -10,6 +10,7 @@ import { VividlyThemeProvider } from '../styles/Theme';
 import { EditorBlockType } from '@/types/editor';
 import { withEmbeds } from '@/components/editor/utils';
 import { InlineEditorWrapper } from '@/components/editor/styles';
+import { LocalizationProvider } from '@/components/contexts/LocalizationContext';
 
 const Wrapper = styled.div`
 	width: 400px;
@@ -27,16 +28,18 @@ const Template: ComponentStory<typeof EditorWithActions> = args => {
 	);
 	return (
 		<VividlyThemeProvider>
-			<Wrapper>
-				<InlineEditorWrapper isFullscreen={false}>
-					<EditorWithActions
-						{...args}
-						editor={editor}
-						onChange={setDraft}
-						onClickMagicPostActions={() => {}}
-					/>
-				</InlineEditorWrapper>
-			</Wrapper>
+			<LocalizationProvider>
+				<Wrapper>
+					<InlineEditorWrapper isFullscreen={false}>
+						<EditorWithActions
+							{...args}
+							editor={editor}
+							onChange={setDraft}
+							onClickMagicPostActions={() => {}}
+						/>
+					</InlineEditorWrapper>
+				</Wrapper>
+			</LocalizationProvider>
 		</VividlyThemeProvider>
 	);
 };

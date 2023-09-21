@@ -3,6 +3,7 @@ import { NotificationsProvider } from '../contexts/NotificationsContext';
 import { FriendRequestsProvider } from '../contexts/FriendRequestsContext';
 import { FeedProvider } from '../contexts/FeedContext';
 import NavigationLayout from './navigation/NavigationLayout';
+import { LocalizationProvider } from '../contexts/LocalizationContext';
 
 type Props = {
 	children: React.ReactNode;
@@ -14,7 +15,9 @@ const AppLayout = ({ children }: Props) => {
 			<FeedProvider>
 				<FriendRequestsProvider>
 					<NotificationsProvider>
-						<NavigationLayout>{children}</NavigationLayout>
+						<LocalizationProvider>
+							<NavigationLayout>{children}</NavigationLayout>
+						</LocalizationProvider>
 					</NotificationsProvider>
 				</FriendRequestsProvider>
 			</FeedProvider>

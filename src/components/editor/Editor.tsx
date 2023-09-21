@@ -65,6 +65,7 @@ import {
 	generateOracleResponse,
 	isDraftEmpty,
 	stripBlocks,
+	kelvinToCelcius,
 } from './utils';
 import { Block, BlockType } from '@/types/post';
 
@@ -82,6 +83,7 @@ import {
 import { showAndLogErrorNotification } from '@/showerror';
 import { MusicInput, OracleInput, LocationSelector } from './MagicActions';
 import { useVividlyTheme } from '@/styles/Theme';
+import { useLocalizationContext } from '../contexts/LocalizationContext';
 
 type TheEditor = BaseEditor & ReactEditor & HistoryEditor;
 
@@ -144,6 +146,7 @@ export const EditorWithActions = (props: EditorWithActionsProps) => {
 	const [searchName, setSearchName] = useState<string | null>(null);
 	const [namesIndex, setNamesIndex] = useState(0);
 	const ref = useRef<HTMLDivElement | null>(null);
+	const { use24HourTime, useCelsius } = useLocalizationContext();
 
 	const { accentColor } = useVividlyTheme();
 
@@ -228,10 +231,12 @@ export const EditorWithActions = (props: EditorWithActionsProps) => {
 					if (data.cod !== 200) {
 						throw Error(`Couldn't get weather`);
 					}
-					const temp = kelvinToFahrenheit(data.main.temp);
+					const temp = useCelsius
+						? kelvinToCelcius(data.main.temp)
+						: kelvinToFahrenheit(data.main.temp);
 					const hour = parseInt(dayjs().format('H'));
 					const emoji = getWeatherEmoji(data.weather[0], hour);
-					const displayText = `${emoji} ${temp}º F`;
+					const displayText = `${emoji} ${temp}º ${useCelsius ? 'C' : 'F'}`;
 
 					removeBlankBlock(editor);
 					editor.insertNode({
@@ -432,7 +437,7 @@ export const EditorWithActions = (props: EditorWithActionsProps) => {
 					<ActionIcon
 						{...actionIconProps}
 						variant='light'
-						onClick={() => addTime(editor)}
+						onClick={() => addTime(editor, use24HourTime)}
 						aria-label='Add current time'
 					>
 						<IconClockHour9 />

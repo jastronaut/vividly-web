@@ -1,5 +1,13 @@
 import { IconSun, IconMoonStars } from '@tabler/icons-react';
-import { Switch, Space, Title, Divider, Button, Center } from '@mantine/core';
+import {
+	Switch,
+	Space,
+	Title,
+	Divider,
+	Button,
+	Center,
+	Select,
+} from '@mantine/core';
 import { rem } from 'polished';
 import styled from 'styled-components';
 import Link from 'next/link';
@@ -22,6 +30,11 @@ import {
 import AppLayout from '@/components/layout/AppLayout';
 import { FadeIn } from '@/styles/Animations';
 import { useEffect } from 'react';
+import {
+	DateFormats,
+	useLocalizationContext,
+} from '@/components/contexts/LocalizationContext';
+import dayjs from 'dayjs';
 
 const PageContainer = styled.div`
 	margin: ${rem(48)} ${rem(128)};
@@ -35,9 +48,18 @@ const PageContainer = styled.div`
 	}
 `;
 
-const PageContent = (props: { token: string }) => {
+const PageContent = () => {
 	const { accountInfo } = useAccountInfoContext();
 	const { logoutCurUser } = useCurUserContext();
+
+	const {
+		use24HourTime,
+		toggleUse24HourTime,
+		useCelsius,
+		toggleUseCelsius,
+		dateFormat,
+		setDateFormat,
+	} = useLocalizationContext();
 
 	const router = useRouter();
 
@@ -130,6 +152,40 @@ const PageContent = (props: { token: string }) => {
 				labelPosition='left'
 				label={
 					<>
+						<Title order={2}>Formats</Title>
+					</>
+				}
+			/>
+			<Switch
+				label='Use celsius'
+				checked={useCelsius}
+				onChange={toggleUseCelsius}
+			/>
+			<Space h='xs' />
+			<Switch
+				label='Use 24 hour time'
+				checked={use24HourTime}
+				onChange={toggleUse24HourTime}
+			/>
+			<Space h='xs' />
+			<div style={{ maxWidth: '300px' }}>
+				<Select
+					label='Date format'
+					value={dateFormat}
+					onChange={(value: string) => setDateFormat(value)}
+					data={[
+						{ value: DateFormats.US, label: dayjs().format(DateFormats.US) },
+						{ value: DateFormats.EU, label: dayjs().format(DateFormats.EU) },
+					]}
+					width='100px'
+				/>
+			</div>
+			<Space h='md' />
+			<Divider
+				size='sm'
+				labelPosition='left'
+				label={
+					<>
 						<Title order={2}>Account</Title>
 					</>
 				}
@@ -172,13 +228,13 @@ const PageContent = (props: { token: string }) => {
 };
 
 const SettingsPage: Page = () => {
-	const { curUser, isLoading } = useCurUserContext();
+	const { isLoading } = useCurUserContext();
 
 	return (
 		<>
 			<FadeIn>
 				<PageContainer>
-					{isLoading ? <Loading /> : <PageContent token={curUser.token} />}
+					{isLoading ? <Loading /> : <PageContent />}
 				</PageContainer>
 			</FadeIn>
 		</>

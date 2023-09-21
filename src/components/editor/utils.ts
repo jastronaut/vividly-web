@@ -70,6 +70,10 @@ export function kelvinToFahrenheit(tempK: number) {
 	return Math.floor(((tempK - 273.15) * 9) / 5 + 32);
 }
 
+export function kelvinToCelcius(tempK: number) {
+	return Math.floor(tempK - 273.15);
+}
+
 export const finishAddingBlock = (editor: ReactEditor) => {
 	Transforms.insertNodes(editor, {
 		type: EditorBlockType.TEXT,
@@ -94,9 +98,12 @@ export const removeBlankBlock = (editor: ReactEditor) => {
 	}
 };
 
-export const addTime = (editor: ReactEditor) => {
-	const now = dayjs().format('h:mm A');
-	const formattedTime = `🕓 ${now}`;
+export const addTime = (editor: ReactEditor, use24HourTime: boolean) => {
+	const now = dayjs();
+	const convertedDate = use24HourTime
+		? dayjs().format('H:mm')
+		: now.format('h:mm A');
+	const formattedTime = `🕓 ${convertedDate}`;
 	removeBlankBlock(editor);
 	Transforms.insertNodes(editor, {
 		type: EditorBlockType.MAGIC,
