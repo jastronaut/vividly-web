@@ -47,7 +47,7 @@ export const QuoteBlock = (props: Props) => {
 		setPostId(props.postId);
 	};
 
-	if (quoteDepth > 3) {
+	if (quoteDepth > 2) {
 		return <Text c='dimmed'>...</Text>;
 	}
 
