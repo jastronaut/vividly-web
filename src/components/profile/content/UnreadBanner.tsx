@@ -51,6 +51,7 @@ const UnreadBannerButton = (props: UnreadBannerProps) => {
 		if (unread) {
 			unread.scrollIntoView({ behavior: 'smooth' });
 			setIsShowing(false);
+			setIsShowing(false);
 		}
 	};
 
