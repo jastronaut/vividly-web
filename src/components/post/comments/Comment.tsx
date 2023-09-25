@@ -20,11 +20,19 @@ export const Comment = (props: CommentProps) => {
 			<Wrapper>
 				<Flex style={{ justifyContent: 'space-between' }}>
 					<Flex>
-						<Avatar
-							src={props.author.avatarSrc}
-							size={30}
-							alt={`${props.author.username}'s avatar`}
-						/>
+						<Link
+							href={{
+								pathname: '/profile/[id]',
+								query: { id: props.author.id },
+							}}
+							onClick={props.onClickLink}
+						>
+							<Avatar
+								src={props.author.avatarSrc}
+								size={30}
+								alt={`${props.author.username}'s avatar`}
+							/>
+						</Link>
 						<TextContainer>
 							<Flex>
 								<Text fw={700} fz='sm'>
