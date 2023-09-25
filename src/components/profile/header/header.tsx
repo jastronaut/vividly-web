@@ -4,7 +4,7 @@ import { useWindowScroll, useMediaQuery } from '@mantine/hooks';
 import { DEFAULT_AVATAR } from '../../../constants';
 import { User } from '@/types/user';
 import { UserResponse } from '@/types/api';
-import { SettingsModal } from './SettingsModal';
+import { ProfileSettingsModal } from './ProfileSettingsModal';
 import {
 	ProfileHeaderContent,
 	HeaderText,
@@ -61,7 +61,7 @@ export const ProfileHeaderComponent = (props: ProfileHeaderProps) => {
 	return (
 		<>
 			{isLoggedInUser && (
-				<SettingsModal
+				<ProfileSettingsModal
 					isOpen={isSettingsModalOpen}
 					onClose={() => setIsSettingsModalOpen(false)}
 					onClickSave={onClickSaveSettings}

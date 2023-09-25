@@ -41,7 +41,7 @@ type Props = {
 	onClickSave: (newUser: User) => void;
 };
 
-export const SettingsModal = (props: Props) => {
+export const ProfileSettingsModal = (props: Props) => {
 	const { curUser } = useCurUserContext();
 	const [name, setName] = useState(curUser.user.name);
 	const [username, setUsername] = useState(curUser.user.username);
