@@ -227,26 +227,37 @@ const PageContent = () => {
 	);
 };
 
+const SettingsPageWithProvider = () => (
+	<AccountInfoProvider>
+		<PageContent />
+	</AccountInfoProvider>
+);
+
 const SettingsPage: Page = () => {
-	const { isLoading } = useCurUserContext();
+	const { isLoading, curUser } = useCurUserContext();
+	const router = useRouter();
+
+	useEffect(() => {
+		if (!isLoading && !curUser.user) {
+			router.push('/login');
+		}
+	}, [curUser, isLoading]);
+
+	if (isLoading || !curUser || !curUser.user) {
+		return <Loading />;
+	}
 
 	return (
 		<>
 			<FadeIn>
 				<PageContainer>
-					{isLoading ? <Loading /> : <PageContent />}
+					<SettingsPageWithProvider />
 				</PageContainer>
 			</FadeIn>
 		</>
 	);
 };
 
-SettingsPage.getLayout = (page: React.ReactNode) => {
-	return (
-		<AppLayout>
-			<AccountInfoProvider>{page}</AccountInfoProvider>
-		</AppLayout>
-	);
-};
+SettingsPage.getLayout = page => <AppLayout>{page}</AppLayout>;
 
 export default SettingsPage;

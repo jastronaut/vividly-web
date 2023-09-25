@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+
 import { Page } from '../_app';
 import { useCurUserContext } from '@/components/contexts/CurUserContext';
 import Link from 'next/link';
@@ -56,11 +57,19 @@ export const FeedPage: Page = () => {
 	const { feed: items, isLoading } = useFeedContext();
 	const router = useRouter();
 
-	const showLoadingState = isLoading || !curUser;
+	useEffect(() => {
+		if (!isLoading && !curUser.user) {
+			router.push('/login');
+		}
+	}, [curUser, isLoading]);
+
+	if (isLoading || !curUser || !curUser.user) {
+		return <LoadingState />;
+	}
 
 	return (
 		<FadeIn>
-			{showLoadingState && <LoadingState />}
+			{isLoading && <LoadingState />}
 			{items && curUser.token ? (
 				items.length > 0 ? (
 					items.map(item => (

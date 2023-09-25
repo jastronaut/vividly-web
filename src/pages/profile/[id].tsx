@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { GetStaticPropsContext } from 'next';
+import { useRouter } from 'next/router';
 
 import { Page } from '../_app';
 import { useCurUserContext } from '@/components/contexts/CurUserContext';
@@ -16,18 +17,23 @@ type PageProps = {
 const ProfilePage: Page<PageProps> = props => {
 	const { id } = props;
 	const { curUser, isLoading } = useCurUserContext();
+	const router = useRouter();
+
+	useEffect(() => {
+		if (!isLoading && !curUser.user) {
+			router.push('/login');
+		}
+	}, [curUser, isLoading]);
+
+	if (isLoading || !curUser || !curUser.user) {
+		return <UserProfileLoadingState />;
+	}
 
 	return (
 		<FriendsProvider id={id}>
-			<>
-				{!curUser.token || isLoading ? (
-					<UserProfileLoadingState />
-				) : (
-					<ProfileProvider profileId={id}>
-						<Profile id={id} />
-					</ProfileProvider>
-				)}
-			</>
+			<ProfileProvider profileId={id}>
+				<Profile id={id} />
+			</ProfileProvider>
 		</FriendsProvider>
 	);
 };
