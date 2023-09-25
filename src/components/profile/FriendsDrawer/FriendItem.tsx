@@ -16,11 +16,11 @@ import { MenuContainer } from '@/components/post/comments/styles';
 import { TextContainer } from '@/components/activity/requests/styles';
 import { Wrapper } from '@/components/activity/requests/styles';
 import { DismissWarningModal } from '@/components/common/DismissWarningModal';
-import { FavoriteBadge } from '@/components/common/FavoriteBadge';
 import { Avatar } from '@/components/common/Avatar';
 
 const TextStyled = styled(Text)`
 	line-height: ${rem(16)};
+	word-break: break-word;
 `;
 
 const WrapperStyled = styled(Wrapper)`
