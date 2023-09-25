@@ -11,6 +11,7 @@ import {
 } from '@mantine/core';
 import { IconPhotoPlus } from '@tabler/icons-react';
 import { useMediaQuery } from '@mantine/hooks';
+import Link from 'next/link';
 
 import { DEFAULT_AVATAR, IMGBB_API_KEY } from '@/constants';
 import { URL_PREFIX } from '@/constants';
@@ -20,7 +21,6 @@ import { useCurUserContext } from '@/components/contexts/CurUserContext';
 import { showAndLogErrorNotification } from '@/showerror';
 import { DismissWarningModal } from '../../common/DismissWarningModal';
 import { User } from '@/types/user';
-import Link from 'next/link';
 
 // validate username
 export function validateUsername(username: string) {
@@ -83,6 +83,10 @@ export const ProfileSettingsModal = (props: Props) => {
 
 				const usernameData = await usernameRes.json();
 
+				if (usernameData.errorCode === 'USERNAME_TAKEN') {
+					showAndLogErrorNotification('Username taken!', usernameData.error);
+				}
+
 				if (usernameData.error) {
 					throw new Error(usernameData.error);
 				}
@@ -106,7 +110,7 @@ export const ProfileSettingsModal = (props: Props) => {
 			props.onClickSave(data.user);
 			closeModal();
 		} catch (err: any) {
-			setError(err.message);
+			setError(err.message || 'Something went wrong, please try again later.');
 		}
 	}, [curUser, username, bio, newAvatarSrc, name]);
 
