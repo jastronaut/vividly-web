@@ -19,11 +19,11 @@ const ProfilePage: Page<PageProps> = props => {
 	const { curUser, isLoading } = useCurUserContext();
 	const router = useRouter();
 
-	useEffect(() => {
-		if (!isLoading && !curUser.user) {
-			router.push('/login');
-		}
-	}, [curUser, isLoading]);
+	// useEffect(() => {
+	// 	if (!isLoading && !curUser.user) {
+	// 		router.push('/login');
+	// 	}
+	// }, [curUser, isLoading]);
 
 	if (isLoading || !curUser || !curUser.user) {
 		return <UserProfileLoadingState />;
