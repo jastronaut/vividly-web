@@ -148,3 +148,28 @@ export type FoursquarePlace = {
 export type FoursquarePlacesResponse = {
 	results: FoursquarePlace[];
 };
+
+type ReportType = 'user' | 'comment' | 'post';
+type ReportReason = 'Spam' | 'Inappropriate content' | 'Harassment' | 'Other';
+
+export type Report = {
+	id: number;
+	reporter: {
+		id: number;
+		username: string;
+	};
+	reason: ReportReason;
+	itemId: number;
+	itemType: ReportType;
+	createdAt: string;
+};
+
+export type AdminUserLookupResponse = DefaultResponse & {
+	user: User & {
+		isDeactivated: boolean;
+		url: string;
+		authUser: AuthUser;
+		reports: Report[];
+		blocked: BlockedUser[];
+	};
+};

@@ -44,4 +44,8 @@ export type FriendshipInfo = {
 export type AuthUser = {
 	email: string;
 	emailVerified: boolean;
+	isAdmin: boolean;
+	resetCode: string | null;
+	verificationCode: string | null;
+	verificationExpiresAt: string | null;
 };
