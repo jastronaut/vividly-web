@@ -16,6 +16,7 @@ import { MiniLoader } from '@/components/common/Loading';
 import { PostContent } from '../content/PostContent';
 import { CommentsSection, PostSection } from './styles';
 import { NewCommentInput } from '@/components/post/comments/NewCommentInput';
+import Link from 'next/link';
 
 type PostDrawerContentProps = {
 	post: Post;
@@ -107,6 +108,8 @@ export const PostDrawer = (props: PostDrawerProps) => {
 		([url, token]: [string, string]) => fetchWithToken(url, token)
 	);
 
+	const author = data?.post?.author;
+
 	const onClickQuotePost = (post: Post) => {
 		props.onClickQuotePost(post);
 		closePostId();
@@ -127,9 +130,12 @@ export const PostDrawer = (props: PostDrawerProps) => {
 			onClose={onClose}
 			position='right'
 			title={
-				withTitle && curUser.user?.name
-					? `${curUser.user.name}'s post`
-					: undefined
+				withTitle && author ? (
+					<>
+						<Link href={`/profile/${author.id}`}>{author.name}</Link>
+						{`'s post`}
+					</>
+				) : undefined
 			}
 			overlayProps={{
 				opacity: 0.55,
