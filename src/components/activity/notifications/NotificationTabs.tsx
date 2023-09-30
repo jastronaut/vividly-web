@@ -50,7 +50,9 @@ export const NotificationTabs = () => {
 	);
 
 	const mentionNotifications = notifications.filter(
-		notification => notification.body.type === NotificationType.MENTION
+		notification =>
+			notification.body.type === NotificationType.POST_MENTION ||
+			notification.body.type === NotificationType.COMMENT_MENTION
 	);
 
 	const unreadNotificationsCount = notifications.filter(
