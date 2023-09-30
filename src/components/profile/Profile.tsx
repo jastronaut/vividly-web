@@ -48,7 +48,7 @@ const Profile = (props: PageProps) => {
 	const { friends, refetchFriends } = useFriendsContext();
 
 	const [initLoad, setInitLoad] = useState(true);
-	const chatEndRef = useRef<HTMLDivElement>(null);
+	const pageEndRef = useRef<HTMLDivElement>(null);
 
 	const [editor] = useState(() =>
 		withHistory(withReact(withEmbeds(createEditor())))
@@ -69,9 +69,9 @@ const Profile = (props: PageProps) => {
 		setInitLoad(false);
 		addPostFromBlocks(blocks);
 		setInitLoad(true);
-		if (chatEndRef.current) {
+		if (pageEndRef.current) {
 			window.scrollTo({
-				top: chatEndRef.current.offsetTop,
+				top: pageEndRef.current.offsetTop,
 				// behavior: 'smooth',
 			});
 		}
@@ -111,8 +111,8 @@ const Profile = (props: PageProps) => {
 	};
 
 	const scrollToBottom = () => {
-		if (chatEndRef.current) {
-			chatEndRef.current.scrollIntoView({ behavior: 'smooth' });
+		if (pageEndRef.current) {
+			pageEndRef.current.scrollIntoView({ behavior: 'smooth' });
 		}
 	};
 
@@ -164,10 +164,10 @@ const Profile = (props: PageProps) => {
 
 	useEffect(() => {
 		refetchFriends();
-		if (chatEndRef.current && window) {
+		if (pageEndRef.current && window) {
 			setInitLoad(true);
-			// chatEndRef.current.scrollIntoView({ behavior: 'smooth' });
-			window.scrollTo(0, chatEndRef.current.offsetTop);
+			// pageEndRef.current.scrollIntoView({ behavior: 'smooth' });
+			window.scrollTo(0, pageEndRef.current.offsetTop);
 		}
 
 		return () => {
@@ -189,14 +189,14 @@ const Profile = (props: PageProps) => {
 		if (
 			feed &&
 			initLoad &&
-			chatEndRef.current &&
+			pageEndRef.current &&
 			!isPostsLoading &&
 			!isUserLoading &&
 			typeof window !== undefined
 		) {
-			// chatEndRef.current.scrollIntoView({ behavior: 'smooth' });
+			// pageEndRef.current.scrollIntoView({ behavior: 'smooth' });
 			window.scrollTo({
-				top: chatEndRef.current.offsetTop,
+				top: pageEndRef.current.offsetTop,
 				// behavior: 'smooth',
 			});
 			setInitLoad(false);
@@ -235,7 +235,7 @@ const Profile = (props: PageProps) => {
 							/>
 						)}
 					</ProfileContent>
-					<div ref={chatEndRef} id='end' />
+					<div ref={pageEndRef} id='end' />
 					<NextUserBanner
 						nextFriendship={nextFriendship}
 						user={user?.user}
