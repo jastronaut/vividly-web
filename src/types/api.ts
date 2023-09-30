@@ -108,6 +108,9 @@ export type ImgBBUploadResponse = {
 		image: {
 			url: string;
 		};
+		thumb: {
+			url: string;
+		};
 	};
 	success: boolean;
 	status: number;

@@ -186,7 +186,7 @@ export const addImage = (editor: ReactEditor, file: File | null) => {
 	})
 		.then(response => response.json())
 		.then((result: ImgBBUploadResponse) => {
-			const { url, width, height } = result.data;
+			const { url, width, height, thumb } = result.data;
 
 			const img: Element = {
 				type: EditorBlockType.IMAGE,
@@ -194,6 +194,7 @@ export const addImage = (editor: ReactEditor, file: File | null) => {
 				width,
 				height,
 				children: [{ text: '' }],
+				thumbnailURL: thumb.url,
 			};
 			removeBlankBlock(editor);
 			Transforms.insertNodes(editor, img);

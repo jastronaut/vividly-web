@@ -72,6 +72,7 @@ export const ImageBlock = (props: BaseElementProps) => {
 					url={element.url}
 					width={element.width}
 					height={element.height}
+					thumbnailUrl={element.thumbnailURL}
 				/>
 			</div>
 		</div>

@@ -24,6 +24,7 @@ export type CustomElement = {
 export type ImageElement = {
 	type: EditorBlockType.IMAGE;
 	url: string;
+	thumbnailURL?: string;
 	width: number;
 	height: number;
 	children: CustomText[];

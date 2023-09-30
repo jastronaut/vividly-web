@@ -19,6 +19,7 @@ type ImageBlockProps = {
 	url: string;
 	width: number;
 	height: number;
+	thumbnailUrl?: string;
 };
 
 export const ImageBlock = (props: ImageBlockProps) => {
@@ -29,7 +30,7 @@ export const ImageBlock = (props: ImageBlockProps) => {
 			alt={url}
 			width={props.width}
 			height={props.height}
-			blurDataURL={DEFAULT_AVATAR}
+			blurDataURL={props.thumbnailUrl || DEFAULT_AVATAR}
 			placeholder='blur'
 		/>
 	);
