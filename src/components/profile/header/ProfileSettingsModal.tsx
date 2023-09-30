@@ -84,7 +84,7 @@ export const ProfileSettingsModal = (props: Props) => {
 				const usernameData = await usernameRes.json();
 
 				if (usernameData.errorCode === 'USERNAME_TAKEN') {
-					showAndLogErrorNotification('Username taken!', usernameData.error);
+					throw new Error('USERNAME_TAKEN');
 				}
 
 				if (usernameData.error) {
@@ -291,8 +291,11 @@ export const ProfileSettingsModal = (props: Props) => {
 					maxLength={20}
 					minLength={3}
 					error={
-						error === 'USERNAME_INVALID' &&
-						'Username can only contain letters, numbers, and underscores.'
+						error === 'USERNAME_INVALID'
+							? 'Username can only contain letters, numbers, and underscores.'
+							: error === 'USERNAME_TAKEN'
+							? 'Username taken!'
+							: null
 					}
 				/>
 				<Space h='sm' />
