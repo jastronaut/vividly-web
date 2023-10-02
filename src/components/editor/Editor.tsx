@@ -146,7 +146,7 @@ export const EditorWithActions = (props: EditorWithActionsProps) => {
 	const [searchName, setSearchName] = useState<string | null>(null);
 	const [namesIndex, setNamesIndex] = useState(0);
 	const ref = useRef<HTMLDivElement | null>(null);
-	const { use24HourTime, useCelsius } = useLocalizationContext();
+	const { use24HourTime, useCelsius, dateFormat } = useLocalizationContext();
 
 	const { accentColor } = useVividlyTheme();
 
@@ -447,7 +447,7 @@ export const EditorWithActions = (props: EditorWithActionsProps) => {
 					<ActionIcon
 						{...actionIconProps}
 						variant='light'
-						onClick={() => addDate(editor)}
+						onClick={() => addDate(editor, dateFormat)}
 						aria-label='Add current date'
 					>
 						<IconCalendar />

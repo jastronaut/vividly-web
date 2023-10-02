@@ -113,8 +113,8 @@ export const addTime = (editor: ReactEditor, use24HourTime: boolean) => {
 	finishAddingBlock(editor);
 };
 
-export const addDate = (editor: ReactEditor) => {
-	const now = dayjs().format('dddd, MMMM D, YYYY');
+export const addDate = (editor: ReactEditor, dateFormat?: string) => {
+	const now = dayjs().format(dateFormat || 'dddd, MMMM D, YYYY');
 	const formattedDate = `📰 ${now}`;
 	const node: Element = {
 		type: EditorBlockType.MAGIC,
