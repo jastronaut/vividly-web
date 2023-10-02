@@ -21,6 +21,7 @@ import { Avatar } from '@/components/common/Avatar';
 const TextStyled = styled(Text)`
 	line-height: ${rem(16)};
 	word-break: break-word;
+	margin-bottom: ${rem(4)};
 `;
 
 const WrapperStyled = styled(Wrapper)`
@@ -97,12 +98,7 @@ export const FriendItem = (props: FriendItemProps) => {
 						</Link>
 						<TextContainer>
 							<>
-								<Text
-									sx={{
-										lineHeight: '1',
-									}}
-									fw={700}
-								>
+								<Text fw={700}>
 									<Link
 										href={{
 											pathname: '/profile/[id]',
@@ -126,7 +122,7 @@ export const FriendItem = (props: FriendItemProps) => {
 									style={{ display: 'flex' }}
 								>
 									{/* @ts-ignore */}
-									<TextStyled c='dimmed' fz='sm'>
+									<TextStyled c='dimmed'>
 										{`@`}
 										{friend.username}
 									</TextStyled>
