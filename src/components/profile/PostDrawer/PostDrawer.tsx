@@ -29,7 +29,7 @@ type PostDrawerContentProps = {
 };
 
 export const PostPreviewDrawerContent = (props: PostDrawerContentProps) => {
-	const { post, addComment } = usePostContext();
+	const { post, addComment, deleteComment } = usePostContext();
 	const [commentDraft, setCommentDraft] = useState('');
 
 	const onDelete = async () => {
@@ -54,6 +54,24 @@ export const PostPreviewDrawerContent = (props: PostDrawerContentProps) => {
 		}
 	};
 
+	const onDeleteComment = async (commentId: number) => {
+		try {
+			const resp = await makeApiCall<DefaultResponse>({
+				uri: `/posts/${post.id}/comment/${commentId}`,
+				method: 'DELETE',
+				token: props.token,
+			});
+
+			if (!resp.success) {
+				throw new Error(resp.error);
+			}
+
+			deleteComment(commentId);
+		} catch (err) {
+			console.error(err);
+		}
+	};
+
 	return (
 		<>
 			<Space h={rem(14)} />
@@ -72,8 +90,11 @@ export const PostPreviewDrawerContent = (props: PostDrawerContentProps) => {
 					<Comment
 						key={comment.id}
 						{...comment}
-						onDelete={() => {}}
-						canDelete={true}
+						onDelete={() => onDeleteComment(comment.id)}
+						canDelete={
+							comment.author.id === props.curUserId ||
+							post?.author?.id === props.curUserId
+						}
 						onClickLink={() => {}}
 					/>
 				))}
