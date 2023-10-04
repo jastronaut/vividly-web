@@ -44,6 +44,10 @@ function getNotificationContentPreview(notification: NotificationBody) {
 }
 
 const WrapperStyled = styled(Wrapper)<{ isUnread: boolean }>`
+	:hover {
+		cursor: pointer;
+	}
+
 	@media (max-width: 800px) {
 		padding: ${rem(10)};
 		min-width: ${rem(295)};
