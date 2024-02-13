@@ -15,7 +15,7 @@ const FeedbackPage = () => {
 				<Loading />
 			) : (
 				<iframe
-					src='https://docs.google.com/forms/d/e/1FAIpQLSe9v9L50mQugy0TmothI-Xtz-XCy0Fl3jCEp_aOPvWZmYRj0A/viewform?embedded=true'
+					src='https://docs.google.com/forms/d/e/1FAIpQLSfYvNRFvp5MG714jY3C2nBD8ODrliMESVgp5dQsblqWyxXnEQ/viewform?embedded=true'
 					width='100%'
 					style={{
 						minHeight: '90vh',
