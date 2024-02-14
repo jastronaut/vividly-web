@@ -19,6 +19,7 @@ const FeedbackPage = () => {
 					width='100%'
 					style={{
 						minHeight: '90vh',
+						border: 'none',
 					}}
 				>
 					Loading…
