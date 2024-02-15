@@ -3,7 +3,6 @@ import { STORAGE_CUR_USER_KEY } from '@/constants';
 
 import GradientLayout from '@/components/layout/GradientLayout';
 import { Page } from '../_app';
-import { withAuth } from '@/components/hooks/withAuth';
 
 const Logout: Page = () => {
 	return (
@@ -29,4 +28,4 @@ Logout.getLayout = page => {
 	return <GradientLayout>{page}</GradientLayout>;
 };
 
-export default withAuth(Logout);
+export default Logout;
