@@ -36,7 +36,7 @@ export const ProfileActions = (props: Props) => {
 					<Menu withArrow offset={0} position='left-start'>
 						<Menu.Target>
 							<ActionIcon>
-								<IconDots size={20} />
+								<IconDots size={16} />
 							</ActionIcon>
 						</Menu.Target>
 						<Menu.Dropdown>
