@@ -317,6 +317,7 @@ export const EditorWithActions = (props: EditorWithActionsProps) => {
 		radius: 'xl' as const,
 		size: 'lg' as const,
 		color: accentColor,
+		variant: 'light' as const,
 	};
 
 	useEffect(() => {
@@ -417,12 +418,12 @@ export const EditorWithActions = (props: EditorWithActionsProps) => {
 			</EditorContainer>
 			<Space h='sm' />
 			<Flex gap='md'>
-				<Tooltip label='Add an image' position='bottom' withArrow>
-					<FileButton
-						onChange={(f: File | null) => addImage(editor, f)}
-						accept='image/png,image/jpeg'
-					>
-						{props => (
+				<FileButton
+					onChange={(f: File | null) => addImage(editor, f)}
+					accept='image/png,image/jpeg'
+				>
+					{props => (
+						<Tooltip label='Add an image' position='bottom' withArrow>
 							<ActionIcon
 								aria-label='Upload image'
 								{...actionIconProps}
@@ -430,13 +431,12 @@ export const EditorWithActions = (props: EditorWithActionsProps) => {
 							>
 								<IconPhoto />
 							</ActionIcon>
-						)}
-					</FileButton>
-				</Tooltip>
+						</Tooltip>
+					)}
+				</FileButton>
 				<Tooltip label='Add current time' position='bottom' withArrow>
 					<ActionIcon
 						{...actionIconProps}
-						variant='light'
 						onClick={() => addTime(editor, use24HourTime)}
 						aria-label='Add current time'
 					>
@@ -446,7 +446,6 @@ export const EditorWithActions = (props: EditorWithActionsProps) => {
 				<Tooltip label='Add current date' position='bottom' withArrow>
 					<ActionIcon
 						{...actionIconProps}
-						variant='light'
 						onClick={() => addDate(editor, dateFormat)}
 						aria-label='Add current date'
 					>
@@ -456,7 +455,6 @@ export const EditorWithActions = (props: EditorWithActionsProps) => {
 				<Tooltip label='Add current weather' position='bottom' withArrow>
 					<ActionIcon
 						{...actionIconProps}
-						variant='light'
 						onClick={() => addWeather(editor)}
 						aria-label='Add current weather'
 					>
@@ -465,8 +463,8 @@ export const EditorWithActions = (props: EditorWithActionsProps) => {
 				</Tooltip>
 				<Tooltip label='Ask the oracle a question' position='bottom' withArrow>
 					<ActionIcon
-						variant={isOracleInputVisible ? 'filled' : 'light'}
 						{...actionIconProps}
+						variant={isOracleInputVisible ? 'filled' : 'light'}
 						onClick={toggleOracleInput}
 						aria-label='Ask the oracle'
 					>
@@ -476,8 +474,8 @@ export const EditorWithActions = (props: EditorWithActionsProps) => {
 
 				<Tooltip label='Add a song' position='bottom' withArrow>
 					<ActionIcon
-						variant={isMusicInputVisible ? 'filled' : 'light'}
 						{...actionIconProps}
+						variant={isMusicInputVisible ? 'filled' : 'light'}
 						onClick={toggleMusicInput}
 						title='Add a song'
 					>
@@ -487,8 +485,8 @@ export const EditorWithActions = (props: EditorWithActionsProps) => {
 
 				<Tooltip label='Add current location' position='bottom' withArrow>
 					<ActionIcon
-						variant={isLocationSelectorVisible ? 'filled' : 'light'}
 						{...actionIconProps}
+						variant={isLocationSelectorVisible ? 'filled' : 'light'}
 						onClick={toggleLocationSelector}
 						title='Add current location'
 					>

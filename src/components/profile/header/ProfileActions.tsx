@@ -36,29 +36,29 @@ export const ProfileActions = (props: Props) => {
 					<Menu withArrow offset={0} position='left-start'>
 						<Menu.Target>
 							<ActionIcon>
-								<IconDots size={14} />
+								<IconDots size={16} />
 							</ActionIcon>
 						</Menu.Target>
 						<Menu.Dropdown>
 							<Menu.Item
 								onClick={props.onClickFriends}
-								icon={<IconUsers size={14} />}
+								icon={<IconUsers size={18} />}
 							>
 								View friends
 							</Menu.Item>
 							<Menu.Item
 								onClick={props.onClickEdit}
-								icon={<IconEdit size={14} />}
+								icon={<IconEdit size={18} />}
 							>
 								Edit profile
 							</Menu.Item>
 							<Link href='/settings'>
-								<Menu.Item onClick={() => {}} icon={<IconSettings size={14} />}>
+								<Menu.Item onClick={() => {}} icon={<IconSettings size={18} />}>
 									Account settings
 								</Menu.Item>
 							</Link>
 							<Link href='/feedback'>
-								<Menu.Item onClick={() => {}} icon={<IconMessage size={14} />}>
+								<Menu.Item onClick={() => {}} icon={<IconMessage size={18} />}>
 									Send feedback
 								</Menu.Item>
 							</Link>
@@ -78,7 +78,7 @@ export const ProfileActions = (props: Props) => {
 				aria-label='View friends'
 			>
 				<Tooltip withArrow label='View friends' position='bottom'>
-					<IconUsers size={16} />
+					<IconUsers size={18} />
 				</Tooltip>
 			</ActionIcon>
 			<ActionIcon
@@ -87,7 +87,7 @@ export const ProfileActions = (props: Props) => {
 				onClick={props.onClickEdit}
 				aria-label='Edit profile'
 			>
-				<IconTool size={16} />
+				<IconTool size={18} />
 			</ActionIcon>
 		</Group>
 	);

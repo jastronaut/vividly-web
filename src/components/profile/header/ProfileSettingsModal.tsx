@@ -246,10 +246,9 @@ export const ProfileSettingsModal = (props: Props) => {
 								onChange={uploadImage}
 								accept='image/png,image/jpeg'
 								// @ts-ignore
-								leftIcon={<IconPhotoPlus size={16} />}
+								leftIcon={<IconPhotoPlus size={18} />}
 								variant='outline'
-								size='xs'
-								radius='md'
+								size='md'
 								loading={uploadingAvatar}
 								sx={{ marginTop: rem(10), marginBottom: rem(10) }}
 							>

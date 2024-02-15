@@ -73,17 +73,17 @@ export const darkTheme = {
 
 export const COLORS = [
 	'red',
-	'pink',
-	'grape',
-	'violet',
-	'indigo',
-	'blue',
-	'cyan',
-	'teal',
-	'green',
-	'lime',
-	'yellow',
 	'orange',
+	'yellow',
+	'lime',
+	'green',
+	'teal',
+	'cyan',
+	'blue',
+	'indigo',
+	'violet',
+	'grape',
+	'pink',
 ];
 
 type VividlyThemeContextType = {

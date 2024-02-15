@@ -7,6 +7,7 @@ import {
 	Button,
 	Center,
 	Select,
+	Text,
 } from '@mantine/core';
 import { rem } from 'polished';
 import styled from 'styled-components';
@@ -131,15 +132,17 @@ const PageContent = () => {
 				}
 			/>
 			<Switch
+				size='md'
 				label='Use system theme'
 				checked={useSystemTheme}
 				onChange={onToggleSystemTheme}
 			/>
-			<Space h='xs' />
+			<Space h='sm' />
 			<Switch
+				size='md'
 				label='Use dark theme'
-				offLabel={<IconSun size='1rem' stroke={2.5} />}
-				onLabel={<IconMoonStars size='1rem' stroke={2.5} />}
+				offLabel={<IconSun size={18} stroke={2.5} />}
+				onLabel={<IconMoonStars size={18} stroke={2.5} />}
 				disabled={useSystemTheme}
 				checked={vividlyTheme === ThemeName.Light ? false : true}
 				onChange={onClickChangeTheme}
@@ -156,13 +159,17 @@ const PageContent = () => {
 					</>
 				}
 			/>
+			<Text span>These formats will be used when creating new posts.</Text>
+			<Space h='sm' />
 			<Switch
+				size='md'
 				label='Use celsius'
 				checked={useCelsius}
 				onChange={toggleUseCelsius}
 			/>
 			<Space h='xs' />
 			<Switch
+				size='md'
 				label='Use 24 hour time'
 				checked={use24HourTime}
 				onChange={toggleUse24HourTime}

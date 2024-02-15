@@ -228,11 +228,7 @@ export const SettingSection = (props: SettingSectionProps) => {
 					variant='subtle'
 					onClick={toggle}
 					rightIcon={
-						opened ? (
-							<IconChevronUp size='1rem' />
-						) : (
-							<IconChevronDown size='1rem' />
-						)
+						opened ? <IconChevronUp size={16} /> : <IconChevronDown size={16} />
 					}
 				>
 					Edit

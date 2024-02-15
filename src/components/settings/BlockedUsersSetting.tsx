@@ -96,9 +96,9 @@ export const BlockedUsersSetting = () => {
 					onClick={() => setIsListVisible(i => !i)}
 					rightIcon={
 						isListVisible ? (
-							<IconChevronUp size='1rem' />
+							<IconChevronUp size={16} />
 						) : (
-							<IconChevronDown size='1rem' />
+							<IconChevronDown size={16} />
 						)
 					}
 				>

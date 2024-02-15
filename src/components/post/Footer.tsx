@@ -56,7 +56,7 @@ export const Footer = (props: FooterProps) => {
 					variant='subtle'
 					color='pink'
 					radius='lg'
-					size='sm'
+					size='md'
 					leftIcon={
 						props.isLiked ? (
 							<IconHeart fill={theme.accent} color={theme.accent} size={18} />
@@ -73,7 +73,7 @@ export const Footer = (props: FooterProps) => {
 					variant='subtle'
 					color='green'
 					radius='lg'
-					size='sm'
+					size='md'
 					leftIcon={
 						props.commentsDisabled ? (
 							<IconMessageCircleOff color={theme.text.lightest} size={18} />
@@ -88,10 +88,10 @@ export const Footer = (props: FooterProps) => {
 				</Button>
 				<Text>—</Text>
 				<Text>{getPostTime(props.timestamp)}</Text>
-				<Menu withArrow offset={0}>
+				<Menu withArrow position='bottom-end' offset={0}>
 					<Menu.Target>
 						<ActionIcon>
-							<IconDots size={14} />
+							<IconDots size={18} />
 						</ActionIcon>
 					</Menu.Target>
 					<Menu.Dropdown>
@@ -99,7 +99,7 @@ export const Footer = (props: FooterProps) => {
 							<>
 								{props.withQuotes && (
 									<Menu.Item
-										icon={<IconEdit size={14} />}
+										icon={<IconEdit size={16} />}
 										onClick={props.onEdit}
 									>
 										Edit post
@@ -107,7 +107,7 @@ export const Footer = (props: FooterProps) => {
 								)}
 								<Menu.Item
 									color='red'
-									icon={<IconTrash size={14} />}
+									icon={<IconTrash size={16} />}
 									onClick={props.onDelete}
 								>
 									Delete post
@@ -118,7 +118,7 @@ export const Footer = (props: FooterProps) => {
 									position='bottom'
 								>
 									<Menu.Item
-										icon={<IconBan size={14} />}
+										icon={<IconBan size={16} />}
 										onClick={props.toggleDisableComments}
 									>
 										<span>
@@ -130,7 +130,7 @@ export const Footer = (props: FooterProps) => {
 								</Tooltip>
 								{props.withQuotes && (
 									<Menu.Item
-										icon={<IconBlockquote size={14} />}
+										icon={<IconBlockquote size={16} />}
 										onClick={props.onClickQuotePost}
 									>
 										Quote post
@@ -140,7 +140,7 @@ export const Footer = (props: FooterProps) => {
 						) : (
 							<Menu.Item
 								color='red'
-								icon={<IconFlag size={14} />}
+								icon={<IconFlag size={16} />}
 								onClick={props.onReport}
 							>
 								Report post

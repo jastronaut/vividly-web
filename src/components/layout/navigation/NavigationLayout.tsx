@@ -5,6 +5,7 @@ import {
 	IconBellRinging,
 	IconSettings,
 	IconAddressBook,
+	IconBolt,
 } from '@tabler/icons-react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -46,14 +47,14 @@ export default function NavigationLayout(props: Props) {
 				<NavItem>
 					<Link href={curUser.user ? `/profile/${curUser.user.id}` : ''}>
 						<ActionIcon {...actionIconProps}>
-							<IconUser size={20} />
+							<IconUser size={22} />
 						</ActionIcon>
 					</Link>
 				</NavItem>
 				<NavItem>
 					<Link href='/feed'>
 						<ActionIcon {...actionIconProps}>
-							<IconAddressBook size={20} />
+							<IconAddressBook size={22} />
 						</ActionIcon>
 					</Link>
 				</NavItem>
@@ -61,15 +62,22 @@ export default function NavigationLayout(props: Props) {
 					<Indicator color='green' disabled={!isNotifsIndicatorVisible}>
 						<Link href='/activity'>
 							<ActionIcon {...actionIconProps}>
-								<IconBellRinging size={20} />
+								<IconBellRinging size={22} />
 							</ActionIcon>
 						</Link>
 					</Indicator>
 				</NavItem>
-				<NavItem id='nav-settings'>
+				<NavItem>
+					<Link href='/feedback'>
+						<ActionIcon {...actionIconProps}>
+							<IconBolt size={22} />
+						</ActionIcon>
+					</Link>
+				</NavItem>
+				<NavItem id='nav-hidden'>
 					<Link href='/settings'>
 						<ActionIcon {...actionIconProps}>
-							<IconSettings size={20} />
+							<IconSettings size={22} />
 						</ActionIcon>
 					</Link>
 				</NavItem>
