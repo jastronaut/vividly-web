@@ -13,7 +13,7 @@ export const NavInner = styled.nav`
 	@media screen and (max-width: 800px) {
 		justify-content: space-between;
 
-		#nav-settings {
+		#nav-hidden {
 			display: none;
 		}
 	}
