@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { rem } from 'polished';
 
 export const RegisterContainer = styled.div`
-	height: 100%;
+	height: 100vh;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;

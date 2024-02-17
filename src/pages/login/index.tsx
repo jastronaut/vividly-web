@@ -91,6 +91,7 @@ const LoginComponent = (props: LoginComponentProps) => {
 									placeholder='username'
 									required
 									maxLength={20}
+									size='md'
 								/>
 								<Space h='xs' />
 								<TextInput
@@ -99,6 +100,7 @@ const LoginComponent = (props: LoginComponentProps) => {
 									type='password'
 									placeholder='password'
 									required
+									size='md'
 								/>
 								{props.loginError !== null && (
 									<>
@@ -118,17 +120,29 @@ const LoginComponent = (props: LoginComponentProps) => {
 								<Center>
 									<Flex
 										direction='column'
+										align='center'
 										sx={{
 											textAlign: 'center',
 										}}
 									>
-										<Button color='grape' type='submit'>
+										<Button color='grape' type='submit' size='md'>
 											Enter
 										</Button>
 										<Text>or</Text>
 										<Link href='/register'>
-											<Button color='grape' variant='light' component='span'>
-												Register
+											<Button
+												color='grape'
+												variant='light'
+												component='span'
+												size='md'
+											>
+												Create an account
+											</Button>
+										</Link>
+										<Space h='md' />
+										<Link href='/forgot-password'>
+											<Button variant='subtle' component='span' size='xs'>
+												Forgot password?
 											</Button>
 										</Link>
 									</Flex>
