@@ -1,30 +1,24 @@
-import { useState, useEffect } from 'react';
-import { TextInput, Center, Button, Space, Text, Tooltip } from '@mantine/core';
+import { useState } from 'react';
+import { TextInput, Button, Space, Text } from '@mantine/core';
 import Link from 'next/link';
 
-import {
-	StyledContainer,
-	RegisterContainer,
-} from '../../components/register/styles';
-import { STORAGE_CUR_USER_KEY } from '../../constants';
-import { CurUser } from '@/types/user';
-import { showAndLogErrorNotification } from '@/showerror';
+import { RegisterContainer, StyledContainer } from '@/components/auth/styles';
 import { makeApiCall } from '@/utils';
 import GradientLayout from '@/components/layout/GradientLayout';
 import { Page } from '../_app';
 
-const usernameRegex = /^[a-zA-Z0-9_]+$/;
-
-const Register: Page = () => {
+const ForgotPassword: Page = () => {
 	const [email, setEmail] = useState('');
-	const [username, setUsername] = useState('');
 	const [resetEmailRequested, setResetEmailRequested] = useState(false);
 
 	const onClickSubmit = async () => {
-		if (username.length === 0 && email.length === 0) {
-			showAndLogErrorNotification('Please enter a username or email.');
-			return;
-		}
+		await makeApiCall<{ exists: boolean }>({
+			uri: `/auth/password/reset-request`,
+			method: 'POST',
+			body: {
+				email,
+			},
+		});
 		setResetEmailRequested(true);
 	};
 
@@ -32,55 +26,65 @@ const Register: Page = () => {
 		<form onSubmit={e => e.preventDefault()} method=''>
 			<RegisterContainer>
 				<StyledContainer>
-					{resetEmailRequested}
-					<Text size='lg' weight={700}>
-						Forgot Password?
-					</Text>
-					<Text>Enter your username or email:</Text>
-					<Space h={8} />
-					<TextInput
-						onChange={e => setUsername(e.target.value)}
-						key='username'
-						type='text'
-						placeholder='username'
-						required
-						title='Username'
-						size='md'
-						disabled={email.length > 0}
-					/>
-					<Space h={4} />
-					<Text c='dimmed'>or</Text>
-					<Space h={4} />
-					<TextInput
-						onChange={e => setEmail(e.target.value)}
-						key='email'
-						type='email'
-						placeholder='email'
-						required
-						title='Email'
-						size='md'
-						disabled={username.length > 0}
-					/>
+					{resetEmailRequested ? (
+						<>
+							<Text>
+								An email has been sent with a link to reset your password.
+							</Text>
+							<Text>Thanks for your patience! 💜</Text>
+						</>
+					) : (
+						<>
+							<Text size='lg' weight={700}>
+								Forgot Password?
+							</Text>
+							<Text>Enter your account email</Text>
+							<Space h={8} />
 
+							<TextInput
+								onChange={e => setEmail(e.target.value)}
+								key='email'
+								type='email'
+								placeholder='email'
+								required
+								title='Email'
+								size='md'
+							/>
+
+							<Space h={16} />
+
+							<Button
+								color='grape'
+								size='md'
+								type='submit'
+								disabled={email.length === 0}
+								onClick={onClickSubmit}
+							>
+								Submit
+							</Button>
+						</>
+					)}
 					<Space h={16} />
-
-					<Button
-						color='grape'
-						size='md'
-						type='submit'
-						disabled={username.length === 0 && email.length === 0}
-						onClick={onClickSubmit}
-					>
-						Submit
-					</Button>
+					<Text>Need more help?</Text>
+					<Text>
+						<Link
+							title='Send an email for additional assitance'
+							href='mailto:help@vividly.love?subject=Help%20Resetting%20Password%20or%20Account'
+							style={{
+								textDecoration: 'underline',
+							}}
+						>
+							Email help@vividly.love
+						</Link>
+					</Text>
 				</StyledContainer>
 			</RegisterContainer>
 		</form>
 	);
 };
 
-Register.getLayout = (page: React.ReactNode) => (
+ForgotPassword.getLayout = (page: React.ReactNode) => (
 	<GradientLayout>{page}</GradientLayout>
 );
 
-export default Register;
+export default ForgotPassword;

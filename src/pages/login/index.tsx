@@ -8,8 +8,6 @@ import {
 	Text,
 	Flex,
 } from '@mantine/core';
-import styled from 'styled-components';
-import { rem } from 'polished';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
@@ -19,33 +17,7 @@ import { LoginResponse } from '@/types/api';
 import GradientLayout from '@/components/layout/GradientLayout';
 import { Page } from '../_app';
 import { Loading } from '@/components/common/Loading';
-
-const StyledContainer = styled.div`
-	background-color: ${props => props.theme.background.primary};
-	border-radius: ${rem(8)};
-	color: ${props => props.theme.text.primary};
-	padding: ${rem(16)} ${rem(32)};
-
-	width: ${rem(350)};
-
-	.mantine-TextInput-root {
-		padding: 0 ${rem(32)};
-	}
-
-	@media screen and (max-width: 900px) {
-		width: ${rem(350)};
-		.mantine-TextInput-root {
-			padding: 0 ${rem(48)};
-		}
-	}
-
-	@media screen and (max-width: 500px) {
-		width: 90%;
-		.mantine-TextInput-root {
-			padding: 0;
-		}
-	}
-`;
+import { StyledContainer } from '@/components/auth/styles';
 
 enum LoginErrors {
 	INVALID_LOGIN,

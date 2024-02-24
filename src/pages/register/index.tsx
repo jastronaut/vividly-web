@@ -2,11 +2,8 @@ import { useState, useEffect } from 'react';
 import { TextInput, Center, Button, Space, Text, Tooltip } from '@mantine/core';
 import Link from 'next/link';
 
-import {
-	StyledContainer,
-	RegisterContainer,
-} from '../../components/register/styles';
-import { STORAGE_CUR_USER_KEY } from '../../constants';
+import { StyledContainer, RegisterContainer } from '@/components/auth/styles';
+import { STORAGE_CUR_USER_KEY } from '@/constants';
 import { CurUser } from '@/types/user';
 import { showAndLogErrorNotification } from '@/showerror';
 import { makeApiCall } from '@/utils';
@@ -23,7 +20,6 @@ export const RegisterSteps = () => {
 	const [passwordError, setPasswordError] = useState<string | null>(null);
 	const [emailError, setEmailError] = useState<string | null>(null);
 	const [step, setStep] = useState(0);
-	const [userId, setUserId] = useState<number | null>(null);
 
 	const checkUsername = () => {
 		// make sure username is valid
@@ -108,7 +104,6 @@ export const RegisterSteps = () => {
 				});
 
 				localStorage.setItem(STORAGE_CUR_USER_KEY, JSON.stringify(user));
-				setUserId(user.user.id);
 				setStep(2);
 			} catch (err) {
 				showAndLogErrorNotification(
