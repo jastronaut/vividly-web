@@ -46,6 +46,10 @@ export const addNewlines = (txt: string, id: string) =>
 
 const PostContentWrapper = styled.div`
 	margin: 0 ${rem(16)};
+
+	@media screen and (max-width: 800px) {
+		margin: 0;
+	}
 `;
 
 function renderPostContent(content: Block, key: string) {
@@ -224,7 +228,7 @@ export const PostContent = (props: Props) => {
 	};
 
 	return (
-		<div style={{ marginBottom: '16px' }} id={`${props.post.id}`}>
+		<div style={{ marginBottom: rem(16) }} id={`${props.post.id}`}>
 			<PostContentWrapper>
 				{post.content.map((block, index) =>
 					renderPostContent(block, index.toString())

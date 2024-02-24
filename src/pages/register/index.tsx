@@ -2,11 +2,8 @@ import { useState, useEffect } from 'react';
 import { TextInput, Center, Button, Space, Text, Tooltip } from '@mantine/core';
 import Link from 'next/link';
 
-import {
-	StyledContainer,
-	RegisterContainer,
-} from '../../components/register/styles';
-import { STORAGE_CUR_USER_KEY } from '../../constants';
+import { StyledContainer, RegisterContainer } from '@/components/auth/styles';
+import { STORAGE_CUR_USER_KEY } from '@/constants';
 import { CurUser } from '@/types/user';
 import { showAndLogErrorNotification } from '@/showerror';
 import { makeApiCall } from '@/utils';
@@ -23,7 +20,6 @@ export const RegisterSteps = () => {
 	const [passwordError, setPasswordError] = useState<string | null>(null);
 	const [emailError, setEmailError] = useState<string | null>(null);
 	const [step, setStep] = useState(0);
-	const [userId, setUserId] = useState<number | null>(null);
 
 	const checkUsername = () => {
 		// make sure username is valid
@@ -108,7 +104,6 @@ export const RegisterSteps = () => {
 				});
 
 				localStorage.setItem(STORAGE_CUR_USER_KEY, JSON.stringify(user));
-				setUserId(user.user.id);
 				setStep(2);
 			} catch (err) {
 				showAndLogErrorNotification(
@@ -172,9 +167,7 @@ export const RegisterSteps = () => {
 							maxLength={20}
 							title='Username'
 							error={usernameError}
-							style={{
-								width: '200px',
-							}}
+							size='md'
 						/>
 					</Tooltip>
 					<Space h='md' />
@@ -188,9 +181,7 @@ export const RegisterSteps = () => {
 								required
 								title='Email'
 								error={emailError}
-								style={{
-									width: '200px',
-								}}
+								size='md'
 							/>
 							<Space h='md' />
 							<Tooltip
@@ -207,9 +198,7 @@ export const RegisterSteps = () => {
 									title='Password'
 									error={passwordError}
 									minLength={6}
-									style={{
-										width: '200px',
-									}}
+									size='md'
 								/>
 							</Tooltip>
 						</>
@@ -223,6 +212,7 @@ export const RegisterSteps = () => {
 									radius='lg'
 									onClick={checkUsername}
 									variant='outline'
+									size='md'
 								>
 									Next
 								</Button>
@@ -244,6 +234,7 @@ export const RegisterSteps = () => {
 									color='grape'
 									radius='lg'
 									onClick={tryRegister}
+									size='md'
 								>
 									Join
 								</Button>
@@ -261,6 +252,7 @@ export const RegisterSteps = () => {
 						<Button
 							variant='gradient'
 							gradient={{ from: '#ed6ea0', to: '#ec8c69', deg: 35 }}
+							size='md'
 							radius='lg'
 						>{`Let's go!`}</Button>
 					</Link>
@@ -272,11 +264,7 @@ export const RegisterSteps = () => {
 
 const Register: Page = () => {
 	return (
-		<form
-			style={{ height: '100vh' }}
-			onSubmit={e => e.preventDefault()}
-			method=''
-		>
+		<form onSubmit={e => e.preventDefault()} method=''>
 			<RegisterContainer>
 				<StyledContainer>
 					<RegisterSteps />

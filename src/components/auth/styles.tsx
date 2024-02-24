@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { rem } from 'polished';
 
 export const RegisterContainer = styled.div`
-	height: 100%;
+	height: 100vh;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
@@ -21,6 +21,27 @@ export const RegisterContainer = styled.div`
 
 export const StyledContainer = styled.div`
 	background-color: ${props => props.theme.background.primary};
-	padding: ${rem(32)} ${rem(48)};
 	border-radius: ${rem(8)};
+	color: ${props => props.theme.text.primary};
+	padding: ${rem(16)} ${rem(32)};
+
+	width: ${rem(350)};
+
+	.mantine-TextInput-root {
+		padding: 0 ${rem(32)};
+	}
+
+	@media screen and (max-width: 900px) {
+		width: ${rem(350)};
+		.mantine-TextInput-root {
+			padding: 0 ${rem(48)};
+		}
+	}
+
+	@media screen and (max-width: 500px) {
+		width: 90%;
+		.mantine-TextInput-root {
+			padding: 0;
+		}
+	}
 `;

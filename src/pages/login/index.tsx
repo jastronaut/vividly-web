@@ -8,8 +8,6 @@ import {
 	Text,
 	Flex,
 } from '@mantine/core';
-import styled from 'styled-components';
-import { rem } from 'polished';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
@@ -19,33 +17,7 @@ import { LoginResponse } from '@/types/api';
 import GradientLayout from '@/components/layout/GradientLayout';
 import { Page } from '../_app';
 import { Loading } from '@/components/common/Loading';
-
-const StyledContainer = styled.div`
-	background-color: ${props => props.theme.background.primary};
-	border-radius: ${rem(8)};
-	color: ${props => props.theme.text.primary};
-	padding: ${rem(16)} ${rem(32)};
-
-	width: ${rem(350)};
-
-	.mantine-TextInput-root {
-		padding: 0 ${rem(32)};
-	}
-
-	@media screen and (max-width: 900px) {
-		width: ${rem(350)};
-		.mantine-TextInput-root {
-			padding: 0 ${rem(48)};
-		}
-	}
-
-	@media screen and (max-width: 500px) {
-		width: 90%;
-		.mantine-TextInput-root {
-			padding: 0;
-		}
-	}
-`;
+import { StyledContainer } from '@/components/auth/styles';
 
 enum LoginErrors {
 	INVALID_LOGIN,
@@ -91,6 +63,7 @@ const LoginComponent = (props: LoginComponentProps) => {
 									placeholder='username'
 									required
 									maxLength={20}
+									size='md'
 								/>
 								<Space h='xs' />
 								<TextInput
@@ -99,6 +72,7 @@ const LoginComponent = (props: LoginComponentProps) => {
 									type='password'
 									placeholder='password'
 									required
+									size='md'
 								/>
 								{props.loginError !== null && (
 									<>
@@ -118,17 +92,29 @@ const LoginComponent = (props: LoginComponentProps) => {
 								<Center>
 									<Flex
 										direction='column'
+										align='center'
 										sx={{
 											textAlign: 'center',
 										}}
 									>
-										<Button color='grape' type='submit'>
+										<Button color='grape' type='submit' size='md'>
 											Enter
 										</Button>
 										<Text>or</Text>
 										<Link href='/register'>
-											<Button color='grape' variant='light' component='span'>
-												Register
+											<Button
+												color='grape'
+												variant='light'
+												component='span'
+												size='md'
+											>
+												Create an account
+											</Button>
+										</Link>
+										<Space h='md' />
+										<Link href='/forgot-password'>
+											<Button variant='subtle' component='span' size='xs'>
+												Forgot password?
 											</Button>
 										</Link>
 									</Flex>

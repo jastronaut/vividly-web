@@ -44,6 +44,7 @@ export async function makeApiCall<T>(props: MakeApiCallProps): Promise<T> {
 		method: props.method ?? 'GET',
 		headers: {
 			'Content-Type': 'application/json',
+			Accept: 'application/json',
 		},
 	};
 
