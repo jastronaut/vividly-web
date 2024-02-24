@@ -200,6 +200,7 @@ const PageContent = () => {
 			<Space h='sm' />
 			<EmailSetting
 				email={accountInfo.authUser.email}
+				newEmail={accountInfo.authUser.newEmail}
 				isVerified={accountInfo.authUser.emailVerified}
 			/>
 			<Divider size='xs' />
