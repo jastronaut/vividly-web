@@ -87,10 +87,8 @@ export default function NavigationLayout(props: Props) {
 
 	return (
 		<>
-			<Navigation isHidden={isNavHidden}>{NavContent}</Navigation>
-			<PageContentContainer isNavHidden={isNavHidden}>
-				{props.children}
-			</PageContentContainer>
+			<Navigation $isHidden={isNavHidden}>{NavContent}</Navigation>
+			<PageContentContainer>{props.children}</PageContentContainer>
 		</>
 	);
 }

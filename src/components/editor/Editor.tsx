@@ -155,7 +155,7 @@ export const EditorWithActions = (props: EditorWithActionsProps) => {
 				friend =>
 					friend.name.toLowerCase().includes(searchName.toLowerCase()) ||
 					friend.username.toLowerCase().includes(searchName.toLowerCase())
-		  )
+			)
 		: [];
 
 	const onKeyDown = useCallback(
@@ -336,7 +336,7 @@ export const EditorWithActions = (props: EditorWithActionsProps) => {
 
 	return (
 		<>
-			<EditorContainer isFullscreen>
+			<EditorContainer $isFullscreen>
 				<Slate
 					editor={editor}
 					value={props.initialValue}
@@ -406,7 +406,7 @@ export const EditorWithActions = (props: EditorWithActionsProps) => {
 										insertMention(editor, char.username);
 										setTarget(null);
 									}}
-									isHighlighted={i === namesIndex}
+									$isHighlighted={i === namesIndex}
 								>
 									<Text className='friend-name'>{char.name}</Text>
 									<Text className='friend-username'>{` @${char.username}`}</Text>
@@ -648,7 +648,7 @@ export const Editor = (props: EditorProps) => {
 	}, [draft, editor]);
 
 	return (
-		<InlineEditorWrapper isFullscreen={isFullscreen}>
+		<InlineEditorWrapper $isFullscreen={isFullscreen}>
 			<DismissWarningModal
 				isOpen={isWarningModalOpen}
 				onNo={() => setIsWarningModalOpen(false)}

@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { rem } from 'polished';
 
-export const EditorContainer = styled.div<{ isFullscreen: boolean }>`
+export const EditorContainer = styled.div<{ $isFullscreen: boolean }>`
 	margin: 0 auto;
 	width: 100%;
 	padding: ${rem(8)} 0 ${rem(8)} ${rem(8)};
@@ -11,7 +11,7 @@ export const EditorContainer = styled.div<{ isFullscreen: boolean }>`
 	min-height: ${rem(100)};
 
 	@media screen and (min-width: 801px) {
-		width: ${props => (props.isFullscreen ? '100%' : '50%')};
+		width: ${props => (props.$isFullscreen ? '100%' : '50%')};
 	}
 
 	img {
@@ -26,17 +26,17 @@ export const MagicTextWrapper = styled.div`
 	background-color: ${props => props.theme.background.hover};
 `;
 
-export const InlineEditorWrapper = styled.div<{ isFullscreen: boolean }>`
+export const InlineEditorWrapper = styled.div<{ $isFullscreen: boolean }>`
 	margin: 0;
 
 	@media screen and (max-width: 800px) {
-		margin: ${props => (props.isFullscreen ? 0 : `0 ${rem(8)} ${rem(10)}`)};
-		width: ${props => (props.isFullscreen ? '100%' : 'auto')};
+		margin: ${props => (props.$isFullscreen ? 0 : `0 ${rem(8)} ${rem(10)}`)};
+		width: ${props => (props.$isFullscreen ? '100%' : 'auto')};
 	}
 
 	@media screen and (min-width: 801px) {
-		height: ${props => (props.isFullscreen ? rem(800) : 'auto')};
-		width: ${props => (props.isFullscreen ? rem(800) : 'auto')};
+		height: ${props => (props.$isFullscreen ? rem(800) : 'auto')};
+		width: ${props => (props.$isFullscreen ? rem(800) : 'auto')};
 	}
 
 	[data-slate-placeholder='true'] {
@@ -44,22 +44,22 @@ export const InlineEditorWrapper = styled.div<{ isFullscreen: boolean }>`
 	}
 `;
 
-export const NamesDropdownOption = styled.div<{ isHighlighted: boolean }>`
+export const NamesDropdownOption = styled.div<{ $isHighlighted: boolean }>`
 	display: flex;
 	padding: ${rem(1)} ${rem(3)};
 	border-radius: ${rem(3)};
 	background-color: ${props =>
-		props.isHighlighted ? props.theme.accent : 'transparent'};
+		props.$isHighlighted ? props.theme.accent : 'transparent'};
 
 	.friend-name {
 		color: ${props =>
-			props.isHighlighted ? '#fff' : props.theme.text.primary};
+			props.$isHighlighted ? '#fff' : props.theme.text.primary};
 		margin-right: ${rem(2)};
 	}
 
 	.friend-username {
 		color: ${props =>
-			props.isHighlighted ? '#fff' : props.theme.text.lightest};
+			props.$isHighlighted ? '#fff' : props.theme.text.lightest};
 	}
 `;
 

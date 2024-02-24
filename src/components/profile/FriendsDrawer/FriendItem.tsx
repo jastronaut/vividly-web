@@ -14,7 +14,7 @@ import { useRouter } from 'next/router';
 import { Friend } from '@/types/user';
 import { MenuContainer } from '@/components/post/comments/styles';
 import { TextContainer } from '@/components/activity/requests/styles';
-import { Wrapper } from '@/components/activity/requests/styles';
+import { VividlyItem } from '@/components/common/VividlyItem';
 import { DismissWarningModal } from '@/components/common/DismissWarningModal';
 import { Avatar } from '@/components/common/Avatar';
 
@@ -24,7 +24,7 @@ const TextStyled = styled(Text)`
 	margin-bottom: ${rem(4)};
 `;
 
-const WrapperStyled = styled(Wrapper)`
+const WrapperStyled = styled(VividlyItem).attrs({ $withHover: true })`
 	border-radius: 0;
 
 	@media screen and (max-width: 800px) {
@@ -60,7 +60,7 @@ export const FriendItem = (props: FriendItemProps) => {
 				onNo={() => setWarningModalOpen(false)}
 				onYes={() => props.unfriendUser(friend.id)}
 			/>
-			<WrapperStyled withHover>
+			<WrapperStyled>
 				<Flex sx={{ justifyContent: 'space-between', flexGrow: 1 }}>
 					<Flex>
 						<Link
