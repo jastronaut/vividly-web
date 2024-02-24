@@ -20,20 +20,25 @@ import { showAndLogErrorNotification } from '@/showerror';
 
 type EmailSettingProps = {
 	email: string;
+	newEmail: string | null;
 	isVerified: boolean;
 };
 
 export const EmailSetting = (props: EmailSettingProps) => {
-	const { isVerified, email } = props;
+	const { isVerified, email, newEmail } = props;
 	const [newData, setNewData] = useState('');
 	const { token } = useCurUserContext().curUser;
 
-	const submitEmail = async (email: string) => {
+	const submitEmail = async (updatedEmail: string) => {
 		try {
+			if (updatedEmail === newEmail) {
+				return;
+			}
+
 			const res = await makeApiCall<DefaultResponse>({
 				uri: '/auth/email/change',
 				method: 'POST',
-				body: { email },
+				body: { updatedEmail },
 				token: token,
 			});
 
@@ -87,7 +92,7 @@ export const EmailSetting = (props: EmailSettingProps) => {
 				data={
 					<>
 						<Text>
-							{email}
+							{newEmail ?? email}
 							{` `}
 							<Badge color={isVerified ? 'teal' : 'red'} radius='xs'>
 								{isVerified ? 'Verified' : 'Not verified'}
@@ -116,6 +121,14 @@ export const EmailSetting = (props: EmailSettingProps) => {
 							>
 								Resend verification email
 							</Button>
+							{newEmail && (
+								<>
+									<Space h='xs' />
+									<Text size='sm' c='dimmed'>
+										Previous email: {email}
+									</Text>
+								</>
+							)}
 						</>
 					)}
 				</div>
@@ -200,7 +213,10 @@ export const PasswordSetting = () => {
 						error={error}
 					/>
 				</div>
-				<Button onClick={onSubmit} disabled={!!error}>
+				<Button
+					onClick={onSubmit}
+					disabled={!!error || !newPassword1 || !newPassword2}
+				>
 					Save
 				</Button>
 			</SettingSection>

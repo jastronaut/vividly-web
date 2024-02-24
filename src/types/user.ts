@@ -42,6 +42,7 @@ export type FriendshipInfo = {
 };
 
 export type AuthUser = {
+	newEmail: string | null;
 	email: string;
 	emailVerified: boolean;
 	isAdmin: boolean;
