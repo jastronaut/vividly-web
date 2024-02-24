@@ -67,7 +67,7 @@ export const ProfileHeaderComponent = (props: ProfileHeaderProps) => {
 					onClickSave={onClickSaveSettings}
 				/>
 			)}
-			<ProfileHeaderContent scrolled={isHeaderScrolled}>
+			<ProfileHeaderContent $scrolled={isHeaderScrolled}>
 				<UserInfoSection>
 					<HeaderAvatar
 						isLoading={isLoading}

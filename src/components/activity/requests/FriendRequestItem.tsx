@@ -22,7 +22,7 @@ export const FriendRequestItem = (props: Props) => {
 
 	const profileLink = `/profile/${id}`;
 	return (
-		<WrapperStyled withHover>
+		<WrapperStyled>
 			<Avatar
 				src={avatarSrc || DEFAULT_AVATAR}
 				onClick={() => router.push(profileLink)}

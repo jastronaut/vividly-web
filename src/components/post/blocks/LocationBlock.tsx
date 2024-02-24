@@ -22,7 +22,7 @@ export const LocationOptionContainer = styled.div<{ inSelector: boolean }>`
 		${props =>
 			props.inSelector
 				? `
-					transition: all 0.2s ease-in-out;
+					transition: all 0.2s ease-in;
 					background-color: ${props.theme.accent}30;
 					border: 1px solid ${props.theme.accent};
 			 		cursor: pointer;`

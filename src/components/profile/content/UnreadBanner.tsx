@@ -10,7 +10,7 @@ import {
 } from '../header/constants';
 import { Friend } from '@/types/user';
 
-const Wrapper = styled.div<{ scrolled: boolean }>`
+const Wrapper = styled.div<{ $scrolled: boolean }>`
 	padding: ${rem(8)} ${rem(12)};
 	display: flex;
 	justify-content: center;
@@ -20,14 +20,14 @@ const Wrapper = styled.div<{ scrolled: boolean }>`
 	left: 0;
 	z-index: 100;
 	width: 100%;
-	top: ${props => (props.scrolled ? rem(100) : rem(110))};
+	top: ${props => (props.$scrolled ? rem(100) : rem(110))};
 
 	button {
 		box-shadow: ${props => `0 0 ${rem(4)} ${props.theme.accent}`};
 	}
 
 	@media screen and (max-width: 800px) {
-		top: ${props => (props.scrolled ? rem(50) : rem(70))};
+		top: ${props => (props.$scrolled ? rem(50) : rem(70))};
 	}
 `;
 
@@ -66,7 +66,7 @@ const UnreadBannerButton = (props: UnreadBannerProps) => {
 	}
 
 	return (
-		<Wrapper scrolled={isScrolled}>
+		<Wrapper $scrolled={isScrolled}>
 			<Button size='md' onClick={onClick}>
 				Jump to unread posts
 			</Button>

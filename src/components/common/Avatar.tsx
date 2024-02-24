@@ -19,7 +19,7 @@ const AvatarRoot = styled.div<{ size?: number }>`
 	width: ${props => rem(props.size || DEFAULT_SIZE)};
 	min-width: ${props => rem(props.size || DEFAULT_SIZE / 2)};
 	height: ${props => rem(props.size || DEFAULT_SIZE)};
-	transition: all 0.3s ease-in-out;
+	transition: all 0.2s ease-in;
 
 	@media screen and (max-width: 800px) {
 		width: ${props =>
