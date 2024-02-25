@@ -6,6 +6,7 @@ declare module 'styled-components' {
 		link: string;
 		accent: string;
 		green: string;
+		blurDataURL: string;
 		text: {
 			primary: string;
 			muted: string;

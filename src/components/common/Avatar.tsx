@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { rem } from 'polished';
 import Image from 'next/image';
+import { useVividlyTheme, lightTheme, darkTheme } from '@/styles/Theme';
 
 const DEFAULT_SIZE = 50;
 const SMALLER_DEFAULT_SIZE = 50 * 0.75;
@@ -49,8 +50,19 @@ export const Avatar = ({
 	src: string;
 	alt: string;
 	onClick?: () => void;
-}) => (
-	<AvatarRoot onClick={onClick} size={size}>
-		<AvatarImg src={src} alt={alt} width={size} height={size} />
-	</AvatarRoot>
-);
+}) => {
+	const { theme } = useVividlyTheme();
+	return (
+		<AvatarRoot onClick={onClick} size={size}>
+			<AvatarImg
+				src={src}
+				alt={alt}
+				width={size}
+				height={size}
+				blurDataURL={
+					theme === 'light' ? lightTheme.blurDataURL : darkTheme.blurDataURL
+				}
+			/>
+		</AvatarRoot>
+	);
+};

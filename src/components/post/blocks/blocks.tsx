@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import styled from 'styled-components';
 import { rem } from 'polished';
-import { DEFAULT_AVATAR } from '@/constants';
+import { useVividlyTheme, lightTheme, darkTheme } from '@/styles/Theme';
 
 const StyledImage = styled(Image)`
 	border-radius: ${rem(8)};
@@ -24,14 +24,17 @@ type ImageBlockProps = {
 
 export const ImageBlock = (props: ImageBlockProps) => {
 	const { url } = props;
+	const { theme } = useVividlyTheme();
 	return (
 		<StyledImage
 			src={url}
 			alt={url}
 			width={props.width}
 			height={props.height}
-			blurDataURL={props.thumbnailUrl || DEFAULT_AVATAR}
 			placeholder='blur'
+			blurDataURL={
+				theme === 'light' ? lightTheme.blurDataURL : darkTheme.blurDataURL
+			}
 		/>
 	);
 };

@@ -40,6 +40,8 @@ export const LightThemeAdditions = {
 		primary: '#555',
 		secondary: '#ddd',
 	},
+	blurDataURL:
+		'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNcuWzZfwAG6wL2Pw3F5wAAAABJRU5ErkJggg==',
 };
 
 export const lightTheme = {
@@ -64,6 +66,8 @@ const darkThemeAdditions = {
 		primary: '#1f2024',
 		secondary: '#2C2E33',
 	},
+	blurDataURL:
+		'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mMs+g8AAekBc1QMEsMAAAAASUVORK5CYII==',
 };
 
 export const darkTheme = {
@@ -163,7 +167,7 @@ export const VividlyThemeProvider = (props: { children: React.ReactNode }) => {
 							? {
 									...darkTheme,
 									accent: mantineAccentColor,
-							  }
+								}
 							: { ...lightTheme, accent: mantineAccentColor }
 					}
 				>
