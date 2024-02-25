@@ -64,5 +64,4 @@ export const GlobalStyles = createGlobalStyle`
 	.mantine-Modal-header, .mantine-Modal-body {
 		padding-bottom: ${rem(10)};
 	}
-	
 `;

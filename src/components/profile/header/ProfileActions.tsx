@@ -74,7 +74,7 @@ export const ProfileActions = (props: Props) => {
 			<ActionIcon
 				onClick={props.onClickFriends}
 				color={accentColor}
-				variant='outline'
+				variant='light'
 				aria-label='View friends'
 			>
 				<Tooltip withArrow label='View friends' position='bottom'>
@@ -82,7 +82,7 @@ export const ProfileActions = (props: Props) => {
 				</Tooltip>
 			</ActionIcon>
 			<ActionIcon
-				variant='outline'
+				variant='light'
 				color={accentColor}
 				onClick={props.onClickEdit}
 				aria-label='Edit profile'

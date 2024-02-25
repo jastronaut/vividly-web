@@ -215,7 +215,11 @@ export const LocationSelector = (props: LocationSelectorProps) => {
 					const data = await res.json();
 
 					console.log(data);
-					setOptions(data.results);
+					setOptions(
+						data.results.filter(
+							(result: FoursquarePlace) => result.categories.length > 0
+						)
+					);
 
 					if (data.error) {
 						throw Error(data.error);
@@ -293,7 +297,10 @@ export const LocationSelector = (props: LocationSelectorProps) => {
 							title='Go back'
 							radius='xl'
 							size='sm'
-							onClick={() => setOptionIndex(index => index + 1)}
+							onClick={() => {
+								if (optionIndex === optionsLen - 1) return;
+								setOptionIndex(index => index + 1);
+							}}
 						>
 							<IconChevronRight />
 						</ActionIcon>
