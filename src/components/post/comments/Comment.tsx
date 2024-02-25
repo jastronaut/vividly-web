@@ -11,7 +11,7 @@ type CommentProps = {
 	onDelete: () => void;
 	onClickLink: () => void;
 	canDelete: boolean;
-	onClickComment?: () => void;
+	onClickComment: (username: string) => void;
 } & CommentType;
 
 export const Comment = (props: CommentProps) => {
@@ -65,7 +65,10 @@ export const Comment = (props: CommentProps) => {
 									</Link>
 								</Text>
 							</Flex>
-							<Text className='comment-content' onClick={props.onClickComment}>
+							<Text
+								className='comment-content'
+								onClick={() => props.onClickComment(props.author.username)}
+							>
 								<Linkified>{props.content}</Linkified>
 							</Text>
 						</TextContainer>

@@ -96,6 +96,9 @@ export const PostPreviewDrawerContent = (props: PostDrawerContentProps) => {
 							post?.author?.id === props.curUserId
 						}
 						onClickLink={() => {}}
+						onClickComment={(username: string) => {
+							setCommentDraft(draft => `${draft} @${username} `);
+						}}
 					/>
 				))}
 				<NewCommentInput

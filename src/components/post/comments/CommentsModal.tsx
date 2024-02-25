@@ -94,6 +94,9 @@ export const CommentsModal = (props: Props) => {
 								props.isPostAuthor ||
 								(curUser ? curUser.user.id === comment.authorId : false)
 							}
+							onClickComment={(username: string) => {
+								setDraft(draft => `${draft} @${username} `);
+							}}
 						/>
 					))}
 					{props.comments.length === 0 && <EmptyCommentsState />}
