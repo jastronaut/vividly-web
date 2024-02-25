@@ -26,7 +26,6 @@ export const LinkBlock = (props: BaseElementProps) => {
 	return (
 		<div {...attributes}>
 			<div contentEditable={false}>
-				{element.url}
 				<LinkBlockContent hideTopUrl {...element} />
 			</div>
 			{children}

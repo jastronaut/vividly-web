@@ -161,12 +161,17 @@ export const addLink = async (editor: ReactEditor, url: string) => {
 	const { description, title, image } = await getMetadata();
 
 	editor.insertNode({
+		type: EditorBlockType.TEXT,
+		children: [{ text: url }],
+	});
+
+	editor.insertNode({
 		type: EditorBlockType.LINK,
 		url,
 		description: description,
 		title: title,
 		imageURL: image,
-		children: [{ text: url }],
+		children: [{ text: '' }],
 	});
 
 	finishAddingBlock(editor);

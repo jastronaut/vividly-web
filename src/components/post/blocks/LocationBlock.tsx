@@ -5,10 +5,10 @@ import { Text } from '@mantine/core';
 
 import { LocationBlock as LocationBlockType } from '@/types/post';
 
-export const LocationOptionContainer = styled.div<{ inSelector: boolean }>`
+export const LocationOptionContainer = styled.div<{ $inSelector: boolean }>`
 	border-radius: ${rem(4)};
 	${props =>
-		props.inSelector
+		props.$inSelector
 			? `border: 1px solid ${props.theme.border.secondary}`
 			: ''};
 
@@ -17,10 +17,10 @@ export const LocationOptionContainer = styled.div<{ inSelector: boolean }>`
 	display: grid;
 	grid-template-columns: ${rem(24)} 1fr;
 
-	:hover,
-	:active {
+	&:hover,
+	&:active {
 		${props =>
-			props.inSelector
+			props.$inSelector
 				? `
 					transition: all 0.2s ease-in;
 					background-color: ${props.theme.accent}30;
@@ -48,7 +48,7 @@ type Props = {
 export const LocationBlock = (props: Props) => {
 	const { inSelector = false, onClick = () => {} } = props;
 	return (
-		<LocationOptionContainer inSelector={inSelector} onClick={onClick}>
+		<LocationOptionContainer $inSelector={inSelector} onClick={onClick}>
 			<Image src={props.icon} alt={props.name} width={24} height={24} />
 			<div>
 				<Text>{props.name}</Text>

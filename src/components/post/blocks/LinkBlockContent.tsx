@@ -46,6 +46,11 @@ const LinkInfo = styled.span`
 	> img {
 		margin-top: ${rem(8)};
 	}
+
+	@media screen and (max-width: 800px) {
+		padding-left: ${rem(8)};
+		border-left-width: ${rem(2)};
+	}
 `;
 
 type LinkBlockProps = {
@@ -59,17 +64,6 @@ type LinkBlockProps = {
 export const LinkBlockContent = (props: LinkBlockProps) => {
 	return (
 		<>
-			{props.hideTopUrl ? null : (
-				<Text
-					sx={{
-						width: 'fit-content',
-					}}
-				>
-					<a href={props.url} target='_blank' rel='noopener noreferrer'>
-						{props.url}
-					</a>
-				</Text>
-			)}
 			<LinkText>
 				<Text
 					fw={700}
