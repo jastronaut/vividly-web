@@ -90,8 +90,8 @@ export const ProfileContent = (props: ProfileContentProps) => {
 			)}
 
 			<ProfileContentContainer
-				isLoading={isLoading || showBottomStuff}
-				isOwnProfile={isLoggedInUser}
+				$isLoading={isLoading || showBottomStuff}
+				$isOwnProfile={isLoggedInUser}
 			>
 				<div>{props.children}</div>
 

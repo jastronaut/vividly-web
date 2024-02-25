@@ -30,7 +30,7 @@ const Template: ComponentStory<typeof EditorWithActions> = args => {
 		<VividlyThemeProvider>
 			<LocalizationProvider>
 				<Wrapper>
-					<InlineEditorWrapper isFullscreen={false}>
+					<InlineEditorWrapper $isFullscreen={false}>
 						<EditorWithActions
 							{...args}
 							editor={editor}

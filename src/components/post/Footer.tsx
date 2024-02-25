@@ -11,6 +11,7 @@ import {
 	IconFlag,
 	IconBlockquote,
 	IconEdit,
+	IconCircle,
 } from '@tabler/icons-react';
 
 import { Group, Button, Text, Menu, ActionIcon, Tooltip } from '@mantine/core';
@@ -113,12 +114,18 @@ export const Footer = (props: FooterProps) => {
 									Delete post
 								</Menu.Item>
 								<Tooltip
-									label='Prevent other users from commenting on your posts'
+									label='Prevent or allow comments'
 									withArrow
 									position='bottom'
 								>
 									<Menu.Item
-										icon={<IconBan size={16} />}
+										icon={
+											props.commentsDisabled ? (
+												<IconCircle size={16} />
+											) : (
+												<IconBan size={16} />
+											)
+										}
 										onClick={props.toggleDisableComments}
 									>
 										<span>

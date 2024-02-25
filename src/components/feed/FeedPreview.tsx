@@ -8,16 +8,19 @@ import { DEFAULT_AVATAR } from '@/constants';
 import { getBlockPreview } from '../utils/getBlockPreview';
 import { getPostTime } from '../utils/time';
 
-import { Wrapper, TextContainer } from '@/components/activity/requests/styles';
-import { FavoriteBadge } from '../common/FavoriteBadge';
-import { Avatar } from '../common/Avatar';
+import { VividlyItem } from '@/components/common/VividlyItem';
+import { TextContainer } from '@/components/activity/requests/styles';
+import { FavoriteBadge } from '@/components/common/FavoriteBadge';
+import { Avatar } from '@/components/common/Avatar';
 
-const WrapperStyled = styled(Wrapper)<{ isUnread?: boolean }>`
+const WrapperStyled = styled(VividlyItem).attrs({ $withHover: false })<{
+	$isUnread?: boolean;
+}>`
 	@media (max-width: 800px) {
 		padding: ${rem(10)};
 		min-width: ${rem(295)};
 	}
-	${props => !props.isUnread && `opacity: 0.5;`}
+	/* ${props => !props.$isUnread && `opacity: 0.5;`} */
 
 	.mantine-Text-root {
 		line-height: ${rem(18)};
@@ -26,7 +29,7 @@ const WrapperStyled = styled(Wrapper)<{ isUnread?: boolean }>`
 
 export const FeedPreviewLoading = () => {
 	return (
-		<WrapperStyled>
+		<WrapperStyled $isUnread={false}>
 			<Group>
 				<div>
 					<Skeleton height={50} circle />
@@ -78,7 +81,7 @@ export const FeedPreview = (props: Props) => {
 	}
 
 	return (
-		<WrapperStyled withHover isUnread={isUnread}>
+		<WrapperStyled $isUnread={isUnread}>
 			<Flex>
 				<Avatar src={friend.avatarSrc || DEFAULT_AVATAR} alt={friend.name} />
 				<TextContainer style={{ width: '100%' }}>

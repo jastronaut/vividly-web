@@ -6,22 +6,22 @@ import { COLORS } from '@/styles/Theme';
 
 import { useVividlyTheme } from '@/styles/Theme';
 
-const Dot = styled.div<{ color: string; picked: boolean }>`
+const Dot = styled.div<{ $color: string; $picked: boolean }>`
 	width: ${rem(25)};
 	height: ${rem(25)};
 	border-radius: 50%;
-	background-color: ${props => props.color};
+	background-color: ${props => props.$color};
 	margin: ${rem(5)};
 	border: ${props =>
-		props.picked
+		props.$picked
 			? `${rem(2)} solid ${props.theme.background.primary}`
 			: 'none'};
 	box-shadow: ${props =>
-		props.picked ? `0 0 ${rem(8)} ${props.color}` : 'none'};
+		props.$picked ? `0 0 ${rem(8)} ${props.$color}` : 'none'};
 	transition: box-shadow 0.2s ease-in-out;
 	:hover {
 		cursor: pointer;
-		box-shadow: ${props => `0 0 ${rem(12)} ${props.color}`};
+		box-shadow: ${props => `0 0 ${rem(12)} ${props.$color}`};
 	}
 `;
 
@@ -39,7 +39,7 @@ const ColorOption = ({
 	return (
 		<div onClick={onClick}>
 			<Tooltip label={name} withArrow position='bottom'>
-				<Dot color={color} picked={picked} />
+				<Dot $color={color} $picked={picked} />
 			</Tooltip>
 		</div>
 	);

@@ -8,13 +8,13 @@ import {
 	NotificationBody,
 } from '@/types/notification';
 
-import { Wrapper, TextContainer } from '../requests/styles';
+import { TextContainer } from '../requests/styles';
 import { DEFAULT_AVATAR } from '@/constants';
 import { getPostTime } from '@/components/utils/time';
-
 import { getBlockPreview } from '@/components/utils/getBlockPreview';
 import { Avatar } from '@/components/common/Avatar';
 import { usePostDrawerContext } from '@/components/contexts/PostDrawerContext';
+import { VividlyItem } from '@/components/common/VividlyItem';
 
 function getNotificationActionMessage(notification: NotificationBody) {
 	switch (notification.type) {
@@ -43,24 +43,21 @@ function getNotificationContentPreview(notification: NotificationBody) {
 	}
 }
 
-const WrapperStyled = styled(Wrapper)<{ isUnread: boolean }>`
-	:hover {
-		cursor: pointer;
-	}
-
+const WrapperStyled = styled(VividlyItem).attrs({ $withHover: true })<{
+	$isUnread: boolean;
+}>`
+	display: flex;
 	@media (max-width: 800px) {
 		padding: ${rem(10)};
 		min-width: ${rem(295)};
 	}
 
-	${props =>
-		!props.isUnread &&
-		`
-		opacity: 0.7;
-	`}
+	background: ${props =>
+		props.$isUnread ? props.theme.background.secondary : 'unset'};
 
-	:hover {
-		opacity: 1;
+	&:hover {
+		background: ${props => props.theme.background.secondary};
+		transition: background 0.2s ease-in;
 	}
 `;
 
@@ -81,36 +78,30 @@ export const NotificationItem = (props: Props) => {
 	}
 
 	return (
-		<WrapperStyled
-			isUnread={isUnread}
-			withHover
-			onClick={() => setPostId(body.post.id)}
-		>
-			<Flex>
-				<Avatar
-					src={sender.avatarSrc || DEFAULT_AVATAR}
-					alt={`${sender.name}'s avatar`}
-					size={30}
-				/>
-				<TextContainer>
-					<Text fw={700} component='span'>
-						{sender.name}
+		<WrapperStyled $isUnread={isUnread} onClick={() => setPostId(body.post.id)}>
+			<Avatar
+				src={sender.avatarSrc || DEFAULT_AVATAR}
+				alt={`${sender.name}'s avatar`}
+				size={30}
+			/>
+			<TextContainer>
+				<Text fw={700} component='span'>
+					{sender.name}
+				</Text>
+				{` `}
+				{notificationActionMessage}
+				{body.type === NotificationType.COMMENT && (
+					<Text
+						sx={{
+							lineHeight: rem(20),
+						}}
+					>
+						{body.message}
 					</Text>
-					{` `}
-					{notificationActionMessage}
-					{body.type === NotificationType.COMMENT && (
-						<Text
-							sx={{
-								lineHeight: rem(20),
-							}}
-						>
-							{body.message}
-						</Text>
-					)}
-					<Text c='dimmed'>{notificationContentPreview}</Text>
-				</TextContainer>
-				<Text c='dimmed'>{timestamp}</Text>
-			</Flex>
+				)}
+				<Text c='dimmed'>{notificationContentPreview}</Text>
+			</TextContainer>
+			<Text c='dimmed'>{timestamp}</Text>
 		</WrapperStyled>
 	);
 };

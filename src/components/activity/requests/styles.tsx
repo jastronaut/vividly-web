@@ -1,13 +1,14 @@
 import { Flex, Group } from '@mantine/core';
 import styled from 'styled-components';
 import { rem } from 'polished';
+import { VividlyItem } from '@/components/common/VividlyItem';
 
 export const TextContainer = styled.div`
 	padding-left: ${rem(8)};
 	flex: 1;
 `;
 
-export const Wrapper = styled.div<{ withHover?: boolean }>`
+export const Wrapper = styled.div<{ $withHover?: boolean }>`
 	padding: ${rem(16)} ${rem(24)};
 	border-bottom: 1px solid ${props => props.theme.background.secondary};
 
@@ -17,10 +18,11 @@ export const Wrapper = styled.div<{ withHover?: boolean }>`
 	}
 
 	${props =>
-		props.withHover &&
+		props.$withHover &&
 		`
-	:hover {
+	&:hover {
 		background: ${props.theme.background.secondary};
+		transition: background 0.2s ease-in;
 	}	`}
 
 	@media screen and (max-width: 800px) {
@@ -28,7 +30,7 @@ export const Wrapper = styled.div<{ withHover?: boolean }>`
 	}
 `;
 
-export const WrapperStyled = styled(Wrapper)`
+export const WrapperStyled = styled(VividlyItem).attrs({ $withHover: true })`
 	display: grid;
 	grid-template-columns: auto 1fr auto;
 `;

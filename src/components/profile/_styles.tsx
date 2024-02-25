@@ -12,16 +12,16 @@ export const ProfileHeaderContainer = styled.div`
 `;
 
 export const ProfileContentContainer = styled.div<{
-	isLoading: boolean;
-	isOwnProfile: boolean;
+	$isLoading: boolean;
+	$isOwnProfile: boolean;
 }>`
 	padding: ${rem(24)};
 	display: flex;
-	flex-direction: ${props => (props.isLoading ? 'column' : 'column-reverse')};
+	flex-direction: ${props => (props.$isLoading ? 'column' : 'column-reverse')};
 	border-top: none;
 
 	@media screen and (max-width: 800px) {
-		padding-bottom: ${props => (props.isOwnProfile ? 0 : rem(45))};
+		padding-bottom: ${props => (props.$isOwnProfile ? 0 : rem(45))};
 	}
 
 	@media screen and (max-width: 500px) {

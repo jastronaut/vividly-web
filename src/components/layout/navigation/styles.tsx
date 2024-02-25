@@ -19,7 +19,7 @@ export const NavInner = styled.nav`
 	}
 `;
 
-export const Navigation = styled.header<{ isHidden: boolean }>`
+export const Navigation = styled.header<{ $isHidden: boolean }>`
 	top: 0;
 	left: 0;
 	right: 0;
@@ -34,7 +34,7 @@ export const Navigation = styled.header<{ isHidden: boolean }>`
 	transition: all 0.2s ease-in;
 
 	@media screen and (max-width: 800px) {
-		${props => (props.isHidden ? 'transform: translateY(100%);' : '')}
+		${props => (props.$isHidden ? 'transform: translateY(100%);' : '')}
 	}
 
 	backdrop-filter: blur(12px);
@@ -56,7 +56,7 @@ export const Navigation = styled.header<{ isHidden: boolean }>`
 
 export const NavItem = styled.div`
 	border-radius: ${rem(4)};
-	:hover {
+	&:hover {
 		cursor: pointer;
 		background-color: ${props => props.theme.accent}50;
 		transform: scale(1.1);
@@ -67,7 +67,7 @@ export const NavItem = styled.div`
 	}
 `;
 
-export const PageContentContainer = styled.main<{ isNavHidden: boolean }>`
+export const PageContentContainer = styled.main`
 	margin-top: ${rem(50)};
 	margin-left: ${rem(64)};
 	margin-right: ${rem(64)};

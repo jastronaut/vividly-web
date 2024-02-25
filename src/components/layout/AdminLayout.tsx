@@ -12,7 +12,7 @@ const AdminLayout = ({ children }: Props) => {
 		<CurUserProvider>
 			<VividlyThemeProvider>
 				<AccountInfoProvider>
-					<PageContentContainer isNavHidden>{children}</PageContentContainer>
+					<PageContentContainer>{children}</PageContentContainer>
 				</AccountInfoProvider>
 			</VividlyThemeProvider>
 		</CurUserProvider>

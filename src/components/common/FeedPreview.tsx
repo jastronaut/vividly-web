@@ -24,7 +24,7 @@ const Wrapper = styled.div`
 		border-radius: 0.25rem;
 	}
 
-	transition: 0.25s all ease-in;
+	transition: 0.2s all ease-in;
 `;
 
 export const InfoContainer = styled.div`

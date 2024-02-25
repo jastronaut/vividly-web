@@ -53,7 +53,7 @@ export const InformationButton = (props: { toggleInformation: () => void }) => {
 
 const BG_BLUR = `blur(${rem(6)})`;
 
-export const ProfileHeaderContent = styled.div<{ scrolled: boolean }>`
+export const ProfileHeaderContent = styled.div<{ $scrolled: boolean }>`
 	background-color: ${props => props.theme.background.primary};
 	display: flex;
 	padding: ${rem(10)} ${rem(36)};
@@ -69,7 +69,7 @@ export const ProfileHeaderContent = styled.div<{ scrolled: boolean }>`
 	width: 100%;
 
 	${props =>
-		props.scrolled &&
+		props.$scrolled &&
 		`background-color: ${getRgba(props.theme.background.primary, 0.9, false)};
 		backdrop-filter: ${BG_BLUR};
 		-webkit-backdrop-filter: ${BG_BLUR};
@@ -137,7 +137,7 @@ export const HeaderTextLoading = () => {
 
 const NamesContainer = styled.div<{ height: number }>`
 	display: flex;
-	transition: height 0.3s ease-in;
+	transition: height 0.2s ease-in;
 	align-items: center;
 
 	@media screen and (max-width: 800px) {
