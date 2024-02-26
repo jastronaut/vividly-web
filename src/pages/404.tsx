@@ -40,6 +40,17 @@ const PageNotFound: Page<{}> = () => {
 							Go to feed
 						</Button>
 					</Link>
+					<Space h='md' />
+					<Text>
+						Need help?{' '}
+						<Link
+							href='mailto:help@vividly.love'
+							style={{ textDecoration: 'underline' }}
+						>
+							Contact us
+						</Link>
+						.
+					</Text>
 				</div>
 			</Center>
 		</Wrapper>
