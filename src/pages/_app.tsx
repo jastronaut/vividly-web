@@ -4,6 +4,7 @@ import Head from 'next/head';
 import { SWRConfig } from 'swr';
 import * as Sentry from '@sentry/nextjs';
 
+import '../styles/globals.css';
 import { fetcher } from '../utils';
 import { Layout } from '../components/layout/Layout';
 
