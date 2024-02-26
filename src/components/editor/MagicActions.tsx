@@ -23,7 +23,7 @@ import { Carousel } from '@giphy/react-components';
 
 import { LocationElement, MusicElement } from '@/types/editor';
 import { EditorBlockType } from '@/types/editor';
-import { FOURSQUARE_API_KEY } from '@/constants';
+import { FOURSQUARE_API_KEY, GIPHY_API_KEY } from '@/constants';
 import { BlockType } from '@/types/post';
 import { FoursquarePlace } from '@/types/api';
 
@@ -316,7 +316,7 @@ export const LocationSelector = (props: LocationSelectorProps) => {
 	);
 };
 
-const giphyFetch = new GiphyFetch(process.env.GIPHY_API_KEY || '');
+const giphyFetch = new GiphyFetch(GIPHY_API_KEY);
 
 const EMPTY_GIF_RESULT: GifsResult = {
 	data: [],

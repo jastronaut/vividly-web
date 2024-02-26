@@ -9,7 +9,7 @@ export const Layout = ({ children }: Props) => {
 	return (
 		<VividlyThemeProvider>
 			{children}
-			<Analytics />
+			{process.env.NODE_ENV === 'production' && <Analytics />}
 		</VividlyThemeProvider>
 	);
 };
