@@ -104,3 +104,9 @@ export const EditorSubmitButtonContainer = styled.div`
 		margin-top: ${rem(16)};
 	}
 `;
+
+export const MagicPostActionsCarouselContainer = styled.div`
+	display: grid;
+	align-items: center;
+	grid-template-columns: ${rem(32)} 1fr ${rem(32)};
+`;

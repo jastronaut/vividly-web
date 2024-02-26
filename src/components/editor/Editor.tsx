@@ -39,6 +39,8 @@ import {
 	IconMusic,
 	IconMap2,
 	IconGif,
+	IconChevronLeft,
+	IconChevronRight,
 } from '@tabler/icons-react';
 
 import {
@@ -52,6 +54,7 @@ import {
 	NamesDropdownOption,
 	NamesDropdownContainer,
 	EditorSubmitButtonContainer,
+	MagicPostActionsCarouselContainer,
 } from './styles';
 import { DismissWarningModal } from '../common/DismissWarningModal';
 import {
@@ -160,6 +163,13 @@ export const EditorWithActions = (props: EditorWithActionsProps) => {
 	const [emblaRef, emblaApi] = useEmblaCarousel({ loop: false });
 	const [visibleMagicPostActions, setVisibleMagicPostActions] =
 		useState<MagicPostActionsInputs>('none');
+
+	const scrollPrev = useCallback(() => {
+		if (emblaApi) emblaApi.scrollPrev();
+	}, [emblaApi]);
+	const scrollNext = useCallback(() => {
+		if (emblaApi) emblaApi.scrollNext();
+	}, [emblaApi]);
 
 	const { accentColor } = useVividlyTheme();
 
@@ -468,9 +478,18 @@ export const EditorWithActions = (props: EditorWithActionsProps) => {
 			</EditorContainer>
 			<Space h='sm' />
 
-			<div className='embla' ref={emblaRef}>
-				<div className='embla__container'>
-					<Flex gap='md'>
+			<MagicPostActionsCarouselContainer className='embla'>
+				<ActionIcon
+					variant='light'
+					title='Previous'
+					radius='xl'
+					size='sm'
+					onClick={scrollPrev}
+				>
+					<IconChevronLeft />
+				</ActionIcon>
+				<div className='embla__viewport' ref={emblaRef}>
+					<div className='embla__container'>
 						<div className='embla__slide'>
 							<FileButton
 								onChange={(f: File | null) => addImage(editor, f)}
@@ -586,9 +605,19 @@ export const EditorWithActions = (props: EditorWithActionsProps) => {
 								</ActionIcon>
 							</Tooltip>
 						</div>
-					</Flex>
+					</div>
 				</div>
-			</div>
+				<ActionIcon
+					variant='light'
+					title='Next'
+					radius='xl'
+					size='sm'
+					onClick={scrollNext}
+				>
+					<IconChevronRight />
+				</ActionIcon>
+			</MagicPostActionsCarouselContainer>
+
 			<OracleInput
 				isVisible={visibleMagicPostActions === 'oracle'}
 				onClickAskOracle={onClickAskOracle}

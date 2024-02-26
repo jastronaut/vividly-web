@@ -73,6 +73,17 @@ export default class _Document extends Document {
 						href='/favicon-16x16.png'
 					/>
 					<link rel='manifest' href='/site.webmanifest' />
+					<meta property='og:url' content='https://app.vividly.love' />
+					<meta property='og:title' content='Vividly' />
+					<meta
+						property='og:description'
+						content='A social media site for your close friends.'
+					/>
+					<meta property='og:image' content='/apple-touch-icon.png' />
+					<meta
+						property='description'
+						content='Vividly: A social media site for your close friends.'
+					/>
 				</Head>
 				<body>
 					<Main />
