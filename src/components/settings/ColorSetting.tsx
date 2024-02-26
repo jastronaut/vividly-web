@@ -19,7 +19,7 @@ const Dot = styled.div<{ $color: string; $picked: boolean }>`
 	box-shadow: ${props =>
 		props.$picked ? `0 0 ${rem(8)} ${props.$color}` : 'none'};
 	transition: box-shadow 0.2s ease-in-out;
-	:hover {
+	&:hover {
 		cursor: pointer;
 		box-shadow: ${props => `0 0 ${rem(12)} ${props.$color}`};
 	}

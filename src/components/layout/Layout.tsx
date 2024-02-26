@@ -1,3 +1,4 @@
+import { Analytics } from '@vercel/analytics/react';
 import { VividlyThemeProvider } from '../../styles/Theme';
 
 type Props = {
@@ -5,5 +6,10 @@ type Props = {
 };
 
 export const Layout = ({ children }: Props) => {
-	return <VividlyThemeProvider>{children}</VividlyThemeProvider>;
+	return (
+		<VividlyThemeProvider>
+			{children}
+			<Analytics />
+		</VividlyThemeProvider>
+	);
 };

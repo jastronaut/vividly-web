@@ -13,8 +13,8 @@ const Wrapper = styled.div`
 	cursor: pointer;
 	margin: ${rem(8)} 0;
 	border-radius: ${rem(8)};
-	:hover {
-		background: ${props => props.theme.background.hover};
+	&:hover {
+		background-color: ${props => props.theme.background.secondary};
 		border-color: ${props => props.theme.background.hover};
 	}
 
