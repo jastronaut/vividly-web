@@ -22,6 +22,11 @@ const nextConfig = {
 				hostname: 'ss3.4sqi.net',
 				pathname: '/img/categories_v2/**/*',
 			},
+			{
+				protocol: 'https',
+				hostname: '*.giphy.com',
+				pathname: '/media/**/*',
+			},
 		],
 	},
 	compiler: {

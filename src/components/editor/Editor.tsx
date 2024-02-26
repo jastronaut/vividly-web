@@ -28,6 +28,7 @@ import {
 	Portal,
 } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
+import useEmblaCarousel from 'embla-carousel-react';
 import {
 	IconPhoto,
 	IconCalendar,
@@ -37,6 +38,7 @@ import {
 	IconCrystalBall,
 	IconMusic,
 	IconMap2,
+	IconGif,
 } from '@tabler/icons-react';
 
 import {
@@ -81,7 +83,12 @@ import {
 	LocationBlock,
 } from './Nodes';
 import { showAndLogErrorNotification } from '@/showerror';
-import { MusicInput, OracleInput, LocationSelector } from './MagicActions';
+import {
+	MusicInput,
+	OracleInput,
+	LocationSelector,
+	GIFSelector,
+} from './MagicActions';
 import { useVividlyTheme } from '@/styles/Theme';
 import { useLocalizationContext } from '../contexts/LocalizationContext';
 
@@ -136,17 +143,23 @@ type EditorWithActionsProps = {
 	isFullscreen: boolean;
 };
 
+type MagicPostActionsInputs = 'oracle' | 'music' | 'location' | 'gif' | 'none';
+
 export const EditorWithActions = (props: EditorWithActionsProps) => {
 	const { editor } = props;
 	const [isOracleInputVisible, setIsOracleInputVisible] = useState(false);
 	const [isMusicInputVisible, setIsMusicInputVisible] = useState(false);
 	const [isLocationSelectorVisible, setIsLocationSelectorVisible] =
 		useState(false);
+	const [isGIFInputVisible, setIsGIFInputVisible] = useState(false);
 	const [target, setTarget] = useState<Range | null>(null);
 	const [searchName, setSearchName] = useState<string | null>(null);
 	const [namesIndex, setNamesIndex] = useState(0);
 	const ref = useRef<HTMLDivElement | null>(null);
 	const { use24HourTime, useCelsius, dateFormat } = useLocalizationContext();
+	const [emblaRef, emblaApi] = useEmblaCarousel({ loop: false });
+	const [visibleMagicPostActions, setVisibleMagicPostActions] =
+		useState<MagicPostActionsInputs>('none');
 
 	const { accentColor } = useVividlyTheme();
 
@@ -267,6 +280,7 @@ export const EditorWithActions = (props: EditorWithActionsProps) => {
 			props.onClickMagicPostActions();
 			setIsOracleInputVisible(true);
 			setIsMusicInputVisible(false);
+			setIsGIFInputVisible(false);
 		}
 	};
 
@@ -277,6 +291,7 @@ export const EditorWithActions = (props: EditorWithActionsProps) => {
 			props.onClickMagicPostActions();
 			setIsMusicInputVisible(true);
 			setIsOracleInputVisible(false);
+			setIsGIFInputVisible(false);
 		}
 	};
 
@@ -286,6 +301,20 @@ export const EditorWithActions = (props: EditorWithActionsProps) => {
 		} else {
 			props.onClickMagicPostActions();
 			setIsLocationSelectorVisible(true);
+			setIsOracleInputVisible(false);
+			setIsMusicInputVisible(false);
+		}
+	};
+
+	const toggleGIFInput = () => {
+		if (isGIFInputVisible) {
+			setIsGIFInputVisible(false);
+		} else {
+			props.onClickMagicPostActions();
+			setIsGIFInputVisible(true);
+			setIsOracleInputVisible(false);
+			setIsLocationSelectorVisible(false);
+			setIsMusicInputVisible(false);
 		}
 	};
 
@@ -311,6 +340,27 @@ export const EditorWithActions = (props: EditorWithActionsProps) => {
 		toggleLocationSelector();
 	};
 
+	const onSelectGIF = (url: string, width: number, height: number) => {
+		const img: ElementType = {
+			type: EditorBlockType.IMAGE,
+			url,
+			width,
+			height,
+			children: [{ text: '' }],
+			thumbnailURL: url,
+		};
+		removeBlankBlock(editor);
+		Transforms.insertNodes(editor, img);
+		finishAddingBlock(editor);
+		toggleGIFInput();
+	};
+
+	const toggleMagicPostActions = (newAction: MagicPostActionsInputs) => {
+		setVisibleMagicPostActions(action =>
+			action === newAction ? 'none' : newAction
+		);
+	};
+
 	const mentionsVisible = target && chars.length > 0;
 
 	const actionIconProps = {
@@ -332,7 +382,7 @@ export const EditorWithActions = (props: EditorWithActionsProps) => {
 
 	useEffect(() => {
 		props.onClickMagicPostActions();
-	}, [isOracleInputVisible, isMusicInputVisible]);
+	}, [visibleMagicPostActions]);
 
 	return (
 		<>
@@ -417,91 +467,143 @@ export const EditorWithActions = (props: EditorWithActionsProps) => {
 				) : null}
 			</EditorContainer>
 			<Space h='sm' />
-			<Flex gap='md'>
-				<FileButton
-					onChange={(f: File | null) => addImage(editor, f)}
-					accept='image/png,image/jpeg'
-				>
-					{props => (
-						<Tooltip label='Add an image' position='bottom' withArrow>
-							<ActionIcon
-								aria-label='Upload image'
-								{...actionIconProps}
-								{...props}
+
+			<div className='embla' ref={emblaRef}>
+				<div className='embla__container'>
+					<Flex gap='md'>
+						<div className='embla__slide'>
+							<FileButton
+								onChange={(f: File | null) => addImage(editor, f)}
+								accept='image/png,image/jpeg'
 							>
-								<IconPhoto />
-							</ActionIcon>
-						</Tooltip>
-					)}
-				</FileButton>
-				<Tooltip label='Add current time' position='bottom' withArrow>
-					<ActionIcon
-						{...actionIconProps}
-						onClick={() => addTime(editor, use24HourTime)}
-						aria-label='Add current time'
-					>
-						<IconClockHour9 />
-					</ActionIcon>
-				</Tooltip>
-				<Tooltip label='Add current date' position='bottom' withArrow>
-					<ActionIcon
-						{...actionIconProps}
-						onClick={() => addDate(editor, dateFormat)}
-						aria-label='Add current date'
-					>
-						<IconCalendar />
-					</ActionIcon>
-				</Tooltip>
-				<Tooltip label='Add current weather' position='bottom' withArrow>
-					<ActionIcon
-						{...actionIconProps}
-						onClick={() => addWeather(editor)}
-						aria-label='Add current weather'
-					>
-						<IconTemperature />
-					</ActionIcon>
-				</Tooltip>
-				<Tooltip label='Ask the oracle a question' position='bottom' withArrow>
-					<ActionIcon
-						{...actionIconProps}
-						variant={isOracleInputVisible ? 'filled' : 'light'}
-						onClick={toggleOracleInput}
-						aria-label='Ask the oracle'
-					>
-						<IconCrystalBall />
-					</ActionIcon>
-				</Tooltip>
+								{props => (
+									<Tooltip label='Add an image' position='bottom' withArrow>
+										<ActionIcon
+											aria-label='Upload image'
+											{...actionIconProps}
+											{...props}
+										>
+											<IconPhoto />
+										</ActionIcon>
+									</Tooltip>
+								)}
+							</FileButton>
+						</div>
+						<div className='embla__slide'>
+							<Tooltip label='Add current time' position='bottom' withArrow>
+								<ActionIcon
+									{...actionIconProps}
+									onClick={() => addTime(editor, use24HourTime)}
+									aria-label='Add current time'
+								>
+									<IconClockHour9 />
+								</ActionIcon>
+							</Tooltip>
+						</div>
+						<div className='embla__slide'>
+							<Tooltip label='Add current date' position='bottom' withArrow>
+								<ActionIcon
+									{...actionIconProps}
+									onClick={() => addDate(editor, dateFormat)}
+									aria-label='Add current date'
+								>
+									<IconCalendar />
+								</ActionIcon>
+							</Tooltip>
+						</div>
+						<div className='embla__slide'>
+							<Tooltip label='Add current weather' position='bottom' withArrow>
+								<ActionIcon
+									{...actionIconProps}
+									onClick={() => addWeather(editor)}
+									aria-label='Add current weather'
+								>
+									<IconTemperature />
+								</ActionIcon>
+							</Tooltip>
+						</div>
 
-				<Tooltip label='Add a song' position='bottom' withArrow>
-					<ActionIcon
-						{...actionIconProps}
-						variant={isMusicInputVisible ? 'filled' : 'light'}
-						onClick={toggleMusicInput}
-						title='Add a song'
-					>
-						<IconMusic />
-					</ActionIcon>
-				</Tooltip>
+						<div className='embla__slide'>
+							<Tooltip
+								label='Ask the oracle a question'
+								position='bottom'
+								withArrow
+							>
+								<ActionIcon
+									{...actionIconProps}
+									variant={
+										visibleMagicPostActions === 'oracle' ? 'filled' : 'light'
+									}
+									onClick={() => toggleMagicPostActions('oracle')}
+									aria-label='Ask the oracle'
+								>
+									<IconCrystalBall />
+								</ActionIcon>
+							</Tooltip>
+						</div>
 
-				<Tooltip label='Add current location' position='bottom' withArrow>
-					<ActionIcon
-						{...actionIconProps}
-						variant={isLocationSelectorVisible ? 'filled' : 'light'}
-						onClick={toggleLocationSelector}
-						title='Add current location'
-					>
-						<IconMap2 />
-					</ActionIcon>
-				</Tooltip>
-			</Flex>
+						<div className='embla__slide'>
+							<Tooltip label='Add a song' position='bottom' withArrow>
+								<ActionIcon
+									{...actionIconProps}
+									variant={
+										visibleMagicPostActions === 'music' ? 'filled' : 'light'
+									}
+									onClick={() => toggleMagicPostActions('music')}
+									title='Add a song'
+								>
+									<IconMusic />
+								</ActionIcon>
+							</Tooltip>
+						</div>
+
+						<div className='embla__slide'>
+							<Tooltip label='Add current location' position='bottom' withArrow>
+								<ActionIcon
+									{...actionIconProps}
+									variant={
+										visibleMagicPostActions === 'location' ? 'filled' : 'light'
+									}
+									onClick={() => toggleMagicPostActions('location')}
+									title='Add current location'
+								>
+									<IconMap2 />
+								</ActionIcon>
+							</Tooltip>
+						</div>
+
+						<div className='embla__slide'>
+							<Tooltip label='Add a gif' position='bottom' withArrow>
+								<ActionIcon
+									{...actionIconProps}
+									variant={
+										visibleMagicPostActions === 'gif' ? 'filled' : 'light'
+									}
+									onClick={() => toggleMagicPostActions('gif')}
+									title='Add a gif'
+								>
+									<IconGif />
+								</ActionIcon>
+							</Tooltip>
+						</div>
+					</Flex>
+				</div>
+			</div>
 			<OracleInput
-				isVisible={isOracleInputVisible}
+				isVisible={visibleMagicPostActions === 'oracle'}
 				onClickAskOracle={onClickAskOracle}
 			/>
-			<MusicInput isVisible={isMusicInputVisible} onSubmit={onClickAddMusic} />
+			<MusicInput
+				isVisible={visibleMagicPostActions === 'music'}
+				onSelect={onClickAddMusic}
+			/>
 			<LocationSelector
-				isVisible={isLocationSelectorVisible}
-				onSubmit={onSelectLocation}
+				isVisible={visibleMagicPostActions === 'location'}
+				onSelect={onSelectLocation}
+			/>
+			<GIFSelector
+				isVisible={visibleMagicPostActions === 'gif'}
+				onSelect={onSelectGIF}
 			/>
 		</>
 	);

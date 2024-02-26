@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, SyntheticEvent } from 'react';
 import {
 	Collapse,
 	Flex,
@@ -7,15 +7,19 @@ import {
 	Space,
 	ActionIcon,
 	Center,
+	Text,
 } from '@mantine/core';
 import {
 	IconChevronLeft,
 	IconChevronRight,
 	IconCloud,
 	IconLink,
+	IconSearch,
 	IconX,
 } from '@tabler/icons-react';
 import { notifications } from '@mantine/notifications';
+import { GiphyFetch, GifsResult } from '@giphy/js-fetch-api';
+import { Carousel } from '@giphy/react-components';
 
 import { LocationElement, MusicElement } from '@/types/editor';
 import { EditorBlockType } from '@/types/editor';
@@ -44,7 +48,7 @@ export const OracleInput = (props: OracleInputProps) => {
 	const { isVisible, onClickAskOracle } = props;
 	const [question, setQuestion] = useState('');
 
-	const onSubmit = () => {
+	const onSelect = () => {
 		if (question.length < 1) return;
 		onClickAskOracle(question);
 		setQuestion('');
@@ -74,7 +78,7 @@ export const OracleInput = (props: OracleInputProps) => {
 						variant='light'
 						radius='lg'
 						size='sm'
-						onClick={onSubmit}
+						onClick={onSelect}
 						disabled={question.length < 1}
 					>
 						Ask
@@ -88,7 +92,7 @@ export const OracleInput = (props: OracleInputProps) => {
 
 type MusicInputProps = {
 	isVisible: boolean;
-	onSubmit: (songData: MusicElement) => void;
+	onSelect: (songData: MusicElement) => void;
 };
 
 export const MusicInput = (props: MusicInputProps) => {
@@ -96,7 +100,7 @@ export const MusicInput = (props: MusicInputProps) => {
 	const [query, setQuery] = useState('');
 	const [error, setError] = useState<string | null>(null);
 
-	const onSubmit = async () => {
+	const onSelect = async () => {
 		try {
 			if (query.length < 1) {
 				throw new Error('Invalid URL');
@@ -138,7 +142,7 @@ export const MusicInput = (props: MusicInputProps) => {
 			} else {
 				throw new Error('Invalid URL');
 			}
-			props.onSubmit(musicData);
+			props.onSelect(musicData);
 			setQuery('');
 		} catch (err) {
 			console.log(err);
@@ -172,7 +176,7 @@ export const MusicInput = (props: MusicInputProps) => {
 						variant='light'
 						radius='lg'
 						size='sm'
-						onClick={onSubmit}
+						onClick={onSelect}
 						disabled={query.length < 1}
 					>
 						Submit
@@ -186,11 +190,11 @@ export const MusicInput = (props: MusicInputProps) => {
 
 type LocationSelectorProps = {
 	isVisible: boolean;
-	onSubmit: (location: LocationElement) => void;
+	onSelect: (location: LocationElement) => void;
 };
 
 export const LocationSelector = (props: LocationSelectorProps) => {
-	const { isVisible, onSubmit } = props;
+	const { isVisible, onSelect } = props;
 	const [error, setError] = useState<string | null>(null);
 	const [optionIndex, setOptionIndex] = useState(0);
 	const [options, setOptions] = useState<FoursquarePlace[]>([]);
@@ -280,7 +284,7 @@ export const LocationSelector = (props: LocationSelectorProps) => {
 							locality={selectedOption.location.locality}
 							region={selectedOption.location.region}
 							onClick={() =>
-								props.onSubmit({
+								props.onSelect({
 									type: EditorBlockType.LOCATION,
 									icon: `${selectedOption.categories[0].icon.prefix}bg_32${selectedOption.categories[0].icon.suffix}`,
 									name: selectedOption.name,
@@ -309,5 +313,107 @@ export const LocationSelector = (props: LocationSelectorProps) => {
 				<Space h='xs' />
 			</>
 		</Collapse>
+	);
+};
+
+const giphyFetch = new GiphyFetch(process.env.GIPHY_API_KEY || '');
+
+const EMPTY_GIF_RESULT: GifsResult = {
+	data: [],
+	pagination: {
+		total_count: 0,
+		count: 0,
+		offset: 0,
+	},
+	meta: {
+		msg: '',
+		response_id: '',
+		status: 200,
+	},
+};
+
+const NoGIFResults = () => {
+	return (
+		<>
+			<Space h='md' />
+			<Text c='dimmed' ta='center'>
+				We couldn&apos;t find anything.
+				<br />
+				Try searching for something else!
+			</Text>
+		</>
+	);
+};
+
+type GIFSelectorProps = {
+	isVisible: boolean;
+	onSelect: (url: string, width: number, height: number) => void;
+};
+
+export const GIFSelector = (props: GIFSelectorProps) => {
+	const [query, setQuery] = useState('');
+	const [error, setError] = useState<string | null>(null);
+
+	const onSelectGIF = (
+		gif: GifsResult['data'][0],
+		e: SyntheticEvent<HTMLElement, Event>
+	) => {
+		e.preventDefault();
+		props.onSelect(
+			gif.images.original.url,
+			gif.images.original.width,
+			gif.images.original.height
+		);
+	};
+
+	const fetchGifs = useCallback(
+		async (offset: number) => {
+			if (props.isVisible && query.length > 0) {
+				const res = await giphyFetch.search(query, { offset, limit: 10 });
+				return res;
+			}
+			return await Promise.resolve(EMPTY_GIF_RESULT);
+		},
+		[query, props.isVisible]
+	);
+
+	useEffect(() => {
+		return () => {
+			setQuery('');
+		};
+	}, []);
+
+	return (
+		<>
+			<Collapse in={props.isVisible}>
+				<>
+					<Space h='md' />
+					<Flex sx={{ justifyContent: 'space-between', width: '100%' }}>
+						<TextInput
+							sx={{ flex: 1, paddingRight: '1rem' }}
+							value={query}
+							radius='md'
+							onChange={e => setQuery(e.currentTarget.value)}
+							placeholder='Search for a GIF...'
+							maxLength={100}
+							icon={<IconSearch />}
+						/>
+					</Flex>
+					<Space h='xs' />
+					{query.length > 0 && (
+						<Carousel
+							key={query}
+							fetchGifs={fetchGifs}
+							gifHeight={200}
+							gutter={6}
+							onGifClick={onSelectGIF}
+							noLink
+							noResultsMessage={<NoGIFResults />}
+						/>
+					)}
+					<Space h='xs' />
+				</>
+			</Collapse>
+		</>
 	);
 };
