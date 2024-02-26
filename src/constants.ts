@@ -30,4 +30,5 @@ export const SENTRY_DSN =
 export const FOURSQUARE_API_KEY =
 	process.env.NEXT_PUBLIC_FOURSQUARE_API_KEY || process.env.FOURSQUARE_API_KEY;
 
-export const GIPHY_API_KEY = process.env.GIPHY_API_KEY || '';
+export const GIPHY_API_KEY =
+	process.env.NEXT_PUBLIC_GIPHY_API_KEY || process.env.GIPHY_API_KEY;
