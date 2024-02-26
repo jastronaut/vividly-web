@@ -316,7 +316,7 @@ export const LocationSelector = (props: LocationSelectorProps) => {
 	);
 };
 
-const giphyFetch = new GiphyFetch(GIPHY_API_KEY);
+const giphyFetch = new GiphyFetch('ivxQuPx1aLPkUQGaAKIP9bbJeIN1ckTD');
 
 const EMPTY_GIF_RESULT: GifsResult = {
 	data: [],
