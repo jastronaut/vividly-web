@@ -7,7 +7,7 @@ import { Descendant, Transforms } from 'slate';
 import { EditorBlockType } from '../../types/editor';
 import { ImgBBUploadResponse } from '@/types/api';
 import { Block, QuoteBlock, BlockType } from '@/types/post';
-import { IMGBB_API_KEY } from '@/types/constants';
+import { IMGBB_API_KEY } from '@/constants';
 
 export const withEmbeds = (props: SlateEditorType) => {
 	const editor = props;
