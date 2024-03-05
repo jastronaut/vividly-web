@@ -7,9 +7,7 @@ import { Descendant, Transforms } from 'slate';
 import { EditorBlockType } from '../../types/editor';
 import { ImgBBUploadResponse } from '@/types/api';
 import { Block, QuoteBlock, BlockType } from '@/types/post';
-
-const IBB_KEY =
-	process.env.IMGBB_API_KEY || process.env.NEXT_PUBLIC_IMGBB_API_KEY;
+import { IMGBB_API_KEY } from '@/types/constants';
 
 export const withEmbeds = (props: SlateEditorType) => {
 	const editor = props;
@@ -185,7 +183,7 @@ export const addImage = (editor: ReactEditor, file: File | null) => {
 	const formData = new FormData();
 	formData.append('image', file);
 
-	fetch(`https://api.imgbb.com/1/upload?key=${IBB_KEY}`, {
+	fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, {
 		method: 'POST',
 		body: formData,
 	})
